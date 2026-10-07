@@ -59,14 +59,14 @@ def _text(value):
     return type(value) is str and bool(value)
 
 
-def validate_record(record):
-    """Exact M3 staging schema; hash envelope fields are intentionally absent."""
+def _validate_record(record, schema_version, extra_fields, start_keys, start_check, end_status):
+    """Shared typed bodies; format choices come from approved code, never evidence."""
     _require(type(record) is dict, "Record must be an object")
     kind = record.get("event_type")
     _require(kind in BODY_KEYS, "Unknown record type")
-    keys = COMMON | ({"call_id"} if kind in CALL_TYPES else set())
+    keys = COMMON | extra_fields | ({"call_id"} if kind in CALL_TYPES else set())
     _require(set(record) == keys, "Unexpected or missing envelope fields")
-    _require(record["schema_version"] == SCHEMA_VERSION, "Unknown M3 schema version")
+    _require(record["schema_version"] == schema_version, "Unknown record schema version")
     for key in ("run_id", "task_id", "session_id", "monitor_instance_id", "event_id"):
         _require(_text(record[key]), "Missing stream identity")
     _require(type(record["seq"]) is int and 1 <= record["seq"] <= MAX_INTEGER, "Invalid seq")
@@ -76,12 +76,12 @@ def validate_record(record):
     if kind in CALL_TYPES:
         _require(_text(record["call_id"]), "Missing call correlation")
     body = record["body"]
-    _require(type(body) is dict and set(body) == BODY_KEYS[kind], "Invalid typed body fields")
+    _require(type(body) is dict and set(body) == (start_keys if kind == "SESSION_START" else BODY_KEYS[kind]),
+             "Invalid typed body fields")
     if kind == "SESSION_START":
-        _require(body["record_class"] == RECORD_CLASS and _text(body["run_challenge"])
-                 and encode(body["execution_profile"]) == encode(PROFILE), "Unsupported M3 execution profile")
+        _require(start_check(body), "Unsupported session-start contract")
     elif kind == "SESSION_END":
-        _require(body["closure_status"] == "CLOSED_UNSEALED", "M3 cannot seal evidence")
+        _require(body["closure_status"] == end_status, "Invalid closure status")
     elif kind == "CALL_PROPOSAL":
         _require(type(body["request_id"]) in (int, str), "Invalid protocol correlation ID")
         _require(type(body["admission_ordinal"]) is int and 1 <= body["admission_ordinal"] <= MAX_INTEGER,
@@ -133,6 +133,13 @@ def validate_record(record):
     encode(record)  # Also rejects invalid JSON types, integer ranges and Unicode.
 
 
+def validate_record(record):
+    """Exact M3 staging schema; M4 fields/versions remain rejected."""
+    _validate_record(record, SCHEMA_VERSION, set(), BODY_KEYS["SESSION_START"],
+        lambda body: (body["record_class"] == RECORD_CLASS and _text(body["run_challenge"])
+                      and encode(body["execution_profile"]) == encode(PROFILE)), "CLOSED_UNSEALED")
+
+
 @dataclass(frozen=True)
 class Draft:
     event_type: str
@@ -167,10 +174,10 @@ class CommitReceipt:
     call_ids: tuple[str, ...]
 
 
-def _phases(records, phase):
+def _phases(records, phase, validator=validate_record):
     """Validate lifecycle/correlation, with no detector-based authority."""
     for record in records:
-        validate_record(record)
+        validator(record)
         kind, body = record["event_type"], record["body"]
         _require(record["event_id"] not in phase["events"], "Duplicate event ID")
         if kind == "SESSION_START":
@@ -246,10 +253,15 @@ def _facts(records):
 class AuditSession:
     """One new M3 monitor/context; old SQLite rows cannot bootstrap authority."""
 
+    database_version = 3
+    record_schema = SCHEMA_VERSION
+    end_status = "CLOSED_UNSEALED"
+    record_extra_sql = ""
+    insert_sql = "INSERT INTO audit_records VALUES (?,?,?,?,?,?,?,?,?)"
+
     def __init__(self, path, run_id, task_id, session_id, challenge, observer=None):
-        self.identity = {"run_id": run_id, "task_id": task_id, "session_id": session_id,
-                         "monitor_instance_id": str(uuid4())}
-        self.state = ContinuityState()
+        self.identity = self._identity(run_id, task_id, session_id)
+        self.state = self._initial_state()
         self.history = ()
         self._phase = _empty_phases()
         self._lock = threading.RLock()
@@ -259,24 +271,59 @@ class AuditSession:
             self._connection.execute("PRAGMA journal_mode=DELETE")
             self._connection.execute("PRAGMA synchronous=FULL")
             version = self._connection.execute("PRAGMA user_version").fetchone()[0]
-            _require(version in {0, 3}, "Unknown database schema")
-            self._connection.execute("""CREATE TABLE IF NOT EXISTS audit_records (
+            _require(version in {0, self.database_version}, "Unknown database schema")
+            self._connection.execute(f"""CREATE TABLE IF NOT EXISTS audit_records (
                 session_id TEXT NOT NULL, seq INTEGER NOT NULL CHECK(seq BETWEEN 1 AND 9007199254740991),
                 event_id TEXT NOT NULL, event_type TEXT NOT NULL, call_id TEXT,
                 run_id TEXT NOT NULL, task_id TEXT NOT NULL, monitor_instance_id TEXT NOT NULL,
-                record_bytes BLOB NOT NULL, PRIMARY KEY(session_id, seq), UNIQUE(session_id, event_id))""")
+                record_bytes BLOB NOT NULL{self.record_extra_sql},
+                PRIMARY KEY(session_id, seq), UNIQUE(session_id, event_id))""")
             self._connection.execute("""CREATE UNIQUE INDEX IF NOT EXISTS call_phases
                 ON audit_records(session_id, call_id, event_type)
                 WHERE event_type IN ('CALL_PROPOSAL','DISPATCH_DECISION','DISPATCH_INTENT','TOOL_OUTCOME')""")
-            self._connection.execute("PRAGMA user_version=3")
+            self._create_extra_tables()
+            self._connection.execute(f"PRAGMA user_version={self.database_version}")
             existing = self._connection.execute("""SELECT 1 FROM audit_records
                 WHERE run_id=? OR task_id=? OR session_id=? LIMIT 1""", (run_id, task_id, session_id)).fetchone()
             _require(existing is None, "Restart requires a fresh singleton run/task/session; inspection only for old rows")
-            self.append_batch((draft("SESSION_START", {"record_class": RECORD_CLASS,
-                "run_challenge": challenge, "execution_profile": deepcopy(PROFILE)}),))
+            self.append_batch((self._start_draft(challenge),))
         except Exception:
             self._connection.close()
             raise
+
+    def _identity(self, run_id, task_id, session_id):
+        return {"run_id": run_id, "task_id": task_id, "session_id": session_id,
+                "monitor_instance_id": str(uuid4())}
+
+    def _initial_state(self):
+        return ContinuityState()
+
+    def _create_extra_tables(self):
+        pass
+
+    def _start_draft(self, challenge):
+        return draft("SESSION_START", {"record_class": RECORD_CLASS,
+                     "run_challenge": challenge, "execution_profile": deepcopy(PROFILE)})
+
+    def _prepare_records(self, records):
+        return records
+
+    def _validate_batch(self, records, phase):
+        return _phases(records, phase)
+
+    def _candidate_state(self, records, phase):
+        lifecycle = "CLOSED" if phase["closed"] else "HALTED" if phase["unknown"] else "ACTIVE"
+        return ContinuityState(records[-1]["seq"], records[-1]["event_id"], lifecycle,
+                               "UNKNOWN_OUTCOME" if phase["unknown"] else "")
+
+    def _storage_rows(self, records, encoded):
+        return [(r["session_id"], r["seq"], r["event_id"], r["event_type"], r.get("call_id"),
+                 r["run_id"], r["task_id"], r["monitor_instance_id"], data)
+                for r, data in zip(records, encoded, strict=True)]
+
+    def _insert_prepared(self, rows):
+        for row in rows:
+            self._connection.execute(self.insert_sql, row)
 
     def halt(self, reason):
         self.state = replace(self.state, lifecycle="HALTED", failure=reason)
@@ -297,27 +344,30 @@ class AuditSession:
             try:
                 _require(bool(drafts), "Empty transaction")
                 for n, item in enumerate(drafts, self.state.count + 1):
-                    record = {"schema_version": SCHEMA_VERSION, **self.identity,
+                    record = {"schema_version": self.record_schema, **self.identity,
                               "event_id": item.event_id, "seq": n, "event_type": item.event_type,
                               "observed_at_utc": datetime.now(timezone.utc).isoformat(timespec="microseconds").replace("+00:00", "Z"),
                               "body": decode(item.body_bytes)}
                     if item.event_type in CALL_TYPES:
                         record["call_id"] = item.call_id
                     records.append(record)
-                phase = _phases(records, deepcopy(self._phase))
+                records = self._prepare_records(records)
+                phase = self._validate_batch(records, deepcopy(self._phase))
                 pending = phase["pending"]
                 _require(pending is None or pending["intent"], "Proposal/decision/intent must commit together")
-                fact_delta = _facts(records)
+                history = self.history + _facts(records)
                 encoded = [encode(r) for r in records]
+                rows = self._storage_rows(records, encoded)
+                state = self._candidate_state(records, phase)
+                receipt = CommitReceipt(self.identity["session_id"], records[0]["seq"], records[-1]["seq"],
+                                        tuple(r["event_id"] for r in records), tuple(r["event_type"] for r in records),
+                                        tuple(r.get("call_id", "") for r in records))
             except (ValueError, TypeError, KeyError) as exc:
                 self.halt("INVALID_RECORD")
-                raise AuditError("Invalid M3 audit transaction") from exc
+                raise AuditError("Invalid audit transaction") from exc
             try:
                 self._connection.execute("BEGIN IMMEDIATE")
-                for r, data in zip(records, encoded, strict=True):
-                    self._connection.execute("INSERT INTO audit_records VALUES (?,?,?,?,?,?,?,?,?)", (
-                        r["session_id"], r["seq"], r["event_id"], r["event_type"], r.get("call_id"),
-                        r["run_id"], r["task_id"], r["monitor_instance_id"], data))
+                self._insert_prepared(rows)
             except sqlite3.Error as exc:
                 try:
                     self._connection.rollback()
@@ -333,13 +383,8 @@ class AuditSession:
                 self.halt("AMBIGUOUS_COMMIT")
                 raise AmbiguousCommit("Audit commit outcome unknown; task halted") from exc
             self._phase = phase
-            self.history += fact_delta
-            lifecycle = "CLOSED" if phase["closed"] else "HALTED" if phase["unknown"] else "ACTIVE"
-            self.state = ContinuityState(records[-1]["seq"], records[-1]["event_id"], lifecycle,
-                                         "UNKNOWN_OUTCOME" if phase["unknown"] else "")
-            receipt = CommitReceipt(self.identity["session_id"], records[0]["seq"], records[-1]["seq"],
-                                    tuple(r["event_id"] for r in records), tuple(r["event_type"] for r in records),
-                                    tuple(r.get("call_id", "") for r in records))
+            self.history = history
+            self.state = state
             if self._observer is not None:
                 try:
                     self._observer(receipt)
@@ -349,7 +394,7 @@ class AuditSession:
             return receipt
 
     def finish(self):
-        self.append_batch((draft("SESSION_END", {"closure_status": "CLOSED_UNSEALED"}),))
+        self.append_batch((draft("SESSION_END", {"closure_status": self.end_status}),))
 
     def close(self):
         if self.state.lifecycle in {"CREATED", "ACTIVE"}:

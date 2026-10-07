@@ -1,9 +1,10 @@
-"""Restricted canonical JSON bytes for M3 typed records; no cryptography."""
+"""Restricted canonical JSON bytes for typed records; no cryptography."""
 
 import json
 
 
 MAX_INTEGER = 2**53 - 1
+CANONICALIZATION_VERSION = "chainguard-json-v1"
 
 
 def _validate(value):

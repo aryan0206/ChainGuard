@@ -2,7 +2,7 @@
 
 ChainGuard investigates explainable security analysis of MCP tool-call sequences and independently verifiable evidence of the monitor's observations and decisions. It is an Information Security course project intended to support a reproducible IEEE-style study.
 
-**Status, 8 October 2026:** **ARCHITECTURE LOCKED — ChainGuard Architecture v1.1**. M1 and M2 were accepted, committed and pushed (`3e7f6e8`, `5515b05`, confirmed in the local/remote main history). M2 remains replay-only. The owner approved M3 with a continuity head `(last_seq, last_event_id)` and canonical typed records, explicitly deferring cryptographic chaining/head semantics to M4. M3 now implements real SQLite persistence and a live audited non-release M1 path; its implementation/results await owner review. M4–M6 remain unimplemented. There is no live grant/revoke/one-use manager or cryptographically verifiable audit evidence. No M3 commit or push has been made.
+**Status, 8 October 2026:** **ARCHITECTURE LOCKED — ChainGuard Architecture v1.1**. M1, M2 and M3 were accepted, committed and pushed (`3e7f6e8`, `5515b05`, `21d655b`, confirmed in main's history). M2 remains replay-only; M3 implements durable SQLite records and a noncryptographic continuity head. The owner approved the M4 design and implementation. M4 now adds new SHA-256 chained streams, ECDSA P-256 closures and pinned-key offline inspection with deterministic finding reproduction. M4 changes/results await student review and remain uncommitted. M5 durable fresh submission/adversarial evaluation and M6 live grant/revoke/one-use execution remain unimplemented.
 
 The locked final architecture specifies a local Python MCP stdio proxy, task-scoped events, B0/B1/B2, core grant/revoke/one-use consumption, SQLite, trusted running SHA-256 commitments, ECDSA P-256 signatures, offline verification and independent evaluation. The final study includes B2-R/B2-S checks, the pinned sensitivity-policy reference adaptation and signed-transcript comparison. A minimal report will separate behavioral findings, oracle labels and evidence status.
 
@@ -154,7 +154,7 @@ For the viva: B1 loses order while retaining counts; B2-R/B2-S agreement tests t
 
 ## M3 durable persistence and live non-release staging
 
-The owner approved this milestone interpretation on 8 October 2026. M3's trusted head is **continuity state `(last_seq, last_event_id)`**, maintained in memory with the record count and task/call lifecycle independently of SQLite. It does not commit the complete transcript cryptographically or detect arbitrary earlier-record mutation. `schema_version = m3-record-v1` and the stored class **M3_DURABLE_UNSEALED_NO_CRYPTOGRAPHIC_COMMITMENT** distinguish these developmental records from later M4 evidence. M3 records cannot be retroactively presented as M4-compliant signed evidence. SHA-256 `prev_hash` chaining, a cryptographic trusted head, signatures, keys, offline verification and evidence packages remain M4 work.
+The owner approved this milestone interpretation on 8 October 2026. M3's trusted head is **continuity state `(last_seq, last_event_id)`**, maintained in memory with the record count and task/call lifecycle independently of SQLite. It does not commit the complete transcript cryptographically or detect arbitrary earlier-record mutation. `schema_version = m3-record-v1` and the stored class **M3_DURABLE_UNSEALED_NO_CRYPTOGRAPHIC_COMMITMENT** distinguish these developmental records from M4 evidence. M3 records cannot be retroactively presented as M4-compliant signed evidence. The separate M4 implementation below creates new chained streams; the M3 entry point still produces its original unsealed format.
 
 The live surface is deliberately restricted to M1's `echo` and `controlled_failure`, with their existing single synthetic string-token contract. Both are normalized as local, public, non-release operations; server/tool identity and succeeded/failed status distinguish them. The trusted gate rejects other tool names and invalid arguments before dispatch. It commits the default-disabled override and disabled release surface in the session-start execution profile. No observation setting or stored grant record enables a release call. For these non-release M3 calls, detector recommendations do not determine forwarding. Later enforcement behavior remains governed by the Architecture Lock; this slice does not establish a general detector non-enforcement rule.
 
@@ -223,6 +223,127 @@ The first M3 run completed **31 tests with three teardown errors**: trigger-inst
 
 For the viva: SQLite supplies atomic durable appends under its local filesystem assumptions; the process owns continuity and phase authority; canonical bytes make record representation reproducible; the later signature authenticates a cryptographic commitment. A database commit and a tool effect are separate operations, so an interrupted intent/outcome interval cannot justify replay or a clean close. Inspection of old rows is useful for audit reconstruction but cannot restore execution authority. JSON-line files were an alternative, but SQLite supplies explicit transaction/rollback behavior without a new dependency. M3 does not establish arbitrary MCP protection, storage tamper detection, trusted timestamps, power-failure correctness on arbitrary hardware, live permission lifecycle or M4 evidence acceptance.
 
-M3 code and README changes remain unstaged for owner/student review. No commit or push is authorized by passing these checks. The Architecture Lock, Charter, Threat Model, Engineering Playbook and AGENTS remain unchanged.
+The owner subsequently reviewed M3 and authorized its commit/push (`21d655b`). M4's shared writer extension retains M3's record schema, noncryptographic state, failure semantics and entry point. The Architecture Lock, Charter, Threat Model, Engineering Playbook and AGENTS remain unchanged.
+
+## M4 cryptographically verifiable committed evidence
+
+M4 implements the approved A3 chain/signature slice and repeatable **INSPECT** verification. It extends the durable writer rather than reconstructing trusted running state from SQLite. It introduces no live release capability, grants, revocation, permission consumption or enforcement policy. The supported live calls remain M1's public, non-release `echo` and `controlled_failure`; their authorization gate remains independent of observation-mode shadows. The existing M2 oracle and detector semantics are unchanged.
+
+| File | Responsibility and choice |
+| --- | --- |
+| `chainguard/audit.py` | Small internal format hooks reuse typed validation, explicit transactions and confirmed state advancement. M3 defaults and its public schema validator remain strict. |
+| `chainguard/canonical.py` | Unchanged encoding algorithm, now named `chainguard-json-v1`; no cryptographic operations. |
+| `chainguard/evidence.py` | Exact M4 schemas, manifest/genesis/event commitments, process-owned cryptographic head, snapshot reconciliation, library signing and key loading. |
+| `chainguard/verifier.py` | Offline inspection with external expectations/pins, independently recomputed hashes and approved detector reproduction. |
+| `chainguard/m4.py` | Fresh trusted launch/bootstrap, independent parent journal, fixture key provisioning and separate-process verification after monitor exit. |
+| `tests/test_m4.py` | Fixed byte/hash vectors, focused mutations, transaction/head checks, sealing failures and real integration. |
+
+### Canonical bytes, chain and persistence
+
+The restricted JSON encoder preserves Unicode, emits UTF-8 with sorted keys and compact separators, and accepts explicit strings/booleans/null and integers within ±(2^53−1). Floats, non-finite values, duplicate keys, invalid Unicode, unknown schemas, extra typed fields and noncanonical bytes are rejected. This project format does not claim RFC 8785 compliance.
+
+The exact construction from Architecture Lock §8 is:
+
+```text
+D_M = ASCII("CHAIN GUARD MANIFEST-v1")   || 0x00
+D_G = ASCII("CHAIN GUARD GENESIS-v1")    || 0x00
+D_E = ASCII("CHAIN GUARD EVENT-v1")      || 0x00
+D_C = ASCII("CHAIN GUARD COMMITMENT-v1") || 0x00
+
+M   = SHA256(D_M || canonical(manifest))
+H_0 = SHA256(D_G || raw_32_bytes(M))
+event_i.prev_hash = lowercase_hex(H_(i-1))
+H_i = SHA256(D_E || canonical(event_i))
+signing_input = D_C || canonical(commitment)
+```
+
+Identity, `seq` and `prev_hash` are inside the canonical event. Its current hash is outside the event in the storage/export wrapper. Digests are exactly 64 lowercase hexadecimal characters. The canonical expected inventory uses `SHA256(canonical(inventory))` as specified in §19.3. Source-artifact/configuration digests identify approved inputs; they do not themselves authenticate those inputs.
+
+M4 uses a fresh `user_version=4` database. `audit_records` retains M3's identity/correlation columns and constraints and adds `event_hash`; `record_bytes` holds the complete canonical M4 event including `prev_hash`. `audit_manifests(session_id, manifest_bytes, manifest_digest)` stores the canonical manifest. Manifest and initial record commit together. No M3 database migration or retrospective signature is provided.
+
+The process maintains immutable count/continuity state plus `manifest_digest` and `cryptographic_head`. Proposed hashes and complete candidate state are prepared before the transaction; neither becomes authoritative until commit confirmation. Under the existing task gate:
+
+```text
+proposal + four shadows + controller decision + empty-selection intent
+  -> one SQLite transaction containing complete records/hashes
+  -> confirmed COMMIT
+  -> advance trusted continuity, cryptographic and semantic state
+  -> observed commit receipt
+  -> forwarding
+terminal outcome -> separate confirmed transaction -> client response
+```
+
+Rollback leaves both heads and semantic history unchanged. An exception after COMMIT begins halts as ambiguous, with no adoption, retry, forwarding or claim of rollback. Prepared SQLite rows do not authorize dispatch. A later result-write failure cannot undo execution. Restart requires fresh monitor/client/run/task/session/challenge; stored records never restore execution authority. This remains local SQLite durability under the stated filesystem/runtime assumptions, not a power-loss certification.
+
+### Manifest, closure and signing
+
+`m4-manifest-v1` binds record/canonical/protocol versions, observation scope, run/task/session/monitor identities, mode, the disabled-release/default-disabled-override profile, a fresh assessor-issued 32-byte random hexadecimal challenge, expected-inventory digest, policy/registry/normalizer/detector versions and digests, code revision and source-artifact digests. References use fixed module names; machine paths, PIDs and environment values are absent. Required display timestamps stay in events and are not freshness authorities.
+
+At launch the monitor emits its new instance ID. The parent registers it in the external expected inventory and fixes configuration before sending trusted bootstrap and any MCP requests. This bootstrap is an internal controlled-host channel; ordinary MCP metadata cannot establish context. The independent parent journal retains prewritten requests, responses, transaction receipts and tool-handler observations outside SQLite. These witnesses assume the trusted runtime; they are not proofs of monitor honesty or a full new live oracle.
+
+`m4-commitment-v1` has exactly: `schema_version`, `record_schema_version`, `canonicalization_version`, `run_id`, `task_id`, `session_id`, `monitor_instance_id`, `run_challenge`, `expected_inventory_digest`, `manifest_digest`, `record_count`, `final_seq`, `final_head`, `closure_status`, `hash_algorithm`, `signature_suite`, `signature_encoding`, `signer_key_id`. Contiguous sequence makes count and final sequence equal; both are bound explicitly. Algorithm/encoding values are `SHA256`, `ECDSA-P256-SHA256-DER-v1`, `DER-base64`.
+
+Sealing stops admissions, requires terminal known outcomes, durably appends `SESSION_END` with `CLOSED`, freezes trusted manifest/count/head, then reads one explicit SQLite snapshot. Schema/lifecycle/sequence and all hashes must reconcile with the frozen process values. Signing/export uses that exact snapshot without rereading storage. Self-verification must pass before output success. The output uses exclusive file creation and is flushed/fsynced; failure reports incomplete and does not replace an existing file. No executed effect is rolled back.
+
+Signing uses `private_key.sign(signing_input, ec.ECDSA(hashes.SHA256()))` with P-256. SHA-256 runs inside the library API once; no preliminary commitment hash is passed to that API. DER signature bytes are transported as strict base64. ECDSA nonce generation is delegated to the library; signatures need not have identical bytes when the same commitment is signed again.
+
+Progress separately reports prefix `durability`, `sealing`, `signature` and `verification`. A committed `CLOSED` event alone is not a signature or verified package. Failed reconciliation/signing/export marks sealing `INCOMPLETE`; a signature already produced before export failure can remain `SIGNED` while export is unsuccessful. Halted contexts cannot resume appending or automatically retry sealing.
+
+Private keys are outside the repository and SQLite. The fixture provisions a key before execution and pins its public key independently for that evidence configuration. Repeated verifier processes reuse that pin; they never generate keys or trust a key embedded in evidence. The explicit `keygen --private-key <external-path> --public-key <trusted-path>` command refuses existing files and repository private-key paths. Generated fixture PEM private keys are unencrypted demonstration artifacts; production key custody is not implemented. Separate files on this host do not establish OS privilege isolation: simulated storage mutation is restricted to the audit database/package, excluding keys, expected configuration and assessor journals.
+
+### Package and offline inspection
+
+The canonical package has exactly `format_version = m4-evidence-v1`, `manifest`, ordered `records` containing `{event, event_hash}`, `commitment`, and `signature`. Approved configuration definitions and artifact references are in the manifest. No executable artifact selected by evidence is run.
+
+Inspection freezes package bytes and reports six dimensions independently as `PASS`, `FAIL`, `INCOMPLETE` or `NOT_CHECKED`: schema/lifecycle/sequence, recomputed commitment/link integrity, trusted signature, external expected-context/configuration binding, signed/inventory completeness, and deterministic finding reproduction. `inspection_passed` is only an all-dimensions summary; the individual results remain available. A valid old signature can pass origin while failing the expected challenge/context. An altered record can fail its chain while the original unchanged closure signature still passes.
+
+Reproduction uses approved installed B0/B1/B2-R/B2-S code. B0 sees only current facts; B1 receives the exact unordered projection; B2-S incrementally observes eligible facts and is compared with full-prefix B2-R. Only prior committed outcomes and existing storage-level control facts enter history. Findings, controller conclusions, lifecycle, sequence, timestamps and hashes are excluded from behavioral features. Required findings must be present and match versions/digests, authorization, behavior, hypothetical recommendation, rule, references and explanation. The independent oracle remains unchanged and is not called for cryptographic inspection.
+
+This reference verifier requires matching approved source artifacts, Git revision and external configuration. It performs no MCP calls, needs no SQLite database or monitor process, and requires no private key. It currently inspects one session package against an exact singleton inventory; a larger expected inventory cannot pass on one session alone. Repeated inspection is allowed. **Durable fresh complete-run acceptance, duplicate rejection after restart and the full adversarial campaign remain M5. M6 live permission lifecycle and final-study A3T/A4T comparisons remain pending.**
+
+### Run M4
+
+No dependencies were installed or changed. M4 uses the already approved/installed `cryptography==50.0.2` plus standard-library SHA-256/SQLite/JSON/unittest. The owner approved unittest commands because pytest is absent. Runtime remains Windows x64 / CPython 3.14.3 / SQLite 3.50.4 / MCP 2.3.0.
+
+```powershell
+.\.venv\Scripts\python.exe -B -m unittest discover -s tests -p test_m4.py -v
+.\.venv\Scripts\python.exe -B -m unittest discover -s tests -p test_m3.py -v
+.\.venv\Scripts\python.exe -B -m unittest discover -s tests -p test_m2.py -v
+.\.venv\Scripts\python.exe -B -m unittest discover -s tests -p test_m1.py -v
+.\.venv\Scripts\python.exe -B -m chainguard.client
+.\.venv\Scripts\python.exe -B -m chainguard.m3
+.\.venv\Scripts\python.exe -B -m chainguard.m4
+git diff --check
+git diff
+git status --short --untracked-files=all
+```
+
+The default M4 demonstration removes its external temporary fixture directory after printing the result. To retain a fresh fixture and repeat inspection in another process:
+
+```powershell
+$taskM4Directory = Join-Path $env:TEMP ("chainguard-m4-review-" + [guid]::NewGuid())
+.\.venv\Scripts\python.exe -B -m chainguard.m4 demo --directory $taskM4Directory
+.\.venv\Scripts\python.exe -B -m chainguard.verifier --package "$taskM4Directory\evidence.json" --expected "$taskM4Directory\expected.json" --config "$taskM4Directory\configuration.json" --public-key "$taskM4Directory\fixture-public.pem" --key-id chainguard-m4-fixture-key
+```
+
+### Actual M4 validation — 8 October 2026
+
+| Executed check | Actual result |
+| --- | --- |
+| Complete final M4 suite | **45 tests in 35.993s — OK**, exit 0 |
+| Complete M3 regression | **35 tests in 26.312s — OK**, exit 0 |
+| Complete M2 regression | **41 tests in 0.368s — OK**, exit 0 |
+| Complete M1 regression | **12 tests in 20.287s — OK**, exit 0 |
+| Standalone M1 flow | Exit 0; modern discovery and correlated success/error/success |
+| Standalone M3 flow | Exit 0; 26 records / 8 transactions; `CLOSED_UNSEALED`, original noncryptographic class |
+| Standalone M4 flow | Exit 0; request IDs 3/4/5 returned `m4-success-A`, `controlled failure: m4-failure-B`, `m4-success-C`; 26 records / 8 confirmed transactions |
+| Separate-process offline verifier | Exit 0 after monitor termination; all six dimensions PASS; 12 findings reproduced at 3 B2-agreeing prefixes |
+| Diff/status inspection | `git diff --check` and all new-file whitespace checks passed; complete tracked/new-file diffs inspected; three modified and four new files remain unstaged |
+
+The first smoke flow and initial complete suite passed; the initial suite had **42 tests in 43.784s — OK**. There were no failed-first-run tests. Review added actual ambiguous-commit forwarding refusal, empty-stream/noncanonical-package checks and explicit INCOMPLETE reporting for missing closure/signature/records, bringing the suite to 45. That run passed in 43.713s. Final diff review strengthened reconciliation to use a structurally valid, fully recomputed SQLite chain; the complete final suite passed in 35.993s. Fixed vectors were independently calculated with literal domain bytes and standard-library JSON/hashlib, then retained as test constants. Earlier checks overlapped; durations are test observations, not benchmarks.
+
+Tests distinguish changed records, recomputed chains against an old signature, incorrect authentic findings, absent required findings, wrong key/curve/suite, external context mismatch, unsealed/truncated evidence and snapshot/sign/export failure. They verify both heads remain unchanged on rollback/ambiguity and that required failures block actual forwarding. The full M5 campaign is not implemented or claimed complete.
+
+For the viva: the chain commits ordered canonical facts; the process-owned head prevents replacing live authority with attacker-recomputed SQLite; the final signature authenticates the stated closure under an independently pinned key. Reproduction checks consistency with approved rules, not raw observation truth. Signatures do not prove monitor honesty, complete capture, correct tool behavior, detector correctness, trusted time, universal tamper resistance or novel cryptography. M3 records remain unsealed developmental records. M4 is pending student review; no commit or push has been made.
 
 The supplied paper is a proposal/literature baseline and needs alignment with this design before reporting implementation or results. The final marking rubric and evaluation date still need confirmation. The existing LICENSE contains only a placeholder heading; release readiness requires resolving it separately.
