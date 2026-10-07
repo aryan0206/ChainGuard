@@ -52,7 +52,7 @@ def read_responses(stream: BinaryIO, responses: queue.Queue) -> None:
             return
 
 
-def run(input_stream: BinaryIO, output_stream: BinaryIO) -> int:
+def run(input_stream: BinaryIO, output_stream: BinaryIO, audit=None) -> int:
     """The downstream command is fixed; the client can only launch this proxy."""
     environment = {**os.environ, "PYTHONUTF8": "1"}
     with subprocess.Popen(
@@ -111,6 +111,24 @@ def run(input_stream: BinaryIO, output_stream: BinaryIO) -> int:
                     continue
                 fields = {"request_id": request_id, "method": method, "downstream_pid": downstream.pid}
                 diagnostic("received", **fields, protocol_version=version, required_metadata=True)
+                call_id = None
+                terminal_recorded = False
+                if audit is not None and method == "tools/call":
+                    from chainguard.audit import AuditError
+                    try:
+                        # M3 proposal + decision + intent commit and trusted
+                        # continuity advance must finish before this relay writes.
+                        call_id = audit.before(request)
+                    except (AuditError, ValueError, TypeError, KeyError):
+                        audit.session.halt(audit.session.state.failure or "AUDIT_PREPARATION_FAILED")
+                        write_error(output_stream, request_id, -32603, "Audit persistence failed; task halted")
+                        diagnostic("audit_failure", **fields, failure=audit.session.state.failure)
+                        status = 2
+                        break
+                    if call_id is None:
+                        write_error(output_stream, request_id, -32602, "Call outside the M3 non-release subset")
+                        diagnostic("rejected", request_id=request_id, reason="unsupported_m3_call")
+                        continue
                 try:
                     downstream.stdin.write(frame)
                     downstream.stdin.flush()
@@ -125,12 +143,32 @@ def run(input_stream: BinaryIO, output_stream: BinaryIO) -> int:
                     ):
                         raise ValueError("Downstream response does not correlate with the request")
                     diagnostic("response_received", **fields)
+                    if call_id is not None:
+                        try:
+                            audit.after(call_id, response)
+                        except (AuditError, ValueError):
+                            audit.session.halt(audit.session.state.failure or "AUDIT_OUTCOME_FAILED")
+                            write_error(output_stream, request_id, -32603, "Audit outcome incomplete; task halted")
+                            diagnostic("audit_failure", **fields, failure=audit.session.state.failure)
+                            status = 2
+                            break
+                        terminal_recorded = True
                     output_stream.write(response_frame)
                     output_stream.flush()
                     diagnostic("returned", **fields)
                 except (OSError, ValueError, UnicodeError, queue.Empty):
-                    write_error(output_stream, request_id, -32603, "Downstream transport failed; call outcome unknown")
-                    diagnostic("transport_failure", **fields)
+                    if call_id is not None:
+                        if terminal_recorded:
+                            audit.session.halt("CLIENT_RESPONSE_DELIVERY_FAILED")
+                        else:
+                            try:
+                                audit.unknown(call_id)
+                            except (AuditError, ValueError):
+                                audit.session.halt(audit.session.state.failure or "AUDIT_OUTCOME_FAILED")
+                    message = ("Client response delivery failed; recorded tool outcome retained" if terminal_recorded
+                               else "Downstream transport failed; call outcome unknown")
+                    diagnostic("client_delivery_failure" if terminal_recorded else "transport_failure", **fields)
+                    write_error(output_stream, request_id, -32603, message)
                     status = 2
                     break
         finally:
