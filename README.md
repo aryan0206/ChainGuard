@@ -2,7 +2,7 @@
 
 ChainGuard investigates explainable security analysis of MCP tool-call sequences and independently verifiable evidence of the monitor's observations and decisions. It is an Information Security course project intended to support a reproducible IEEE-style study.
 
-**Status, 7 October 2026:** **ARCHITECTURE LOCKED — ChainGuard Architecture v1.1**. The owner subsequently authorized M1 implementation and the exact dependency set in `requirements-m1.txt`. M1 transport tests and the standalone client -> proxy -> controlled server flow pass. M2 and later milestones remain unimplemented; this is not yet a working security detector or audit-evidence system. No commit or push was made.
+**Status, 8 October 2026:** **ARCHITECTURE LOCKED — ChainGuard Architecture v1.1**. M1 was accepted and committed; the owner reports it was pushed. The owner approved M2 using replay-only staging. M2 now implements deterministic detector/oracle semantics over explicitly synthetic transcripts. M3–M6 remain unimplemented. M2 is awaiting owner review; no M2 commit or push was made. There is no live security permission manager or durable audit-evidence system.
 
 The locked final architecture specifies a local Python MCP stdio proxy, task-scoped events, B0/B1/B2, core grant/revoke/one-use consumption, SQLite, trusted running SHA-256 commitments, ECDSA P-256 signatures, offline verification and independent evaluation. The final study includes B2-R/B2-S checks, the pinned sensitivity-policy reference adaptation and signed-transcript comparison. A minimal report will separate behavioral findings, oracle labels and evidence status.
 
@@ -94,8 +94,62 @@ In that run the proxy PID was **26488**, the downstream launcher PID **37012**, 
 
 Additional passing checks cover required per-request metadata, refusal to forward missing metadata/unsupported versions, rejection of legacy and unsupported methods, distinction between protocol errors and tool errors, exact request/response frame preservation, and stopping on mismatched response IDs or downstream EOF without retries.
 
-M1 proves the configured local execution path and correlated success/error behavior. It does not detect attacks, authenticate diagnostics, prevent arbitrary host-side bypasses, track sensitive data, implement an oracle, persist audits, produce hashes/signatures, or manage grants/revocation/consumption. M2–M6 were not implemented. Protocol conformance beyond this subset, other operating systems, concurrent calls and exhaustive timeout/resource-failure behavior have not been demonstrated. Student verification remains pending; subsequent milestone work requires a new instruction.
+M1 proves the configured local execution path and correlated success/error behavior. It does not detect attacks, authenticate diagnostics, prevent arbitrary host-side bypasses, track sensitive data, implement an oracle, persist audits, produce hashes/signatures, or manage grants/revocation/consumption. M2–M6 were not implemented at M1 completion. Protocol conformance beyond this subset, other operating systems, concurrent calls and exhaustive timeout/resource-failure behavior have not been demonstrated. The owner subsequently accepted M1; the separately approved M2 work is described below.
 
 For the viva: the SDK client/server provide protocol semantics, the relay proves where supported traffic flows, and the deterministic tools isolate success/error behavior. A tool error is a valid correlated protocol result, while a transport error can leave the execution outcome unknown. Passing M1 establishes transport progress, not detector correctness.
+
+## M2 replay-only semantics
+
+All M2 evidence is labeled **SYNTHETIC_REPLAY_NOT_DURABLE_COMMIT_PROOF**. The harness executes no tools, writes no database, and introduces no live grant/revoke interface. A fixture's `commit: confirmed` is a staged input assumption, never proof of a real durable commit. Real transaction witnesses and live permission-bearing execution remain for M3/M6. M1 client, proxy, controlled server and tests are unchanged.
+
+| File | Responsibility and locked contract |
+| --- | --- |
+| `chainguard/semantics.py` | Frozen current extraction, immutable semantic facts/scopes, exact B1 count projection and findings (§§6, 15.3, 16). |
+| `chainguard/detectors.py` | Stateless B0, conservative B1, independently implemented full-prefix B2-R and incremental B2-S. They output shadows and cannot execute tools. |
+| `chainguard/oracle.py` | Independently reconstruct raw fixture observations and assess authorization, dispatch, consumption, disclosure and task completion (§18). Imports no detector or normalizer. |
+| `chainguard/m2.py` | Validate staged admission/call phases, project one shared history independently of shadows, compare every proposal prefix, check prewritten expectations and report observed B1 ambiguity. |
+| `tests/m2_fixtures.py` | Explicit synthetic journals, public synthetic canaries, expected contract labels, side effects and detector operating-point expectations. |
+| `tests/test_m2.py` | Semantic unit tests, fault/uncertainty tests and integration of the complete replay pipeline. |
+
+**B0 was frozen before the first fixture comparison on 8 October 2026.** Its fixed operating point recognizes exact registered synthetic canaries in raw UTF-8 or one strict base64 layer, with a 64 KiB input bound and static local-destination restrictions. This implements the bounded direct-content checks required by Architecture Lock §§6/16. There is no recursive decoding, hex recognition or tuning from B1/B2 results. Missing historical permission is `INDETERMINATE`: current warnings recommend hypothetical denial; an outgoing call without warnings can recommend hypothetical allowance without establishing task authorization. The comparison rejects changes to the static policy across fixtures.
+
+B1 receives only counts by category, operation, resource, destination, outcome, sensitivity, transformation category and exact scope. Task identity is implicit in prior validation/partitioning; event/grant IDs, order, ordinals, timestamps, active-state flags, transition features, scenario labels and findings are absent. Evidence references are attached after evaluation through a separate mapping. Permission is established only when `G_s > U_s AND R_s = 0`; `G_s <= U_s` is definite absence under validated lifecycle, while remaining revoke ambiguity is `INDETERMINATE` with `SUSPICIOUS` and hypothetical denial.
+
+B2-R reconstructs state by independently examining each grant and later eligible facts; B2-S incrementally updates private exposure/grant/revoke/use state. Both see only prior `TOOL_OUTCOME`, `GRANT`, `REVOKE_SCOPE` and once-only projected `USE` facts. Current proposals and lifecycle/admission bookkeeping are outside history features. `USE` comes from selected grants in a staged reservation witness; outcomes never consume again. Failed reads create no exposure; failed dispatched releases do not refund consumption; unknown outcomes halt subsequent proposal evaluation. Supporting-reference storage and grant-ID tombstones are retained: no constant-memory claim is made.
+
+The oracle separately consumes the raw assessor journal: controls/witnesses, proposals/order, source observations, forwarding attempts, handler arrivals, destination-tagged sink bytes and task outputs. It uses its own raw/base64/hex canary checks and pre-reservation permission snapshots. Its five dimensions remain separate from detector authorization, behavior and hypothetical recommendations. Incomplete observations preserve `INDETERMINATE` or `UNKNOWN`; task closure alone does not establish absence of disclosure. The replay ledger validates transcript execution choices without reading shadow findings. Neither it nor the oracle is a live controller.
+
+There are 23 prewritten research transcripts, covering public/failed/denied reads, sticky exposure and unrelated public transfer, raw/base64 recognition, authorized release, revoke/new-grant ordering, consumption after success/failure/unknown outcome, wrong scopes, multi-resource coverage, static prohibitions, unsupported mappings, empty-selection synthetic override, hex disclosure, reconnect and ambiguous reservation. Additional tests exercise missing witnesses, task isolation, restart/closure validation, malformed reservations and incorrect/omitted normalized observations. Replay integration was chosen to validate policy semantics within the owner-approved M2 boundary; implementing a durable live controller here would cross into later milestones.
+
+## Run M2 and regress M1
+
+No dependencies were added or installed; `requirements-m1.txt` and its approved pins are unchanged. Use the existing Windows CPython 3.14.3 environment from the repository root:
+
+```powershell
+.\.venv\Scripts\python.exe -B -m unittest discover -s tests -p test_m2.py -v
+.\.venv\Scripts\python.exe -B -m unittest discover -s tests -p test_m1.py -v
+.\.venv\Scripts\python.exe -B -m chainguard.m2
+.\.venv\Scripts\python.exe -B -m chainguard.client
+git diff --check
+git diff
+git status --short --untracked-files=all
+```
+
+The replay command emits deterministic JSON with the staging label, frozen B0 point, findings and five-dimensional oracle observations for each proposal. It fails if a prewritten expectation or B2 prefix-equivalence check fails. Its repository-local fixture source is `tests/m2_fixtures.py`. The M1 command separately runs real MCP subprocesses.
+
+## Actual M2 validation — 8 October 2026
+
+- Complete M2 suite: **41 tests in 0.184s — OK**, exit 0.
+- Complete unchanged M1 regression: **12 tests in 23.188s — OK**, exit 0.
+- Standalone M1 flow: exit 0; discovery and success/error/success retained their expected correlated results.
+- Replay harness: exit 0; **23 fixtures / 37 valid proposal prefixes**, all prewritten expectations passed, and B2-R/B2-S agreed at **every** prefix on authorization, behavior, recommendation, rules, explanations, supporting references and hypothetical selection.
+- Matched order pair: byte-identical B1 input, B1 `INDETERMINATE` in both cases; B2 `UNAUTHORIZED` after grant→revoke and `AUTHORIZED` after revoke→NEW grant.
+- Observed ambiguity analysis: **one mixed-label B1 input group**, minimum binary error count **1** for that observed group; **one oracle-INDETERMINATE proposal**, excluded from the binary grouping counts. This is not a population result or an accuracy benchmark.
+
+The first M2 run reported four failures caused by one oracle bug: task closure incorrectly implied no disclosure despite incomplete observation coverage. The oracle was corrected to preserve unknown disclosure, with regression cases for missing coverage and uncertain permissions. Diff review added regressions for missing independent source observations, persistent unknown authority and duplicate ambiguous reservation records. Golden expectations and B0 content coverage were unchanged. Test durations are observations, not a performance study.
+
+The hex case illustrates bounded history benefit over frozen B0 coverage using independently covered synthetic sink bytes. B1 also represents sticky exposure; this case does not establish an ordering advantage over B1. The matched grant/revoke pair provides the ordering distinction. Hard benign public-transfer and failed-read controls accompany those interpretations.
+
+For the viva: B1 loses order while retaining counts; B2-R/B2-S agreement tests two implementations of one policy, while the independent oracle checks that policy against raw fixture observations. An unrelated public transfer can violate the conservative authorization contract without leaking a canary. Hypothetical detector denial cannot be credited with preventing a staged dispatch. Source/configuration digests identify frozen artifacts; they do not authenticate these transcripts. Live prevention, durable witnesses, evidence integrity, scaling, held-out accuracy and publication-level claims remain untested in M2.
 
 The supplied paper is a proposal/literature baseline and needs alignment with this design before reporting implementation or results. The final marking rubric and evaluation date still need confirmation. The existing LICENSE contains only a placeholder heading; release readiness requires resolving it separately.
