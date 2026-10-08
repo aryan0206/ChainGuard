@@ -61,6 +61,30 @@ E02 preserves current call, scoped non-order semantics and serialized B1 input w
 
 Shadows see one controller-generated committed history and cannot control forwarding or consume grants. Normal observation retains authorization; unauthorized forwarding requires the committed, default-disabled synthetic local-sink override. Static prohibitions, unsupported operations and persistence failures still block. Enforcement uses fresh separate executions per configuration under the same static envelope/controller; trajectories may diverge. Attribute detector recommendation, controller refusal, dispatch, consumption, disclosure and completion separately. Prevention by a common gate is not detector credit.
 
+## Phase 2 foundation qualification — 8 October 2026
+
+**PHASE 2 FOUNDATION COMPLETE** means development contract/observation infrastructure was implemented and focused tests passed. It does not complete E01/E02/E03/E04/E05/E06/E07/E13, qualify live M6 witnesses, establish a held-out result or open further implementation gates. Regression outcomes, including the initial M1 timeout and its isolated rerun, are recorded in the [ledger](RESULTS_LEDGER.md).
+
+Implementation: [workflows.py](../chainguard/workflows.py), authored development data in [workflow_fixtures.py](../tests/workflow_fixtures.py), and [test_workflows.py](../tests/test_workflows.py). No existing oracle, detector, controller, persistence, verifier or acceptance semantics were modified. No dependencies were added.
+
+WorkflowContract contains identity/task/stratum, ordered raw staged records, synthetic resources/destinations, objective, explicit per-call authorization/dispatch/consumption/disclosure/handler/result expectations, completion and failure behavior. Golden labels are author inputs; record-construction helpers implement no policy. Validation reuses the unchanged M2 independent assessor to check those inputs, rather than duplicating a detector or constructing another policy engine. The alternative of copying detector transitions was rejected because it would create circularity and semantic drift.
+
+EnvironmentObservations and CallObservation separately hold provenance, forwarding/handler receipts, returned result/bytes, destination-tagged sink bytes, independent consumption witnesses, task output/coverage and audit persistence/closure. No observations are synthesized from the contract plan. Missing inputs retain UNKNOWN/INDETERMINATE/NOT_CHECKED. Explicit empty capture coverage differs from unavailable capture; task/audit closure does not establish capture completeness. Positive handler arrival remains an observed effect even when the plan expected denial.
+
+The five primary axes remain separate. Authorization correctness, decision coverage and unnecessary denial are detector-relative comparisons and therefore stay NOT_CHECKED in this truth-only API; a future downstream comparison may use findings without feeding them back into truth calculation. Actual authorization attribution currently requires an independently supplied **staged** M2-style journal and is labeled SYNTHETIC_REPLAY_NOT_DURABLE_COMMIT_PROOF. Receipt structures can hold environment observations, but no live collector or live authorization adapter was implemented/qualified. With receipts but no independent permission history, sensitive disclosure can be observed while its authorization remains unknown. Disclosure attribution additionally requires agreement of destination and exact sink bytes with that journal.
+
+The nine development contracts cover S1-S6: public/current-event, monotone exposure with an unrelated public transfer, grant/use/revoke, active-unconsumed revoke, revoke/NEW grant/use, grant/revoke/NEW grant/use, failed use/retry, ambiguous reservation and multiple grants/interleaved scopes. These are modeled journals, not nine live runs or final independent research samples. `revocation_boundary_01` pairs grant->revoke->proposal and revoke->NEW grant->proposal with the same task, resource sensitivity, grant identifier, scope, current proposal and objective. Expected authorization is UNAUTHORIZED versus AUTHORIZED. Qualification checks both independent non-order inventories and exact B1-input byte equality on a separate representation path. A denied proposed use is not a committed USE. Grant->use->revoke versus grant->revoke->proposal is covered as lifecycle data, but is not mislabeled an identical-prefix E02 pair.
+
+Dependency inspection and tests establish separate paths:
+
+```text
+authored contract -> unchanged independent M2 assessor -> expected semantic outcomes
+independent receipts/staged journal -> workflows.qualify -> observed effects/unknowns
+history -> existing B0/B1/B2 -> findings -> controller in the applicable execution mode
+```
+
+The last path does not enter either truth path. A fresh-process test qualifies contracts with detector/normalizer/controller modules absent; AST checks inspect oracle/workflow imports; mutation and poisoned-evaluator checks demonstrate independence. Identifier renaming, malformed contracts/receipts and unknown observation handling are covered. No final metrics were calculated. Viva focus: why agreement is not truth, why absent receipts are not negative facts, why authored expectations differ from observed execution, and why synthetic commit witnesses do not qualify M6.
+
 ## Independent oracle and outcome axes
 
 Prewrite fixture contracts and expected effects. Independently retain issued/admitted controls and order, successful control/reservation commit witnesses, raw pre-decision proposals, source observations, forwarding attempts, handler arrivals, destination sink contents/canaries, task outputs and audit persistence/closure observations outside the simulated audit attack surface. Labels cannot come from ChainGuard findings, B2 transitions or audit-only reconstruction. The controller is execution authority, not the oracle.

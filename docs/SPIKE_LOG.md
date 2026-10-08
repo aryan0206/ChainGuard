@@ -12,6 +12,7 @@ Documentation snapshot: 8 October 2026. [Architecture Lock](ARCHITECTURE_LOCK.md
 | 8 October 2026, after initial M4 | Persistence-gate flaw discovered and repaired | SQL acknowledgments could hide missing/altered evidence while forwarding occurred; later seal rejection was too late. Transaction-local schema validation and exact persisted-batch/manifest readback before commit repair the gate. See [AF-001](ADVERSARIAL_FINDINGS.md). Repair baseline: `49aa07b31edc2d77f275ec15e7ae42af02d37065`. |
 | 8 October 2026, after repair | M5 expected-run acceptance completed for review | Durable whole-run acceptance, complete external inventory, duplicate/restart/concurrency protection; 27 tests, 32 package cases and 16 consolidated checks. New-process duplicate rejected as ALREADY_ACCEPTED. README records student review pending; implementation completion does not imply milestone commit approval. |
 | 8 October 2026, Phase 1 | Research-control pivot and approved Astra protocol recorded | Focus: representation sufficiency, useful authorization, independent outcomes, evidence/reproduction/acceptance separation and cost. No novelty or superiority conclusion. E01-E13 are planned, not completed research. |
+| 8 October 2026, Phase 2 | PHASE 2 FOUNDATION COMPLETE: independent workflow/observation qualification | Added a separate workflow layer, nine explicit development contracts covering S1-S6 and focused tests. Reused unchanged M2 assessor for staged contract semantics; environment receipts remain separate and unknowns are preserved. `revocation_boundary_01` has identical B1-input bytes and prewritten opposite authorization labels. No final experiment or live M6 qualification. See protocol and ledger for tests/limits. |
 
 ## Evidence classes and open decisions
 
@@ -22,7 +23,7 @@ The supplied protocol and existing documents disagree on A1/A2 labels, baseline 
 | Future decision | Required record before execution | Status |
 | --- | --- | --- |
 | Protocol freeze / ambiguity resolution | Owner resolution, versions/digests and affected experiment IDs; no silent lock amendment | PLANNED |
-| Fixture and oracle qualification | Independently prewritten labels, commit witnesses, coverage limits, grouped splits | PLANNED |
+| Fixture and oracle qualification | Development foundation complete; live witness qualification, expanded corpus and grouped splits still required | FOUNDATION COMPLETE; FINAL QUALIFICATION PLANNED |
 | Baseline conformance | Locked narrow subset, resolved pin and differential outputs | NOT STARTED |
 | M6 live qualification | Separate implementation authorization; active-unconsumed revoke and one-use cases | NOT STARTED |
 | Held-out freeze and analysis | Frozen rules, actual independent workflow count, raw artifacts and uncertainty method | PLANNED |

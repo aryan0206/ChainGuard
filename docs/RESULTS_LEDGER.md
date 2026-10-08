@@ -23,6 +23,28 @@ Verifier dimensions: schema/lifecycle/sequence; commitment/link integrity; trust
 
 README records Windows x64, CPython 3.14.3, SQLite 3.50.4, MCP 2.3.0 and cryptography 50.0.2 for the existing milestones. These versions were not checked or installed in this phase. README's suite durations are test observations, not E12 benchmarks. Older 35/45/160-test counts are historical checkpoints superseded by the current regression; do not sum them.
 
+### Phase 2 foundation qualification — 8 October 2026
+
+**PHASE 2 FOUNDATION COMPLETE.** This is infrastructure/engineering qualification, not a completed E01-E13 experiment. Added [workflows.py](../chainguard/workflows.py), [workflow_fixtures.py](../tests/workflow_fixtures.py) and [test_workflows.py](../tests/test_workflows.py). Only this ledger, the protocol and spike log receive status updates; other research claims and experiment statuses remain valid.
+
+| Executed check | Actual result | Boundary |
+| --- | --- | --- |
+| New focused tests, initial version | 25 tests in 0.420s, OK, exit 0 | Contract/oracle separation, explicit receipts and matched input qualification |
+| New focused tests, final version | 29 tests in 0.989s, OK, exit 0 | Added destination binding, unreadable sink bytes, fake-live evidence rejection and malformed observation coverage |
+| M1 unchanged regression, isolated rerun | 12 tests in 20.926s, OK, exit 0 | Original discovery/assertions/timeouts unchanged |
+| M2 unchanged regression | 41 tests in 0.585s, OK, exit 0 | Replay-only semantics preserved |
+| M3 unchanged regression | 40 tests in 65.113s, OK, exit 0 | Existing durable/unsealed slice preserved |
+| M4 unchanged regression | 67 tests in 166.955s, OK, exit 0 | Existing signed evidence/verifier tests preserved |
+| M5 unchanged regression | 27 tests in 127.805s, OK, exit 0 | Existing expected-run acceptance tests preserved |
+
+Nine authored **development** contracts cover all six strata. One matched group, `revocation_boundary_01`, checks identical non-order facts and actual B1-input bytes with prewritten UNAUTHORIZED/AUTHORIZED labels. This is a qualification example, not a final E02 research result, held-out validation or a general ordering-effect estimate. All new observation examples are explicitly injected synthetic unittest inputs; no live collector, M6, external baseline or evidence variant was implemented.
+
+Independence checks: fresh process with detector/normalizer/controller imports absent; AST import inspection; altered detector findings and rejected controller/finding annotations; poisoned B2 evaluators; handler/sink receipts contradicting the authored plan; independently supplied consumption observations; unknown and incomplete data retained. Expected labels are checked with unchanged M2 assessor semantics. Its staged witness classification is preserved; receipt inputs are not manufactured from detector or controller outputs. Detector-relative metrics remain NOT_CHECKED in the truth-only foundation.
+
+The initial concurrent M1/M3/M4/M5 run produced an M1 discovery timeout in setUpClass: 3 tests ran, one setup error, exit 1. Diagnosis found unchanged existing sources and tests; all other suites passed. The isolated M1 rerun passed all 12 tests without modifying code, assertions or timeouts. This is consistent with concurrent subprocess load, but does not conclusively identify the timeout's root cause. These test durations are engineering observations, not cost/scaling benchmarks.
+
+Final separately executed suite counts: M1/M2/M3/M4/M5 = 12/41/40/67/27 (187 existing tests), plus 29 new foundation tests = **216 passing tests across the executed suites**. This is an aggregate of suite results, not a new project-wide discovery run, research sample size or count that includes failed/repeated attempts.
+
 ## B. COMPLETED RESEARCH/EXPERIMENTAL RESULTS
 
 No completed final E01-E13 research results are established by the supplied status. Existing fixture checks, mutation checks and package campaigns remain engineering evidence above. No final held-out sample count, effect size, uncertainty interval, comparative superiority or novelty result is recorded.
