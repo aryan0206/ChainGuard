@@ -2,7 +2,7 @@
 
 ChainGuard investigates explainable security analysis of MCP tool-call sequences and independently verifiable evidence of the monitor's observations and decisions. It is an Information Security course project intended to support a reproducible IEEE-style study.
 
-**Status, 8 October 2026:** **ARCHITECTURE LOCKED — ChainGuard Architecture v1.1**. M1, M2 and M3 were accepted, committed and pushed (`3e7f6e8`, `5515b05`, `21d655b`, confirmed in main's history). M2 remains replay-only; M3 implements durable SQLite records and a noncryptographic continuity head. The owner approved the M4 design and implementation. M4 now adds new SHA-256 chained streams, ECDSA P-256 closures and pinned-key offline inspection with deterministic finding reproduction. M4 changes/results await student review and remain uncommitted. M5 durable fresh submission/adversarial evaluation and M6 live grant/revoke/one-use execution remain unimplemented.
+**Status, 8 October 2026:** **ARCHITECTURE LOCKED — ChainGuard Architecture v1.1**. M1–M4 are committed and pushed. The reviewed M4 durability repair is baseline `49aa07b31edc2d77f275ec15e7ae42af02d37065`. M2 remains replay-only; M3 retains its unsealed continuity records; M4 creates separate chained, signed streams. The owner approved M5 implementation: durable complete-run acceptance and adversarial evaluation are implemented below and await student review. M5 changes remain uncommitted and unpushed. M6 live grant/revoke/one-use execution remains unimplemented.
 
 The locked final architecture specifies a local Python MCP stdio proxy, task-scoped events, B0/B1/B2, core grant/revoke/one-use consumption, SQLite, trusted running SHA-256 commitments, ECDSA P-256 signatures, offline verification and independent evaluation. The final study includes B2-R/B2-S checks, the pinned sensitivity-policy reference adaptation and signed-transcript comparison. A minimal report will separate behavioral findings, oracle labels and evidence status.
 
@@ -308,7 +308,7 @@ Inspection freezes package bytes and reports six dimensions independently as `PA
 
 Reproduction uses approved installed B0/B1/B2-R/B2-S code. B0 sees only current facts; B1 receives the exact unordered projection; B2-S incrementally observes eligible facts and is compared with full-prefix B2-R. Only prior committed outcomes and existing storage-level control facts enter history. Findings, controller conclusions, lifecycle, sequence, timestamps and hashes are excluded from behavioral features. Required findings must be present and match versions/digests, authorization, behavior, hypothetical recommendation, rule, references and explanation. The independent oracle remains unchanged and is not called for cryptographic inspection.
 
-This reference verifier requires matching approved source artifacts, Git revision and external configuration. It performs no MCP calls, needs no SQLite database or monitor process, and requires no private key. It currently inspects one session package against an exact singleton inventory; a larger expected inventory cannot pass on one session alone. Repeated inspection is allowed. **Durable fresh complete-run acceptance, duplicate rejection after restart and the full adversarial campaign remain M5. M6 live permission lifecycle and final-study A3T/A4T comparisons remain pending.**
+This reference verifier requires matching approved source artifacts, Git revision and external configuration. It performs no MCP calls, needs no SQLite audit database or monitor process, and requires no private key. Its M4 `inspect_package` entry point inspects one session against an exact singleton inventory; a larger inventory cannot pass on one session alone. Repeated inspection is allowed. M5 adds collection inspection and durable fresh acceptance below. M6 live permission lifecycle and final-study A3T/A4T comparisons remain pending.
 
 ### Run M4
 
@@ -375,8 +375,84 @@ Independent rechecks covered suppressed/deleted inserts, rewritten bytes/hashes,
 
 The initial targeted run passed 25 tests in 57.066s; the finalized targeted run passed all 27. No behavioral assertion failed. Three command-selection errors occurred: two nonexistent smoke-test class names and an M2 module invocation that could not import `m2_fixtures`. Correct test selection and the documented M2 discovery command resolved them without source fixes. Durations are observations, not benchmarks.
 
-The correction is **ready for M4 re-review**. M5 remains blocked pending owner review. These changes are uncommitted and unpushed.
+At the time of this correction report, M4 required re-review and the changes were uncommitted. The owner subsequently completed independent review and authorized synchronization: the correction is committed and pushed as `49aa07b`. M5 was then explicitly approved for implementation.
 
 For the viva: the chain commits ordered canonical facts; the process-owned head prevents replacing live authority with attacker-recomputed SQLite; the final signature authenticates the stated closure under an independently pinned key. Reproduction checks consistency with approved rules, not raw observation truth. Signatures do not prove monitor honesty, complete capture, correct tool behavior, detector correctness, trusted time, universal tamper resistance or novel cryptography. M3 records remain unsealed developmental records.
 
 The supplied paper is a proposal/literature baseline and needs alignment with this design before reporting implementation or results. The final marking rubric and evaluation date still need confirmation. The existing LICENSE contains only a placeholder heading; release readiness requires resolving it separately.
+
+## M5 durable fresh complete-run acceptance
+
+M5 tests whether independently submitted M4 evidence is eligible for one assessor-defined run and whether that run has already been accepted. **No architecture amendment required.** M4 record, manifest, closure, canonicalization, hash domains, signing algorithms and package format are unchanged. The M4 writer and execution durability gate are unchanged. No dependencies were added.
+
+| File | Responsibility |
+| --- | --- |
+| `chainguard/acceptance.py` | Local trusted SQLite expectation/acceptance registry, immutable contexts, exact transactional acceptance, duplicate and terminal-state rejection. |
+| `chainguard/verifier.py` | Existing singleton `inspect_package`, plus `inspect_run` over a collection of unchanged packages bound to the full external inventory. Inspection consumes nothing. |
+| `chainguard/m5.py` | Explicit registry administration, frozen file submission in a separate process, and the controlled adversarial campaign. |
+| `chainguard/m4.py` | Optional trusted assessor callback: confirmed expectation registration after monitor launch, before bootstrap or MCP input. Its default demo behavior is preserved. |
+| `tests/m5_fixtures.py`, `tests/test_m5.py` | Declared acceptance labels, synthetic signed multi-session fixtures, real SQLite failures, concurrency, restart and campaign checks. |
+| `tests/test_m4.py` | Inspection's freshness marker now says `NOT_CHECKED`; singleton completeness checks are retained. |
+
+### Trusted registry and transaction
+
+The assessor owns the registry, expected run/challenge, exact task/session/monitor inventory, external public-key pins and configuration. Submitted packages cannot register or revise expectations. Registration must durably commit **before execution**. The live campaign enforces this using the trusted launch callback; failed registration supplies no bootstrap/tool input. Administrative CLI commands are trusted assessor operations, not an input channel from evidence.
+
+The registry has `expected_runs` (unique run ID, unique challenge, canonical inventory and its digest, canonical configuration, canonical public-key pins, lifecycle state) and `accepted_sessions` (run/session primary key, canonical authenticated M4 commitment and its digest). No private keys, execution authority, grants or client state are stored. The whole-run acceptance identity is `(run_id, challenge, expected_inventory_digest)`. Per-session digests use the existing M4 domain-separated commitment signing input, with no new aggregate commitment or evidence format.
+
+Acceptance freezes bytes once, loads the immutable context, and independently inspects every session. Full expected inventory is retained during every session's binding check. Missing sessions are incomplete; duplicates and extra associations fail. Every required dimension must PASS. Verification failure takes precedence over INCOMPLETE; otherwise required INCOMPLETE or NOT_CHECKED prevents acceptance. Behavioral verdicts are not an acceptance criterion: valid evidence of a violation is eligible under this contract, though the live demonstration remains the supported non-release M4 slice.
+
+After verification, one `BEGIN IMMEDIATE` transaction rechecks the exact expectation is unchanged and ACTIVE, writes **all** authenticated session commitments, and transitions the run to ACCEPTED. Schema/durability settings and exact stored identity/commitment bytes/digests are checked; row counts or SQL acknowledgments alone are insufficient. Only confirmed COMMIT with no remaining transaction reports `ACCEPTED`. SQLite uses DELETE journal, FULL synchronous and foreign keys. Write/readback failures roll back without consuming the run. Concurrent submissions can accept it only once.
+
+Registry COMMIT ambiguity reports `NOT_CHECKED`, `REGISTRY_COMMIT_AMBIGUOUS`, durability `UNKNOWN`, closes the connection, and performs no automatic retry. An explicit reopened retry reconciles durable state: ACCEPTED rejects with `ALREADY_ACCEPTED`; ACTIVE requires fresh verification and may accept. Execution COMMIT ambiguity retains M4's stricter halt/no-forward/no-retry behavior. CANCELLED/FAILED runs are terminal; replacement requires a new run/challenge and independently registered full inventory. Changing signature bytes cannot create fresh identity.
+
+Opening a missing registry does not create it. Initialization refuses an existing file. Corrupt schema, unsafe connection settings, partial acceptance or inconsistent accepted commitments fail closed. These checks diagnose unavailable state; they do not defend rollback of the independently trusted registry. Restart never resumes monitor execution or permissions. Repeat inspection of previously accepted evidence remains allowed.
+
+### Campaign coverage and reproducibility
+
+The declared mutation matrix has 32 cases, including the intact positive control. It covers identity/challenge/inventory/configuration changes, record/manifest/closure/signature mutation, wrong or unknown signer, recomputed chains with old or untrusted signatures, truncation/missing records/closure/signature, insertion/reordering/sequence/predecessor/hash changes, malformed/noncanonical/deeply nested input and unknown versions. A newly trusted-signed incorrect finding passes the other five dimensions and fails independent finding reproduction.
+
+Sixteen consolidated checks reuse actual M4 pre-seal reconciliation, unresolved-outcome refusal, audit-write and ambiguous-execution-commit forwarding refusal, export failure and closed-stream refusal, plus M5 old-context/wrong-pin/re-signed-duplicate/terminal-context cases, missing-registry refusal, both registry ambiguity outcomes, concurrent processes and complete/partial multi-session acceptance. Thus the original 40 requested scenarios are covered by transformations and lifecycle families, without claiming 40 distinct new unit tests. Multi-session checks cover missing, repeated and additional sessions, order-independent collection submission, and atomic rollback of a partial write. Package session order does not change each session's signed event order.
+
+Mutation expectations are predeclared by transformation, not computed from detector/verifier outputs. Synthetic multi-session fixtures use real typed SQLite streams and independently signed M4-format snapshots; they do not add a live multi-session exporter. The live run remains singleton success/error/success. Campaign measurements count false acceptance/rejection only against the declared mutation labels; they do not measure arbitrary adversaries or detector accuracy. The separate consolidated tests report their own pass/fail. `elapsed_seconds` covers submission plus the synthetic/consolidated campaign after live export, not pure acceptance latency or a benchmark.
+
+```powershell
+.\.venv\Scripts\python.exe -B -m unittest discover -s tests -p test_m5.py -v
+.\.venv\Scripts\python.exe -B -m unittest discover -s tests -v
+.\.venv\Scripts\python.exe -B -m chainguard.m5 campaign
+
+# Retain a fresh local campaign outside the repository for student inspection.
+$taskM5Directory = Join-Path $env:TEMP ("chainguard-m5-review-" + [guid]::NewGuid())
+.\.venv\Scripts\python.exe -B -m chainguard.m5 campaign --directory $taskM5Directory
+# Each additional accept process rejects the already accepted run.
+$taskM5Run = (Get-Content "$taskM5Directory\live\expected.json" | ConvertFrom-Json).run_id
+.\.venv\Scripts\python.exe -B -m chainguard.m5 accept --registry "$taskM5Directory\acceptance.sqlite" --run-id $taskM5Run --package "$taskM5Directory\live\evidence.json"
+```
+
+Acceptance exits 0 only for ACCEPTED; rejected, incomplete or unavailable submissions exit 2 and emit a structured result. Trusted administration is available through `init`, `register` and `terminate`; `register` takes external `--expected`, `--config`, `--public-key` and `--key-id`. Registration cannot be retroactively presented as pre-execution expectation. The default campaign deletes temporary artifacts; an explicit directory retains demonstration keys outside Git. Campaign generation uses the project's trusted fixture/test modules; normal acceptance does not import them.
+
+The registry assumes trusted assessor code/storage outside audit attacker authority and SQLite/filesystem durability. It is local, with logical rather than OS privilege isolation. Matching installed M4 source/configuration remains required: packages from a different code revision/configuration are not automatically migrated. M5 code belongs to the trusted assessor runtime; no M5 artifact fields were added to the signed M4 format. There is no continuous post-acceptance monitoring or guarantee of raw observation truth. The independent M2 oracle is unchanged. M6, the external baseline, new detectors, transports and services remain outside this implementation.
+
+### Actual M5 validation — 8 October 2026
+
+| Executed check | Actual result |
+| --- | --- |
+| Final complete M5 suite | **27 tests in 94.748s — OK**, exit 0 |
+| Complete M4 regression | **67 tests in 111.632s — OK**, exit 0 |
+| Complete M3 regression | **40 tests in 38.407s — OK**, exit 0 |
+| Complete M2 regression | **41 tests in 0.459s — OK**, exit 0 |
+| Complete M1 regression | **12 tests in 44.293s — OK**, exit 0 |
+| Project-wide discovery | **187 tests in 199.498s — OK**, exit 0 |
+| Standalone adversarial campaign | **32/32 declared package cases and 16/16 consolidated checks passed**; zero false acceptances/rejections in the declared package matrix; submission/campaign phase 26.990s |
+| Real M4 within M5 campaign | Success/error/success, handler IDs 3/4/5; **26 records / 8 confirmed transactions** |
+| Separate-process offline inspection | Exit 0 after monitor termination; all six dimensions PASS; **12 findings reproduced / 3 B2-agreeing prefixes** |
+| Separate-process fresh acceptance/restart | First process ACCEPTED, exit 0; new process REJECTED / ALREADY_ACCEPTED, exit 2; same durable acceptance identity |
+| Diff review | Tracked diff and all four new files inspected; `git diff --check`, new-file syntax and whitespace checks passed; locked documents, writer/crypto definitions and M2 detector/oracle compared unchanged with HEAD |
+
+The first M5 run executed 25 tests in 53.631s and had two failing assertions from one incorrect fixture label, also used by the campaign check. Removing the final record leaves inventory completeness INCOMPLETE **and** breaks the original signed count/head, so M4 reports commitment integrity FAIL and fresh submission correctly returns REJECTED. The expected transformation label was corrected to reflect FAIL precedence; M4 verification behavior was not changed. The next 27-test run passed in 54.665s. Consolidated campaign expansion and deeply nested malformed-input coverage then passed in the final 27-test run above. Independent regressions overlapped; durations are observations, not performance benchmarks.
+
+The 187 project-wide count is unittest discovery's top-level count. The M5 campaign test additionally executes its 16 consolidated checks; those are reported separately rather than added to discovery's count. Synthetic multi-session evidence is explicitly separate from the real singleton flow. The retained external standalone report is `campaign-report.json` in the generated review directory; no fixture databases, packages or private keys were added to Git.
+
+M5 is ready for student review. HEAD and origin/main remain `49aa07b31edc2d77f275ec15e7ae42af02d37065`; there are four modified and four new unstaged files, no staged changes, no commit and no push. The Architecture Lock is unchanged. M6 remains mandatory final-project work and was not started.
+
+For the viva: immutable pre-execution expectations prevent a valid old bundle choosing its own new context; full inventory prevents accepting one valid session while another is missing; the registry transaction makes complete-run acceptance atomic and durable. Signature bytes are unsuitable replay identities because ECDSA can sign the same commitment differently. A failed registry acknowledgment requires explicit reconciliation, while an ambiguous execution acknowledgment must halt without forwarding or replay. Acceptance authenticates eligible evidence and checks reproducibility; it does not certify benign behavior or raw observation truth.

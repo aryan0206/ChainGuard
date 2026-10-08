@@ -199,7 +199,7 @@ class M4Tests(unittest.TestCase):
     def test_repeated_inspection_does_not_consume_expectation(self):
         package = self.package()
         self.assertEqual(self.inspect(package), self.inspect(package))
-        self.assertEqual(self.inspect(package)["fresh_submission"], "NOT_IMPLEMENTED_M5")
+        self.assertEqual(self.inspect(package)["fresh_submission"], "NOT_CHECKED")
 
     def test_hashes_and_both_trusted_heads_agree_after_confirmed_commit(self):
         observed = []

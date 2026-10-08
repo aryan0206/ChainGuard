@@ -76,7 +76,7 @@ def proxy(database, output, private_path, public_path, key_id):
             session.close()
 
 
-def execute_demo(directory):
+def execute_demo(directory, register_expected=None):
     """Prewritten real success/error/success; expected context precedes execution."""
     directory = Path(directory).resolve()
     _require(not directory.is_relative_to(ROOT), "Fixture artifacts/private key must be outside repository")
@@ -128,6 +128,9 @@ def execute_demo(directory):
             # Independently register the launched monitor and immutable expectations BEFORE input.
             expected_path.write_bytes(encode(inventory))
             config_path.write_bytes(encode(config))
+            if register_expected is not None:
+                # Trusted assessor hook; confirmed registration precedes bootstrap/tool input.
+                register_expected(inventory, config, {KEY_ID: load_public(public_path)})
             manifest = make_manifest(inventory, config, task_id, session_id, launch["monitor_instance_id"])
             process.stdin.write(encode({"manifest": manifest, "inventory": inventory}) + b"\n")
             process.stdin.write(b"".join(json.dumps(r).encode("utf-8") + b"\n" for r in requests))

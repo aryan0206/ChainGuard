@@ -1,4 +1,4 @@
-"""Repeatable M4 offline inspection. Durable fresh submission remains M5.
+"""Repeatable offline session and whole-run inspection; no acceptance writes.
 
 Only external expectations, approved installed code/configuration and pinned
 public keys are trust inputs. Inspection never executes or reconnects tools.
@@ -71,9 +71,9 @@ def reproduce_findings(manifest, entries):
     return {"proposals": proposals, "findings_reproduced": reproduced, "b2_agreeing_prefixes": prefixes}
 
 
-def inspect_package(package_bytes, inventory, expected_config, pinned_keys):
+def _inspect_session(package_bytes, inventory, expected_config, pinned_keys, singleton):
     """Freeze bytes once and report dimensions independently, without accepting a run."""
-    report = {"mode": "INSPECT", "fresh_submission": "NOT_IMPLEMENTED_M5",
+    report = {"mode": "INSPECT", "fresh_submission": "NOT_CHECKED",
               "inspection_passed": False,
               "dimensions": {name: {"status": "NOT_CHECKED", "reason": "Prerequisite unavailable"}
                              for name in DIMENSIONS}}
@@ -149,10 +149,11 @@ def inspect_package(package_bytes, inventory, expected_config, pinned_keys):
             _require(len(entries) == closure["record_count"] == closure["final_seq"], "Extra records or closure sequence/count mismatch")
             if not bound:
                 result("inventory_completeness", "NOT_CHECKED", "External context binding failed")
-            elif len(inventory["sessions"]) != 1:
+            elif singleton and len(inventory["sessions"]) != 1:
                 raise IncompleteEvidence("This session package does not contain every independently expected session")
             else:
-                result("inventory_completeness", "PASS", "Complete signed stream and exact singleton expected inventory")
+                result("inventory_completeness", "PASS", "Complete signed session" +
+                       (" and exact singleton expected inventory" if singleton else "; whole-run inventory checked separately"))
         except IncompleteEvidence as exc:
             result("inventory_completeness", "INCOMPLETE", str(exc))
         except Exception as exc:
@@ -167,6 +168,52 @@ def inspect_package(package_bytes, inventory, expected_config, pinned_keys):
             result("finding_reproduction", "FAIL", str(exc))
     report["inspection_passed"] = all(d["status"] == "PASS" for d in report["dimensions"].values())
     return report
+
+
+def inspect_package(package_bytes, inventory, expected_config, pinned_keys):
+    """Preserve M4 singleton inspection: repeatable and never consumes expectations."""
+    return _inspect_session(package_bytes, inventory, expected_config, pinned_keys, True)
+
+
+def inspect_run(package_snapshots, inventory, expected_config, pinned_keys):
+    """Inspect unchanged M4 packages against the FULL external inventory.
+
+    Session-local completeness cannot establish whole-run completeness. Never
+    shrink the inventory to make one session's signed binding pass.
+    """
+    snapshots = tuple(package_snapshots)
+    validate_inventory(inventory)
+    reports = [_inspect_session(data, inventory, expected_config, pinned_keys, False) for data in snapshots]
+    associations = []
+    for data in snapshots:
+        try:
+            manifest = decode(data)["manifest"]
+            association = tuple(manifest[k] for k in IDENTITY_KEYS[1:])
+            _require(all(type(value) is str for value in association), "Invalid session association")
+            associations.append(association)
+        except Exception:
+            associations.append(None)
+    required = {tuple(entry[k] for k in IDENTITY_KEYS[1:]) for entry in inventory["sessions"]}
+    present = set(associations)
+    if None in present or len(present) != len(associations) or present - required:
+        completeness = {"status": "FAIL", "reason": "Invalid, duplicate or additional session association"}
+    elif required - present:
+        completeness = {"status": "INCOMPLETE", "reason": "Missing independently expected session"}
+    else:
+        completeness = {"status": "PASS", "reason": "Every independently expected session present exactly once"}
+    dimensions = {}
+    for name in DIMENSIONS:
+        values = [report["dimensions"][name]["status"] for report in reports]
+        if name == "inventory_completeness":
+            values.append(completeness["status"])
+        status = next((s for s in ("FAIL", "INCOMPLETE", "NOT_CHECKED") if s in values),
+                      "PASS" if values else "NOT_CHECKED")
+        reason = "Aggregated independent session checks"
+        if name == "inventory_completeness":
+            reason = completeness["reason"] + "; session closure completeness: " + status
+        dimensions[name] = {"status": status, "reason": reason}
+    return {"mode": "INSPECT_RUN", "fresh_submission": "NOT_CHECKED", "sessions": reports,
+            "dimensions": dimensions, "inspection_passed": all(d["status"] == "PASS" for d in dimensions.values())}
 
 
 def main():
