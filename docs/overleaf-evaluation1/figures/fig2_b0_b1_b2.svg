@@ -1,0 +1,116 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="7.16in" height="5.5421in" viewBox="0 0 1040 805" role="img" aria-labelledby="title desc">
+<title id="title">B0 / B1 / B2 Representation Comparison</title><desc id="desc">Same current proposal with current-only, conservative unordered and ordered representations. Histories are schematic, conditional on valid lifecycle and identical non-order projection; no performance or label difference is asserted.</desc>
+<defs><marker id="arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L8 4 L0 8 Z" fill="#333"/></marker></defs>
+<style>text{font-family:Arial,Helvetica,sans-serif;font-size:19px;fill:#111} .bold{font-weight:600} .small{font-size:18px} .tiny{font-size:17px} rect,line,path{vector-effect:non-scaling-stroke} .arrow{fill:none;stroke:#333;stroke-width:1;marker-end:url(#arrow)} .dashed{stroke-dasharray:4 4}</style>
+<rect width="1040" height="805" fill="#fff"/>
+<rect x="259" y="20" width="522" height="53" fill="#fff" stroke="#333" stroke-width="1"/>
+<text x="520.0" y="52.5" text-anchor="middle">
+<tspan x="520.0" dy="0">Same proposed MCP operation c_t + static policy</tspan>
+</text>
+<path d="M520 73 L520 96" class="arrow"/>
+<line x1="177" y1="96" x2="861" y2="96" stroke="#777" stroke-width="1"/>
+<path d="M177 96 L177 119" class="arrow"/>
+<path d="M519 96 L519 119" class="arrow"/>
+<path d="M861 96 L861 119" class="arrow"/>
+<rect x="20" y="119" width="316" height="232" fill="#fff" stroke="#333" stroke-width="1"/>
+<rect x="362" y="119" width="316" height="232" fill="#fff" stroke="#333" stroke-width="1"/>
+<rect x="704" y="119" width="316" height="232" fill="#fff" stroke="#333" stroke-width="1"/>
+<text x="178" y="149" text-anchor="middle" class="bold">
+<tspan x="178" dy="0">B0: current event only</tspan>
+</text>
+<text x="40" y="186" text-anchor="start">
+<tspan x="40" dy="0">Current normalized features</tspan>
+<tspan x="40" dy="29">Frozen direct-content checks</tspan>
+<tspan x="40" dy="29">Static destination policy</tspan>
+<tspan x="40" dy="29"></tspan>
+<tspan x="40" dy="29">No historical state</tspan>
+</text>
+<text x="520" y="149" text-anchor="middle" class="bold">
+<tspan x="520" dy="0">B1: unordered prefix</tspan>
+</text>
+<text x="382" y="186" text-anchor="start" class="small">
+<tspan x="382" dy="0">Approved category / scope facts</tspan>
+<tspan x="382" dy="27">Successful exposure counts</tspan>
+<tspan x="382" dy="27">Scoped grant/revoke/use counts</tspan>
+<tspan x="382" dy="27"></tspan>
+<tspan x="382" dy="27">Remove IDs, ordering, timestamps,</tspan>
+<tspan x="382" dy="27">active-state flags and transitions</tspan>
+</text>
+<text x="862" y="149" text-anchor="middle" class="bold">
+<tspan x="862" dy="0">B2: ordered stateful history</tspan>
+</text>
+<text x="724" y="186" text-anchor="start" class="small">
+<tspan x="724" dy="0">Ordered eligible semantic facts</tspan>
+<tspan x="724" dy="27">Grant / use / revoke / regrant</tspan>
+<tspan x="724" dy="27">Lifecycle and order retained</tspan>
+<tspan x="724" dy="27"></tspan>
+<tspan x="724" dy="27">Ordered state affects</tspan>
+<tspan x="724" dy="27">authorization evaluation</tspan>
+</text>
+<text x="520" y="383" text-anchor="middle" class="bold">
+<tspan x="520" dy="0">Illustrative order-sensitive lifecycle example</tspan>
+</text>
+<text x="23" y="434" text-anchor="start">
+<tspan x="23" dy="0">History A</tspan>
+</text>
+<rect x="145" y="403" width="161" height="48" fill="#fff" stroke="#333" stroke-width="1"/>
+<text x="225.5" y="433.0" text-anchor="middle" class="small">
+<tspan x="225.5" dy="0">GRANT</tspan>
+</text>
+<path d="M306 427 L342 427" class="arrow"/>
+<rect x="342" y="403" width="161" height="48" fill="#fff" stroke="#333" stroke-width="1"/>
+<text x="422.5" y="433.0" text-anchor="middle" class="small">
+<tspan x="422.5" dy="0">USE</tspan>
+</text>
+<path d="M503 427 L539 427" class="arrow"/>
+<rect x="539" y="403" width="161" height="48" fill="#fff" stroke="#333" stroke-width="1"/>
+<text x="619.5" y="433.0" text-anchor="middle" class="small">
+<tspan x="619.5" dy="0">REVOKE</tspan>
+</text>
+<path d="M700 427 L736 427" class="arrow"/>
+<rect x="736" y="403" width="260" height="48" fill="#fff" stroke="#333" stroke-width="1"/>
+<text x="866.0" y="433.0" text-anchor="middle" class="small">
+<tspan x="866.0" dy="0">PROPOSE RELEASE</tspan>
+</text>
+<text x="23" y="498" text-anchor="start">
+<tspan x="23" dy="0">History B</tspan>
+</text>
+<rect x="145" y="467" width="161" height="48" fill="#fff" stroke="#333" stroke-width="1"/>
+<text x="225.5" y="497.0" text-anchor="middle" class="small">
+<tspan x="225.5" dy="0">GRANT</tspan>
+</text>
+<path d="M306 491 L342 491" class="arrow"/>
+<rect x="342" y="467" width="161" height="48" fill="#fff" stroke="#333" stroke-width="1"/>
+<text x="422.5" y="497.0" text-anchor="middle" class="small">
+<tspan x="422.5" dy="0">REVOKE</tspan>
+</text>
+<path d="M503 491 L539 491" class="arrow"/>
+<rect x="539" y="467" width="161" height="48" fill="#fff" stroke="#333" stroke-width="1"/>
+<text x="619.5" y="497.0" text-anchor="middle" class="small">
+<tspan x="619.5" dy="0">USE</tspan>
+</text>
+<path d="M700 491 L736 491" class="arrow"/>
+<rect x="736" y="467" width="260" height="48" fill="#fff" stroke="#333" stroke-width="1"/>
+<text x="866.0" y="497.0" text-anchor="middle" class="small">
+<tspan x="866.0" dy="0">PROPOSE RELEASE</tspan>
+</text>
+<rect x="20" y="542" width="486" height="105" fill="#fff" stroke="#333" stroke-width="1"/>
+<text x="263.0" y="575.5" text-anchor="middle" class="small">
+<tspan x="263.0" dy="0">B1 can receive byte-identical inputs</tspan>
+<tspan x="263.0" dy="25">only when current call and the complete locked</tspan>
+<tspan x="263.0" dy="25">non-order projection are identical.</tspan>
+</text>
+<rect x="534" y="542" width="486" height="105" fill="#fff" stroke="#333" stroke-width="1"/>
+<text x="777.0" y="575.5" text-anchor="middle" class="small">
+<tspan x="777.0" dy="0">B2 retains the transition order and can</tspan>
+<tspan x="777.0" dy="25">distinguish lifecycle evolution; final permission</tspan>
+<tspan x="777.0" dy="25">states and independent labels may still agree.</tspan>
+</text>
+<rect x="20" y="670" width="1000" height="113" fill="#fafafa" stroke="#333" stroke-width="1"/>
+<text x="40" y="695" text-anchor="start" class="small">
+<tspan x="40" dy="0">Validity first: a post-revoke USE requires a valid available / NEW grant for its exact scope.</tspan>
+<tspan x="40" dy="25">The synthetic observation override has an empty selection and generates no USE.</tspan>
+<tspan x="40" dy="25">These strings alone establish neither valid matching nor opposite labels.</tspan>
+<tspan x="40" dy="25">Independent fixture / oracle labels determine whether the distinction is correct.</tspan>
+</text>
+</svg>

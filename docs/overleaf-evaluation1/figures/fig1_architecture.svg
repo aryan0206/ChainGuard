@@ -1,0 +1,151 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="7.16in" height="6.1962in" viewBox="0 0 1040 900" role="img" aria-labelledby="title desc">
+<title id="title">ChainGuard System Architecture</title><desc id="desc">Current controlled local MCP stdio path, independent fixture oracle and later M4/M5 checks. Live surface is public and non-release; lifecycle/sink scenarios are replay-only.</desc>
+<defs><marker id="arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L8 4 L0 8 Z" fill="#333"/></marker></defs>
+<style>text{font-family:Arial,Helvetica,sans-serif;font-size:19px;fill:#111} .bold{font-weight:600} .small{font-size:18px} .tiny{font-size:17px} rect,line,path{vector-effect:non-scaling-stroke} .arrow{fill:none;stroke:#333;stroke-width:1;marker-end:url(#arrow)} .dashed{stroke-dasharray:4 4}</style>
+<rect width="1040" height="900" fill="#fff"/>
+<text x="253" y="27" text-anchor="middle" class="bold">
+<tspan x="253" dy="0">Current mediated execution</tspan>
+</text>
+<text x="773" y="27" text-anchor="middle" class="bold">
+<tspan x="773" dy="0">Independent assessment / evidence</tspan>
+</text>
+<rect x="36" y="47" width="434" height="47" fill="#fff" stroke="#333" stroke-width="1"/>
+<text x="253.0" y="76.5" text-anchor="middle">
+<tspan x="253.0" dy="0">MCP Client (scripted)</tspan>
+</text>
+<path d="M253 94 L253 119" class="arrow"/>
+<text x="301" y="112" text-anchor="start" class="small">
+<tspan x="301" dy="0">stdio</tspan>
+</text>
+<rect x="20" y="119" width="466" height="277" fill="#fafafa" stroke="#333" stroke-width="1"/>
+<text x="253" y="147" text-anchor="middle" class="bold">
+<tspan x="253" dy="0">ChainGuard mediation / proxy</tspan>
+</text>
+<rect x="36" y="163" width="434" height="53" fill="#fff" stroke="#333" stroke-width="1"/>
+<text x="253.0" y="195.5" text-anchor="middle">
+<tspan x="253.0" dy="0">Event normalizer + task/session tracker</tspan>
+</text>
+<line x1="253" y1="216" x2="253" y2="227" stroke="#777" stroke-width="1"/>
+<line x1="105" y1="227" x2="401" y2="227" stroke="#777" stroke-width="1"/>
+<path d="M105 227 L105 239" class="arrow"/>
+<path d="M253 227 L253 239" class="arrow"/>
+<path d="M401 227 L401 239" class="arrow"/>
+<rect x="36" y="239" width="138" height="66" fill="#fff" stroke="#333" stroke-width="1"/>
+<text x="105.0" y="265.5" text-anchor="middle" class="small">
+<tspan x="105.0" dy="0">B0</tspan>
+<tspan x="105.0" dy="25">current event</tspan>
+</text>
+<rect x="184" y="239" width="138" height="66" fill="#fff" stroke="#333" stroke-width="1"/>
+<text x="253.0" y="265.5" text-anchor="middle" class="small">
+<tspan x="253.0" dy="0">B1</tspan>
+<tspan x="253.0" dy="25">unordered</tspan>
+</text>
+<rect x="332" y="239" width="138" height="66" fill="#fff" stroke="#333" stroke-width="1"/>
+<text x="401.0" y="265.5" text-anchor="middle" class="small">
+<tspan x="401.0" dy="0">B2</tspan>
+<tspan x="401.0" dy="25">ordered history</tspan>
+</text>
+<text x="253" y="330" text-anchor="middle" class="small">
+<tspan x="253" dy="0">B0 / B1 / B2 shadow findings</tspan>
+</text>
+<text x="253" y="355" text-anchor="middle" class="small">
+<tspan x="253" dy="0">B2-R / B2-S evaluated on eligible prefixes</tspan>
+</text>
+<text x="253" y="381" text-anchor="middle" class="tiny">
+<tspan x="253" dy="0">One shared committed history; shadows do not dispatch</tspan>
+</text>
+<path d="M253 396 L253 422" class="arrow"/>
+<rect x="36" y="422" width="434" height="70" fill="#fff" stroke="#333" stroke-width="1"/>
+<text x="253.0" y="450.5" text-anchor="middle">
+<tspan x="253.0" dy="0">Controller / dispatch decision</tspan>
+<tspan x="253.0" dy="25">Current slice: supported non-release calls</tspan>
+</text>
+<path d="M253 492 L253 518" class="arrow"/>
+<rect x="36" y="518" width="434" height="83" fill="#fff" stroke="#333" stroke-width="1"/>
+<text x="253.0" y="540.5" text-anchor="middle" class="small">
+<tspan x="253.0" dy="0">Durable audit / evidence persistence</tspan>
+<tspan x="253.0" dy="25">SQLite exact batch + confirmed COMMIT</tspan>
+<tspan x="253.0" dy="25">Trusted state advance + admission receipt</tspan>
+</text>
+<path d="M253 601 L253 630" class="arrow"/>
+<text x="299" y="621" text-anchor="start" class="tiny">
+<tspan x="299" dy="0">allowed + durably admitted</tspan>
+</text>
+<rect x="36" y="630" width="434" height="63" fill="#fff" stroke="#333" stroke-width="1"/>
+<text x="253.0" y="655.0" text-anchor="middle">
+<tspan x="253.0" dy="0">Controlled MCP server</tspan>
+<tspan x="253.0" dy="25">echo / controlled_failure</tspan>
+</text>
+<path d="M253 693 L253 719" class="arrow"/>
+<rect x="36" y="719" width="434" height="47" fill="#fff" stroke="#333" stroke-width="1"/>
+<text x="253.0" y="748.5" text-anchor="middle">
+<tspan x="253.0" dy="0">Tool execution</tspan>
+</text>
+<path d="M36 742 L9 742 L9 188 L36 188" class="arrow"/>
+<text x="253" y="796" text-anchor="middle" class="small">
+<tspan x="253" dy="0">Correlated result → separate durable outcome append</tspan>
+</text>
+<text x="253" y="821" text-anchor="middle" class="small">
+<tspan x="253" dy="0">→ semantic history update → client response</tspan>
+</text>
+<rect x="552" y="47" width="466" height="84" fill="#fff" stroke="#333" stroke-width="1"/>
+<text x="785.0" y="70.0" text-anchor="middle" class="small">
+<tspan x="785.0" dy="0">Prewritten fixture contracts</tspan>
+<tspan x="785.0" dy="25">Independent journals / receipts</tspan>
+<tspan x="785.0" dy="25">Outside simulated audit-storage attack surface</tspan>
+</text>
+<path d="M785 131 L785 158" class="arrow dashed"/>
+<rect x="552" y="158" width="466" height="224" fill="#fff" stroke="#333" stroke-width="1"/>
+<text x="785" y="186" text-anchor="middle" class="bold">
+<tspan x="785" dy="0">Independent Oracle</tspan>
+</text>
+<text x="574" y="216" text-anchor="start" class="small">
+<tspan x="574" dy="0">• Pre-decision authorization expectation</tspan>
+<tspan x="574" dy="25">• Forwarding attempt / handler arrival</tspan>
+<tspan x="574" dy="25">• Permission consumption witnesses</tspan>
+<tspan x="574" dy="25">• Disclosure / destination sink contents</tspan>
+<tspan x="574" dy="25">• Fixture-defined task completion</tspan>
+<tspan x="574" dy="25">• Audit persistence / closure, where observed</tspan>
+</text>
+<text x="785" y="408" text-anchor="middle" class="tiny">
+<tspan x="785" dy="0">Oracle labels assess outcomes; they do not feed detectors.</tspan>
+</text>
+<text x="785" y="431" text-anchor="middle" class="tiny">
+<tspan x="785" dy="0">The oracle has no enforcement / forwarding role.</tspan>
+</text>
+<path d="M470 540 L521 540 L552 540" class="arrow dashed"/>
+<text x="785" y="469" text-anchor="middle" class="bold">
+<tspan x="785" dy="0">M4: committed evidence and clean closure</tspan>
+</text>
+<rect x="552" y="489" width="466" height="66" fill="#fff" stroke="#333" stroke-width="1"/>
+<text x="785.0" y="515.5" text-anchor="middle" class="small">
+<tspan x="785.0" dy="0">Canonical records + manifest</tspan>
+<tspan x="785.0" dy="25">SHA-256 hash chain</tspan>
+</text>
+<path d="M785 555 L785 577" class="arrow"/>
+<rect x="552" y="577" width="466" height="63" fill="#fff" stroke="#333" stroke-width="1"/>
+<text x="785.0" y="602.0" text-anchor="middle" class="small">
+<tspan x="785.0" dy="0">Exact snapshot ↔ frozen trusted count/head</tspan>
+<tspan x="785.0" dy="25">ECDSA P-256/SHA-256 closure</tspan>
+</text>
+<path d="M785 640 L785 662" class="arrow"/>
+<rect x="552" y="662" width="466" height="65" fill="#fff" stroke="#333" stroke-width="1"/>
+<text x="785.0" y="688.0" text-anchor="middle" class="small">
+<tspan x="785.0" dy="0">Offline verification + finding reproduction</tspan>
+<tspan x="785.0" dy="25">Independent key / configuration pins</tspan>
+</text>
+<path d="M785 727 L785 749" class="arrow"/>
+<rect x="552" y="749" width="466" height="75" fill="#fff" stroke="#333" stroke-width="1"/>
+<text x="785.0" y="767.5" text-anchor="middle" class="small">
+<tspan x="785.0" dy="0">M5: expected-run acceptance</tspan>
+<tspan x="785.0" dy="25">External challenge + exact inventory</tspan>
+<tspan x="785.0" dy="25">Durable acceptance registry</tspan>
+</text>
+<line x1="20" y1="844" x2="1018" y2="844" stroke="#777" stroke-width="1"/>
+<text x="520" y="870" text-anchor="middle" class="small">
+<tspan x="520" dy="0">Current live surface: public non-release calls; grant/use/revoke and sink fixtures are replay-only.</tspan>
+</text>
+<text x="520" y="894" text-anchor="middle" class="small">
+<tspan x="520" dy="0">M6 live lifecycle remains pending. Authenticated evidence and acceptance do not prove real-world truth.</tspan>
+</text>
+</svg>
