@@ -357,6 +357,106 @@ os._exit(23)
         self.assertEqual([f.outcome for f in reconstruct_history(self.rows())], ["succeeded"])
 
 
+class DurabilityGateTests(unittest.TestCase):
+    def setUp(self):
+        self.directory = TemporaryDirectory(prefix="m3-durability-")
+        self.path = Path(self.directory.name) / "audit.sqlite"
+        self.receipts = []
+        self.session = new_session(self.path, self.receipts.append)
+
+    def tearDown(self):
+        self.session.close()
+        self.directory.cleanup()
+
+    def assert_failed_without_advancement(self, action):
+        before, receipts, history = self.session.state, list(self.receipts), self.session.history
+        with self.assertRaises(AuditError):
+            action()
+        self.assertEqual(self.session.state.count, before.count)
+        self.assertEqual(self.session.state.head, before.head)
+        self.assertEqual(self.session.history, history)
+        self.assertEqual(self.receipts, receipts)
+        self.assertEqual(self.session.state.failure, "ROLLED_BACK")
+        self.assertFalse(self.session._connection.in_transaction)
+        self.assertEqual(len(read_records(self.path, self.session.identity["session_id"])), before.count)
+
+    def test_silent_suppression_schema_is_rejected(self):
+        with closing(sqlite3.connect(self.path)) as connection:
+            connection.execute("""CREATE TRIGGER ignore_intent BEFORE INSERT ON audit_records
+                WHEN NEW.event_type='DISPATCH_INTENT' BEGIN SELECT RAISE(IGNORE); END""")
+        self.assert_failed_without_advancement(lambda: LiveAudit(self.session).before(request()))
+
+    def test_exact_bytes_readback_failure_rolls_back_noncryptographic_batch(self):
+        insert = self.session._insert_prepared
+
+        def rewrite(rows):
+            insert(rows)
+            event = decode(rows[-1][8])
+            event["observed_at_utc"] = "2099-01-01T00:00:00Z"
+            self.session._connection.execute("UPDATE audit_records SET record_bytes=? WHERE seq=?",
+                                             (encode(event), rows[-1][1]))
+
+        with patch.object(self.session, "_insert_prepared", side_effect=rewrite):
+            self.assert_failed_without_advancement(lambda: LiveAudit(self.session).before(request()))
+        self.assertFalse(hasattr(self.session.state, "cryptographic_head"))
+
+    def test_whole_batch_missing_record_rolls_back(self):
+        insert = self.session._insert_prepared
+
+        def remove(rows):
+            insert(rows)
+            self.session._connection.execute("DELETE FROM audit_records WHERE seq=?", (rows[0][1],))
+
+        with patch.object(self.session, "_insert_prepared", side_effect=remove):
+            self.assert_failed_without_advancement(lambda: LiveAudit(self.session).before(request()))
+
+    def test_write_lock_protects_schema_and_readback_until_commit(self):
+        validate = self.session._validate_storage_schema
+        verify = self.session._verify_stored_batch
+        checked = []
+
+        def other_writer_blocked(operation):
+            with closing(sqlite3.connect(self.path, timeout=0)) as other:
+                with self.assertRaises(sqlite3.OperationalError):
+                    other.execute("CREATE TRIGGER concurrent_sabotage BEFORE INSERT ON audit_records BEGIN SELECT RAISE(IGNORE); END")
+            checked.append(operation)
+
+        def validated():
+            validate()
+            other_writer_blocked("schema")
+
+        def verified(rows):
+            verify(rows)
+            other_writer_blocked("readback")
+
+        with patch.object(self.session, "_validate_storage_schema", side_effect=validated), \
+             patch.object(self.session, "_verify_stored_batch", side_effect=verified):
+            LiveAudit(self.session).before(request())
+        self.assertEqual(checked, ["schema", "readback"])
+        self.assertEqual(self.session.state.count, 4)
+
+    def test_validation_failure_with_uncertain_rollback_is_ambiguous(self):
+        connection = self.session._connection
+
+        class UncertainRollback:
+            def __getattr__(self, name):
+                return getattr(connection, name)
+
+            def rollback(self):
+                raise sqlite3.OperationalError("Fixture rollback acknowledgement lost")
+
+        before, receipts = self.session.state, list(self.receipts)
+        with patch.object(self.session, "_connection", UncertainRollback()), \
+             patch.object(self.session, "_verify_stored_batch", side_effect=ValueError("Fixture mismatch")), \
+             self.assertRaises(AmbiguousCommit):
+            LiveAudit(self.session).before(request())
+        self.assertEqual(self.session.state.count, before.count)
+        self.assertEqual(self.session.state.head, before.head)
+        self.assertEqual(self.receipts, receipts)
+        self.assertEqual(self.session.state.failure, "ROLLBACK_UNCONFIRMED")
+        connection.rollback()  # Test cleanup only; the monitor never reconciles/retries.
+
+
 class LiveIntegrationTests(unittest.TestCase):
     def setUp(self):
         self.directory = TemporaryDirectory(prefix="m3-live-")
@@ -379,13 +479,24 @@ class LiveIntegrationTests(unittest.TestCase):
         trace = [json.loads(line) for line in result.stderr.decode().splitlines() if line.startswith("{")]
         return result, trace, read_records(self.path, identities["session_id"])
 
-    def install_trigger(self, kind):
-        bootstrap = new_session(self.path)
-        bootstrap.finish()
-        bootstrap.close()
-        with closing(sqlite3.connect(self.path)) as connection:
-            connection.execute(f"""CREATE TRIGGER reject_live_write BEFORE INSERT ON audit_records
-                WHEN NEW.event_type='{kind}' BEGIN SELECT RAISE(ABORT, 'injected real write failure'); END""")
+    def failing_write_child(self, kind):
+        # Install only inside the target transaction via a trusted test hook.
+        # Preinstalled triggers now correctly fail initialization, which would
+        # no longer exercise these tests' dispatch/outcome SQL-error boundaries.
+        return f"""import sys
+from chainguard.audit import AuditSession,LiveAudit
+from chainguard.m3 import shadows
+from chainguard.proxy import run
+class FailWrite(AuditSession):
+ def _insert_prepared(self,rows):
+  if any(row[3]=='{kind}' for row in rows):
+   self._connection.execute(\"CREATE TRIGGER reject_live_write BEFORE INSERT ON audit_records WHEN NEW.event_type='{kind}' BEGIN SELECT RAISE(ABORT, 'injected real write failure'); END\")
+  super()._insert_prepared(rows)
+s=FailWrite(*sys.argv[1:])
+status=run(sys.stdin.buffer,sys.stdout.buffer,LiveAudit(s,shadows))
+s.close()
+raise SystemExit(status)
+"""
 
     def test_real_audited_success_error_success_and_redaction(self):
         report = execute_demo(self.path)
@@ -407,8 +518,7 @@ class LiveIntegrationTests(unittest.TestCase):
         self.assertEqual([w["last_seq"] for w in witnesses], [1, 8, 9, 16, 17, 24, 25, 26])
 
     def test_failed_required_transaction_blocks_real_forwarding(self):
-        self.install_trigger("DISPATCH_INTENT")
-        result, trace, records = self.launch([request(1), request(2)])
+        result, trace, records = self.launch([request(1), request(2)], self.failing_write_child("DISPATCH_INTENT"))
         self.assertEqual(result.returncode, 2)
         self.assertEqual(len(result.stdout.splitlines()), 1)
         self.assertFalse(any(r.get("phase") in {"forwarded", "tool_received"} for r in trace))
@@ -416,8 +526,7 @@ class LiveIntegrationTests(unittest.TestCase):
         self.assertEqual([r["failure"] for r in trace if r.get("phase") == "audit_failure"], ["ROLLED_BACK"])
 
     def test_outcome_audit_failure_cannot_undo_executed_call_or_cleanly_close(self):
-        self.install_trigger("TOOL_OUTCOME")
-        result, trace, records = self.launch([request(1), request(2)])
+        result, trace, records = self.launch([request(1), request(2)], self.failing_write_child("TOOL_OUTCOME"))
         self.assertEqual(result.returncode, 2)
         self.assertEqual(len([r for r in trace if r.get("phase") == "tool_received"]), 1)
         self.assertEqual(len([r for r in trace if r.get("phase") == "forwarded"]), 1)

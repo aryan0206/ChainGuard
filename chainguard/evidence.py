@@ -342,8 +342,12 @@ class ChainedAuditSession(AuditSession):
         return CryptographicState(manifest_digest=manifest_digest(self.manifest), cryptographic_head=genesis(self.manifest))
 
     def _create_extra_tables(self):
-        self._connection.execute("""CREATE TABLE IF NOT EXISTS audit_manifests (
-            session_id TEXT PRIMARY KEY, manifest_bytes BLOB NOT NULL, manifest_digest TEXT NOT NULL)""")
+        self._connection.execute(self._schema_statements()["audit_manifests"].replace(
+            "CREATE TABLE ", "CREATE TABLE IF NOT EXISTS ", 1))
+
+    def _schema_statements(self):
+        return {**super()._schema_statements(), "audit_manifests": """CREATE TABLE audit_manifests (
+            session_id TEXT PRIMARY KEY, manifest_bytes BLOB NOT NULL, manifest_digest TEXT NOT NULL)"""}
 
     def _start_draft(self, challenge):
         return draft("SESSION_START", {"record_class": RECORD_CLASS, "run_challenge": challenge,
@@ -373,6 +377,14 @@ class ChainedAuditSession(AuditSession):
             self._connection.execute("INSERT INTO audit_manifests VALUES (?,?,?)",
                                      (self.identity["session_id"], self._manifest_bytes, self.state.manifest_digest))
         super()._insert_prepared(rows)
+
+    def _verify_stored_batch(self, rows):
+        super()._verify_stored_batch(rows)
+        stored = self._connection.execute(
+            "SELECT manifest_bytes,manifest_digest FROM main.audit_manifests WHERE session_id=?",
+            (self.identity["session_id"],)).fetchall()
+        _require(stored == [(self._manifest_bytes, self.state.manifest_digest)],
+                 "Stored manifest differs from exact expected manifest")
 
     def _snapshot(self):
         # Explicit read transaction freezes manifest and records together.

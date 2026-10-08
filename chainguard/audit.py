@@ -259,6 +259,19 @@ class AuditSession:
     record_extra_sql = ""
     insert_sql = "INSERT INTO audit_records VALUES (?,?,?,?,?,?,?,?,?)"
 
+    def _schema_statements(self):
+        return {
+            "audit_records": f"""CREATE TABLE audit_records (
+                session_id TEXT NOT NULL, seq INTEGER NOT NULL CHECK(seq BETWEEN 1 AND 9007199254740991),
+                event_id TEXT NOT NULL, event_type TEXT NOT NULL, call_id TEXT,
+                run_id TEXT NOT NULL, task_id TEXT NOT NULL, monitor_instance_id TEXT NOT NULL,
+                record_bytes BLOB NOT NULL{self.record_extra_sql},
+                PRIMARY KEY(session_id, seq), UNIQUE(session_id, event_id))""",
+            "call_phases": """CREATE UNIQUE INDEX call_phases
+                ON audit_records(session_id, call_id, event_type)
+                WHERE event_type IN ('CALL_PROPOSAL','DISPATCH_DECISION','DISPATCH_INTENT','TOOL_OUTCOME')""",
+        }
+
     def __init__(self, path, run_id, task_id, session_id, challenge, observer=None):
         self.identity = self._identity(run_id, task_id, session_id)
         self.state = self._initial_state()
@@ -272,15 +285,11 @@ class AuditSession:
             self._connection.execute("PRAGMA synchronous=FULL")
             version = self._connection.execute("PRAGMA user_version").fetchone()[0]
             _require(version in {0, self.database_version}, "Unknown database schema")
-            self._connection.execute(f"""CREATE TABLE IF NOT EXISTS audit_records (
-                session_id TEXT NOT NULL, seq INTEGER NOT NULL CHECK(seq BETWEEN 1 AND 9007199254740991),
-                event_id TEXT NOT NULL, event_type TEXT NOT NULL, call_id TEXT,
-                run_id TEXT NOT NULL, task_id TEXT NOT NULL, monitor_instance_id TEXT NOT NULL,
-                record_bytes BLOB NOT NULL{self.record_extra_sql},
-                PRIMARY KEY(session_id, seq), UNIQUE(session_id, event_id))""")
-            self._connection.execute("""CREATE UNIQUE INDEX IF NOT EXISTS call_phases
-                ON audit_records(session_id, call_id, event_type)
-                WHERE event_type IN ('CALL_PROPOSAL','DISPATCH_DECISION','DISPATCH_INTENT','TOOL_OUTCOME')""")
+            for name in ("audit_records", "call_phases"):
+                statement = self._schema_statements()[name]
+                statement = statement.replace("CREATE TABLE ", "CREATE TABLE IF NOT EXISTS ", 1)
+                statement = statement.replace("CREATE UNIQUE INDEX ", "CREATE UNIQUE INDEX IF NOT EXISTS ", 1)
+                self._connection.execute(statement)
             self._create_extra_tables()
             self._connection.execute(f"PRAGMA user_version={self.database_version}")
             existing = self._connection.execute("""SELECT 1 FROM audit_records
@@ -325,6 +334,44 @@ class AuditSession:
         for row in rows:
             self._connection.execute(self.insert_sql, row)
 
+    def _validate_storage_schema(self):
+        """Approve this dedicated audit DB under the BEGIN IMMEDIATE lock.
+
+        Compare definitions to code, never to a baseline obtained from storage.
+        Temp objects are forbidden so unqualified DML cannot be redirected.
+        """
+        _require(self._connection.in_transaction, "Schema validation requires a write transaction")
+        _require(not self._connection.execute("SELECT 1 FROM temp.sqlite_schema LIMIT 1").fetchone(),
+                 "Unexpected temporary audit schema")
+        _require(self._connection.execute("PRAGMA main.user_version").fetchone()[0] == self.database_version,
+                 "Unexpected audit database version")
+        statements = self._schema_statements()
+        expected = {
+            ("table" if name.startswith("audit_") else "index", name,
+             name if name.startswith("audit_") else "audit_records", " ".join(sql.split()))
+            for name, sql in statements.items()
+        }
+        expected.update({("index", "sqlite_autoindex_audit_records_1", "audit_records", None),
+                         ("index", "sqlite_autoindex_audit_records_2", "audit_records", None)})
+        if "audit_manifests" in statements:
+            expected.add(("index", "sqlite_autoindex_audit_manifests_1", "audit_manifests", None))
+        actual = {(kind, name, table, " ".join(sql.split()) if sql is not None else None)
+                  for kind, name, table, sql in self._connection.execute(
+                      "SELECT type,name,tbl_name,sql FROM main.sqlite_schema").fetchall()}
+        _require(actual == expected, "Unapproved audit schema (tables/indexes/triggers/views)")
+
+    def _verify_stored_batch(self, rows):
+        """Verify complete final materialization, not INSERT acknowledgements.
+
+        Frozen tuples contain all metadata, canonical bytes and (in M4) hashes.
+        Read after every DML in the batch; no database value becomes authority.
+        """
+        _require(self._connection.in_transaction, "Batch verification requires a write transaction")
+        actual = self._connection.execute(
+            "SELECT * FROM main.audit_records WHERE session_id=? AND seq BETWEEN ? AND ? ORDER BY seq",
+            (self.identity["session_id"], rows[0][1], rows[-1][1])).fetchall()
+        _require(actual == list(rows), "Stored audit batch differs from exact expected records")
+
     def halt(self, reason):
         self.state = replace(self.state, lifecycle="HALTED", failure=reason)
 
@@ -357,7 +404,7 @@ class AuditSession:
                 _require(pending is None or pending["intent"], "Proposal/decision/intent must commit together")
                 history = self.history + _facts(records)
                 encoded = [encode(r) for r in records]
-                rows = self._storage_rows(records, encoded)
+                rows = tuple(self._storage_rows(records, encoded))
                 state = self._candidate_state(records, phase)
                 receipt = CommitReceipt(self.identity["session_id"], records[0]["seq"], records[-1]["seq"],
                                         tuple(r["event_id"] for r in records), tuple(r["event_type"] for r in records),
@@ -367,11 +414,14 @@ class AuditSession:
                 raise AuditError("Invalid audit transaction") from exc
             try:
                 self._connection.execute("BEGIN IMMEDIATE")
+                self._validate_storage_schema()
                 self._insert_prepared(rows)
-            except sqlite3.Error as exc:
+                self._verify_stored_batch(rows)
+            except (sqlite3.Error, ValueError, TypeError, KeyError) as exc:
                 try:
                     self._connection.rollback()
-                except sqlite3.Error:
+                    _require(not self._connection.in_transaction, "Audit rollback not confirmed")
+                except (sqlite3.Error, ValueError):
                     self.halt("ROLLBACK_UNCONFIRMED")
                     raise AmbiguousCommit("Audit rollback could not be confirmed") from exc
                 self.halt("ROLLED_BACK")

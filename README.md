@@ -265,7 +265,10 @@ The process maintains immutable count/continuity state plus `manifest_digest` an
 
 ```text
 proposal + four shadows + controller decision + empty-selection intent
-  -> one SQLite transaction containing complete records/hashes
+  -> BEGIN IMMEDIATE under the task gate
+  -> validate approved ordinary-table schema
+  -> insert complete records/hashes
+  -> read back and compare the exact whole batch and manifest
   -> confirmed COMMIT
   -> advance trusted continuity, cryptographic and semantic state
   -> observed commit receipt
@@ -274,6 +277,12 @@ terminal outcome -> separate confirmed transaction -> client response
 ```
 
 Rollback leaves both heads and semantic history unchanged. An exception after COMMIT begins halts as ambiguous, with no adoption, retry, forwarding or claim of rollback. Prepared SQLite rows do not authorize dispatch. A later result-write failure cannot undo execution. Restart requires fresh monitor/client/run/task/session/challenge; stored records never restore execution authority. This remains local SQLite durability under the stated filesystem/runtime assumptions, not a power-loss certification.
+
+The M4 durability-gate correction also protects the shared M3 writer. Each write transaction checks the dedicated database's schema against code-owned table/index definitions, including their constraints and conflict policies. Unexpected schema objects (including triggers/views) and temporary objects fail closed. Whitespace is normalized; alternative table/index definitions are deliberately not accepted even if semantically equivalent. No migration is performed. Manifest/start initialization uses the same verified transaction path.
+
+After all batch inserts, exact stored tuples must match the frozen expected sequence, event identities/types, metadata and canonical BLOB bytes; M4 additionally compares event hashes and exact manifest bytes/digest. Canonical bytes include predecessor links. Counts, `RETURNING` and successful INSERT/COMMIT acknowledgments alone are insufficient. A mismatch enters rollback cleanup, emits no successful receipt and leaves trusted count/head/history unchanged. An unconfirmed rollback halts as incomplete/ambiguous. Database reads verify materialization and never reconstruct running authority.
+
+This establishes the intended evidence at the confirmed commit boundary under SQLite locking/durability assumptions. It does not continuously protect old rows after commit, detect raw filesystem/database-engine compromise, or make an external tool effect atomic with SQLite. Later storage mutation remains subject to frozen-head sealing checks. No M5 or M6 functionality is added; M4 requires re-review before opening M5.
 
 ### Manifest, closure and signing
 
@@ -326,7 +335,7 @@ $taskM4Directory = Join-Path $env:TEMP ("chainguard-m4-review-" + [guid]::NewGui
 .\.venv\Scripts\python.exe -B -m chainguard.verifier --package "$taskM4Directory\evidence.json" --expected "$taskM4Directory\expected.json" --config "$taskM4Directory\configuration.json" --public-key "$taskM4Directory\fixture-public.pem" --key-id chainguard-m4-fixture-key
 ```
 
-### Actual M4 validation — 8 October 2026
+### Original M4 validation — 8 October 2026 (before durability-gate correction)
 
 | Executed check | Actual result |
 | --- | --- |
@@ -344,6 +353,30 @@ The first smoke flow and initial complete suite passed; the initial suite had **
 
 Tests distinguish changed records, recomputed chains against an old signature, incorrect authentic findings, absent required findings, wrong key/curve/suite, external context mismatch, unsealed/truncated evidence and snapshot/sign/export failure. They verify both heads remain unchanged on rollback/ambiguity and that required failures block actual forwarding. The full M5 campaign is not implemented or claimed complete.
 
-For the viva: the chain commits ordered canonical facts; the process-owned head prevents replacing live authority with attacker-recomputed SQLite; the final signature authenticates the stated closure under an independently pinned key. Reproduction checks consistency with approved rules, not raw observation truth. Signatures do not prove monitor honesty, complete capture, correct tool behavior, detector correctness, trusted time, universal tamper resistance or novel cryptography. M3 records remain unsealed developmental records. M4 is pending student review; no commit or push has been made.
+### Durability-gate correction validation — 8 October 2026
+
+Adversarial review of committed M4 revision `d631e61bfd0621fadf225a8bede03b87820da15a` found that successful SQL acknowledgments could conceal missing or altered evidence while permitting actual forwarding. Later sealing refused the streams, but execution had already occurred. The original tests above did not establish the required persistence gate against those manipulations.
+
+The correction adds transaction-local schema validation and exact whole-batch/manifest verification. No architecture document, dependency, detector, cryptographic construction, M5 component or M6 lifecycle was changed. Five M3 and twenty-two M4 durability regressions were added. Two existing M3 failure fixtures now inject their SQL failure inside the target dispatch/outcome transaction: preinstalled triggers correctly fail initialization under the new schema gate. Existing ambiguity tests retain their meaning.
+
+| Executed correction check | Actual result |
+| --- | --- |
+| Targeted durability regressions | **27 tests in 60.854s — OK** |
+| Full M3 | **40 tests in 22.842s — OK** |
+| Full M4 | **67 tests in 95.632s — OK** |
+| Full M2 | **41 tests in 0.288s — OK** |
+| Full M1 | **12 tests in 18.583s — OK** |
+| Project-wide discovery | **160 tests in 126.937s — OK** |
+| Standalone M4 demonstration, including first offline process | **10.202s**, success/error/success; 26 records / 8 confirmed transactions; handler IDs 3/4/5 |
+| Additional separate verifier process after monitor exit | **2.861s**, exit 0; all six dimensions PASS; 12 findings reproduced; B2 agreement at all 3 proposal prefixes |
+| Independent post-suite adversarial recheck | **10 cases in 25.973s — BLOCKED** |
+
+Independent rechecks covered suppressed/deleted inserts, rewritten bytes/hashes, same-count metadata corruption, earlier-record deletion, live view substitution, modified conflict behavior with an occupied sequence, initialization suppression and outcome suppression. Admission attacks caused zero real handler executions and no successful admission receipt or trusted count/head/history advancement. Initialization sabotage established no usable context. Outcome sabotage occurred after one correctly audited execution; it halted with no false committed outcome and no second execution. Separate fault-injection regressions establish that exact readback itself rejects bad final materialization, independently of trigger rejection.
+
+The initial targeted run passed 25 tests in 57.066s; the finalized targeted run passed all 27. No behavioral assertion failed. Three command-selection errors occurred: two nonexistent smoke-test class names and an M2 module invocation that could not import `m2_fixtures`. Correct test selection and the documented M2 discovery command resolved them without source fixes. Durations are observations, not benchmarks.
+
+The correction is **ready for M4 re-review**. M5 remains blocked pending owner review. These changes are uncommitted and unpushed.
+
+For the viva: the chain commits ordered canonical facts; the process-owned head prevents replacing live authority with attacker-recomputed SQLite; the final signature authenticates the stated closure under an independently pinned key. Reproduction checks consistency with approved rules, not raw observation truth. Signatures do not prove monitor honesty, complete capture, correct tool behavior, detector correctness, trusted time, universal tamper resistance or novel cryptography. M3 records remain unsealed developmental records.
 
 The supplied paper is a proposal/literature baseline and needs alignment with this design before reporting implementation or results. The final marking rubric and evaluation date still need confirmation. The existing LICENSE contains only a placeholder heading; release readiness requires resolving it separately.

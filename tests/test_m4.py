@@ -11,7 +11,7 @@ import secrets
 import sqlite3
 import subprocess
 import sys
-from tempfile import TemporaryDirectory
+from tempfile import TemporaryDirectory, TemporaryFile
 import unittest
 from unittest.mock import patch
 from uuid import uuid4
@@ -538,6 +538,284 @@ class M4Tests(unittest.TestCase):
         self.session.finish()
         with self.assertRaises(AuditError):
             LiveAudit(self.session).before(request())
+
+
+class DurabilityGateTests(unittest.TestCase):
+    """Real relay attacks plus fault injection that independently exercises readback."""
+
+    def setUp(self):
+        self.directory = TemporaryDirectory(prefix="m4-durability-")
+        self.path = Path(self.directory.name) / "audit.sqlite"
+        self.receipts = []
+        self.expected, self.manifest = self.context()
+        self.session = ChainedAuditSession(self.path, self.manifest, self.expected, self.receipts.append)
+
+    def context(self):
+        expected = inventory(*(str(uuid4()) for _ in range(4)), challenge=secrets.token_hex(32))
+        entry = expected["sessions"][0]
+        return expected, make_manifest(expected, configuration(), entry["task_id"],
+                                       entry["session_id"], entry["monitor_instance_id"])
+
+    def tearDown(self):
+        self.session.close()
+        self.directory.cleanup()
+
+    def execute_sql(self, sql):
+        with closing(sqlite3.connect(self.path)) as connection:
+            connection.executescript(sql)
+
+    def relay(self, gate=None, calls=1):
+        phases = []
+        popen = subprocess.Popen
+        with TemporaryFile() as handler_log:
+            def launch(*args, **kwargs):
+                return popen(*args, **{**kwargs, "stderr": handler_log})
+
+            output = io.BytesIO()
+            frames = b"".join(json.dumps(request(n)).encode() + b"\n" for n in range(1, calls + 1))
+            with patch("chainguard.proxy.subprocess.Popen", side_effect=launch), \
+                 patch("chainguard.proxy.diagnostic", side_effect=lambda phase, **fields: phases.append(phase)):
+                status = run(io.BytesIO(frames), output, gate or LiveAudit(self.session, shadows))
+            handler_log.seek(0)
+            handlers = [json.loads(line) for line in handler_log.read().splitlines()]
+        return status, phases, [json.loads(line) for line in output.getvalue().splitlines()], handlers
+
+    def assert_blocked(self, before, receipts):
+        status, phases, responses, handlers = self.relay()
+        self.assertEqual(status, 2)
+        self.assertNotIn("forwarded", phases)
+        self.assertFalse(any(item.get("phase") == "tool_received" for item in handlers))
+        self.assertEqual(responses[0]["error"]["code"], -32603)
+        self.assertEqual(self.session.state.count, before.count)
+        self.assertEqual(self.session.state.head, before.head)
+        self.assertEqual(self.session.state.cryptographic_head, before.cryptographic_head)
+        self.assertEqual(self.session.history, ())
+        self.assertEqual(self.receipts, receipts)
+        self.assertEqual(self.session.state.failure, "ROLLED_BACK")
+        self.assertFalse(self.session._connection.in_transaction)
+        with closing(sqlite3.connect(self.path)) as connection:
+            self.assertEqual(connection.execute("SELECT count(*) FROM audit_records").fetchone()[0], 1)
+
+    def trigger_attack(self, timing, action):
+        self.execute_sql(f"""CREATE TRIGGER sabotage {timing} INSERT ON audit_records
+            WHEN NEW.event_type='DISPATCH_INTENT' BEGIN {action}; END;""")
+        self.assert_blocked(self.session.state, list(self.receipts))
+
+    def test_suppressed_insert_schema_blocks_real_handler(self):
+        self.trigger_attack("BEFORE", "SELECT RAISE(IGNORE)")
+
+    def test_after_deleted_insert_schema_blocks_real_handler(self):
+        self.trigger_attack("AFTER", "DELETE FROM audit_records WHERE session_id=NEW.session_id AND seq=NEW.seq")
+
+    def test_same_count_bytes_trigger_blocks_real_handler(self):
+        self.trigger_attack("AFTER", "UPDATE audit_records SET record_bytes=x'7b7d' WHERE seq=NEW.seq")
+
+    def test_same_count_hash_trigger_blocks_real_handler(self):
+        self.trigger_attack("AFTER", "UPDATE audit_records SET event_hash='" + "0" * 64 + "' WHERE seq=NEW.seq")
+
+    def test_earlier_batch_deletion_trigger_blocks_real_handler(self):
+        self.trigger_attack("AFTER", "DELETE FROM audit_records WHERE session_id=NEW.session_id AND seq=NEW.seq-6")
+
+    def readback_attack(self, mutate):
+        before, receipts = self.session.state, list(self.receipts)
+        insert = self.session._insert_prepared
+
+        def insert_then_corrupt(rows):
+            insert(rows)
+            mutate(rows)
+
+        # Approved schema remains intact: inject a bad final materialization to
+        # prove exact readback is independently effective, not just trigger rejection.
+        with patch.object(self.session, "_insert_prepared", side_effect=insert_then_corrupt):
+            self.assert_blocked(before, receipts)
+
+    def test_exact_readback_detects_missing_intent(self):
+        self.readback_attack(lambda rows: self.session._connection.execute(
+            "DELETE FROM audit_records WHERE seq=?", (rows[-1][1],)))
+
+    def test_whole_batch_readback_detects_earlier_record_deletion(self):
+        self.readback_attack(lambda rows: self.session._connection.execute(
+            "DELETE FROM audit_records WHERE seq=?", (rows[0][1],)))
+
+    def test_exact_readback_detects_canonical_bytes_with_same_count(self):
+        def corrupt(rows):
+            event = decode(rows[-1][8])
+            event["observed_at_utc"] = "2099-01-01T00:00:00Z"
+            self.session._connection.execute("UPDATE audit_records SET record_bytes=? WHERE seq=?",
+                                             (encode(event), rows[-1][1]))
+        self.readback_attack(corrupt)
+
+    def test_exact_readback_detects_hash_with_same_count(self):
+        self.readback_attack(lambda rows: self.session._connection.execute(
+            "UPDATE audit_records SET event_hash=? WHERE seq=?", ("0" * 64, rows[-1][1])))
+
+    def test_exact_readback_detects_metadata_with_same_count(self):
+        self.readback_attack(lambda rows: self.session._connection.execute(
+            "UPDATE audit_records SET event_id='replacement' WHERE seq=?", (rows[-1][1],)))
+
+    def test_exact_readback_rejects_recomputed_hash_with_wrong_predecessor(self):
+        def corrupt(rows):
+            event = decode(rows[-1][8])
+            event["prev_hash"] = "0" * 64
+            self.session._connection.execute("UPDATE audit_records SET record_bytes=?,event_hash=? WHERE seq=?",
+                (encode(event), event_hash(event), rows[-1][1]))
+        self.readback_attack(corrupt)
+
+    def test_live_view_substitution_blocks_real_handler(self):
+        self.execute_sql("""ALTER TABLE audit_records RENAME TO backing_records;
+            CREATE VIEW audit_records AS SELECT * FROM backing_records;
+            CREATE TRIGGER ignore_view INSTEAD OF INSERT ON audit_records BEGIN SELECT 1; END;""")
+        self.assert_blocked(self.session.state, list(self.receipts))
+
+    def test_temp_schema_substitution_blocks_real_handler(self):
+        self.session._connection.execute("CREATE TEMP TABLE audit_records(dummy TEXT)")
+        self.assert_blocked(self.session.state, list(self.receipts))
+
+    def test_modified_conflict_schema_rejected_at_initialization(self):
+        self.session.close()
+        self.path = Path(self.directory.name) / "conflict.sqlite"
+        sql = AuditSession._schema_statements(self.session)["audit_records"].replace(
+            "PRIMARY KEY(session_id, seq)", "PRIMARY KEY(session_id, seq) ON CONFLICT IGNORE")
+        with closing(sqlite3.connect(self.path)) as connection:
+            connection.execute(sql)
+            connection.execute("PRAGMA user_version=4")
+        expected, manifest = self.context()
+        observed = []
+        with self.assertRaises(AuditError):
+            ChainedAuditSession(self.path, manifest, expected, observed.append)
+        self.assertEqual(observed, [])
+
+    def test_live_modified_conflict_schema_blocks_real_handler(self):
+        sql = self.session._schema_statements()["audit_records"].replace(
+            "PRIMARY KEY(session_id, seq)", "PRIMARY KEY(session_id, seq) ON CONFLICT IGNORE")
+        self.execute_sql("ALTER TABLE audit_records RENAME TO old_records; DROP INDEX call_phases;"
+            + sql + "; INSERT INTO audit_records SELECT * FROM old_records; DROP TABLE old_records;"
+            + self.session._schema_statements()["call_phases"] + ";")
+        self.assert_blocked(self.session.state, list(self.receipts))
+
+    def test_initialization_trigger_suppression_rejected_on_reopen(self):
+        for table in ("audit_manifests", "audit_records"):
+            with self.subTest(table=table):
+                self.execute_sql(f"""CREATE TRIGGER ignore_start BEFORE INSERT ON {table}
+                    BEGIN SELECT RAISE(IGNORE); END;""")
+                expected, manifest = self.context()
+                observed = []
+                with self.assertRaises(AuditError):
+                    ChainedAuditSession(self.path, manifest, expected, observed.append)
+                self.assertEqual(observed, [])
+                self.execute_sql("DROP TRIGGER ignore_start;")
+        with closing(sqlite3.connect(self.path)) as connection:
+            self.assertEqual(connection.execute("SELECT count(*) FROM audit_records").fetchone()[0], 1)
+            self.assertEqual(connection.execute("SELECT count(*) FROM audit_manifests").fetchone()[0], 1)
+
+    def test_exact_initialization_manifest_and_start_validation(self):
+        insert = ChainedAuditSession._insert_prepared
+        for target, action in (("audit_manifests", "DELETE"), ("audit_records", "DELETE"),
+                               ("audit_manifests", "UPDATE"), ("audit_records", "UPDATE")):
+            with self.subTest(target=target, action=action):
+                path = Path(self.directory.name) / (target + action + ".sqlite")
+                expected, manifest = self.context()
+                observed = []
+
+                def sabotage(session, rows):
+                    insert(session, rows)
+                    if action == "DELETE":
+                        session._connection.execute(f"DELETE FROM {target}")
+                    else:
+                        column = "manifest_bytes" if target == "audit_manifests" else "record_bytes"
+                        session._connection.execute(f"UPDATE {target} SET {column}=x'7b7d'")
+
+                with patch.object(ChainedAuditSession, "_insert_prepared", sabotage), self.assertRaises(AuditError):
+                    ChainedAuditSession(path, manifest, expected, observed.append)
+                self.assertEqual(observed, [])
+                with closing(sqlite3.connect(path)) as connection:
+                    self.assertEqual(connection.execute("SELECT count(*) FROM audit_records").fetchone()[0], 0)
+                    self.assertEqual(connection.execute("SELECT count(*) FROM audit_manifests").fetchone()[0], 0)
+
+    def test_changed_manifest_blocks_next_admission(self):
+        self.execute_sql("UPDATE audit_manifests SET manifest_digest='" + "0" * 64 + "';")
+        self.assert_blocked(self.session.state, list(self.receipts))
+
+    def test_outcome_suppression_halts_after_one_real_execution(self):
+        gate = LiveAudit(self.session, shadows)
+        after = gate.after
+
+        def sabotage_then_after(call_id, result):
+            self.execute_sql("""CREATE TRIGGER ignore_outcome BEFORE INSERT ON audit_records
+                WHEN NEW.event_type='TOOL_OUTCOME' BEGIN SELECT RAISE(IGNORE); END;""")
+            after(call_id, result)
+
+        with patch.object(gate, "after", side_effect=sabotage_then_after):
+            status, phases, responses, handlers = self.relay(gate, calls=2)
+        self.assertEqual(status, 2)
+        self.assertEqual(phases.count("forwarded"), 1)
+        self.assertEqual([r["request_id"] for r in handlers if r.get("phase") == "tool_received"], [1])
+        self.assertEqual(responses[0]["error"]["code"], -32603)
+        self.assertEqual(self.session.state.count, 8)
+        self.assertEqual(len(self.receipts), 2)
+        self.assertEqual(self.session.history, ())
+        self.assertEqual(self.session.state.failure, "ROLLED_BACK")
+
+    def test_outcome_readback_corruption_halts_without_false_history(self):
+        gate = LiveAudit(self.session, shadows)
+        insert = self.session._insert_prepared
+
+        def corrupt_outcome(rows):
+            insert(rows)
+            if rows[0][3] == "TOOL_OUTCOME":
+                self.session._connection.execute("UPDATE audit_records SET event_hash=? WHERE seq=?",
+                                                 ("0" * 64, rows[0][1]))
+
+        with patch.object(self.session, "_insert_prepared", side_effect=corrupt_outcome):
+            status, phases, responses, handlers = self.relay(gate, calls=2)
+        self.assertEqual(status, 2)
+        self.assertEqual(phases.count("forwarded"), 1)
+        self.assertEqual(len([r for r in handlers if r.get("phase") == "tool_received"]), 1)
+        self.assertEqual(responses[0]["error"]["code"], -32603)
+        self.assertEqual(self.session.state.count, 8)
+        self.assertEqual(self.session.history, ())
+        self.assertEqual(len(self.receipts), 2)
+        self.assertFalse(self.session._connection.in_transaction)
+
+    def test_failed_closure_readback_cannot_sign(self):
+        insert = self.session._insert_prepared
+
+        def suppress_close(rows):
+            insert(rows)
+            self.session._connection.execute("DELETE FROM audit_records WHERE seq=?", (rows[-1][1],))
+
+        key = ec.generate_private_key(ec.SECP256R1())
+        with patch.object(self.session, "_insert_prepared", side_effect=suppress_close), self.assertRaises(AuditError):
+            self.session.seal(key, KEY_ID, {KEY_ID: key.public_key()})
+        self.assertEqual(self.session.state.count, 1)
+        self.assertEqual(self.session.progress["signature"], "NOT_SIGNED")
+        self.assertEqual(self.session.progress["sealing"], "INCOMPLETE")
+
+    def test_positive_real_forwarding_follows_exact_verified_commit(self):
+        insert_verified = []
+        verify = self.session._verify_stored_batch
+
+        def verified(rows):
+            verify(rows)
+            insert_verified.append(rows)
+
+        def witnessed(receipt):
+            self.assertFalse(self.session._connection.in_transaction)
+            self.assertEqual(self.session.state.count, receipt.last_seq)
+            with closing(sqlite3.connect(self.path)) as connection:
+                actual = connection.execute("SELECT * FROM audit_records WHERE session_id=? AND seq BETWEEN ? AND ? ORDER BY seq",
+                    (receipt.session_id, receipt.first_seq, receipt.last_seq)).fetchall()
+            self.assertEqual(actual, list(insert_verified[-1]))
+            self.receipts.append(receipt)
+
+        self.session._observer = witnessed
+        with patch.object(self.session, "_verify_stored_batch", side_effect=verified):
+            status, phases, responses, handlers = self.relay()
+        self.assertEqual(status, 0)
+        self.assertEqual(phases.count("forwarded"), 1)
+        self.assertEqual(len([r for r in handlers if r.get("phase") == "tool_received"]), 1)
+        self.assertFalse(responses[0]["result"]["isError"])
+        self.assertEqual(self.session.state.count, 9)
 
 
 class KeyAndIntegrationTests(unittest.TestCase):
