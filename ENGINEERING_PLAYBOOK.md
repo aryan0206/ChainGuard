@@ -2,7 +2,9 @@
 
 Version 1.1 — 7 October 2026.
 
-## Current authorization
+## Authorization snapshot — 7 October 2026
+
+Chronology clarification, 9 October 2026: the original closed implementation/dependency wording records the 7 October architecture-lock stage. Later explicit owner instructions authorized the recorded M1–M5 milestones and Phase 2 foundation; their decisions and evidence are retained in [the engineering history](docs/SPIKE_LOG.md#historical-engineering-readme-at-checkpoint-5d00057). Those later authorizations do not weaken Architecture v1.1 or grant blanket approval for dependencies, M6 or other work. The initial 9 October documentation cleanup excluded commits and pushes; that task-specific restriction does not override later explicit owner authorization.
 
 Research direction and mandatory scope are approved. The owner explicitly declared [ARCHITECTURE LOCKED — ChainGuard Architecture v1.1](docs/ARCHITECTURE_LOCK.md), retaining ECDSA P-256 and SHA-256. This task records lock status only. Application code, dependency installation, experiments, commit, push and publication remain outside the current authorized task.
 
@@ -10,7 +12,7 @@ The pre-existing local environment is not evidence that packages or application 
 
 ## Approval gates
 
-| Gate | Current state | What opens it |
+| Gate | State at the 7 October lock stage | What opens it |
 | --- | --- | --- |
 | Research direction and mandatory scope | Approved | Owner approval already received |
 | Final contract synchronization | Completed in version 1.1 | Owner-directed documentation pass |

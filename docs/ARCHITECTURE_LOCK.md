@@ -10,6 +10,8 @@
 
 **State:** **ARCHITECTURE LOCKED — ChainGuard Architecture v1.1**. Application implementation and dependency installation remain prohibited.
 
+Chronology clarification, 9 October 2026: the original closed implementation/dependency wording records the 7 October architecture-lock stage. Later explicit owner instructions authorized the recorded M1–M5 milestones and Phase 2 foundation; their decisions and evidence are retained in [the engineering history](SPIKE_LOG.md#historical-engineering-readme-at-checkpoint-5d00057). Those later authorizations do not weaken Architecture v1.1 or grant blanket approval for dependencies, M6 or other work. The initial 9 October documentation cleanup excluded commits and pushes; that task-specific restriction does not override later explicit owner authorization.
+
 This document is the single authoritative source of system architecture contracts. The [charter](PROJECT_CHARTER.md) defines research methodology; the [threat model](THREAT_MODEL.md) defines security assumptions and claim limits. Sections 15–20 incorporate the reviewed amendment's precise contracts. [ARCHITECTURE_AMENDMENTS_V1.md](../ARCHITECTURE_AMENDMENTS_V1.md) is historical supporting material only and has no independent normative authority. MUST, MUST NOT, SHOULD and MAY express normative requirements. This document records a design, not an implemented or tested system.
 
 ## 1. Direction and mandatory scope

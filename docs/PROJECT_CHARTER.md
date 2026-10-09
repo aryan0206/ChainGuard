@@ -2,6 +2,8 @@
 
 Version 1.1 — 7 October 2026. Research direction and mandatory scope approved; architecture version 1.1 explicitly locked by the owner in the authoritative [Architecture Lock](ARCHITECTURE_LOCK.md). Application implementation and dependency installation remain closed; no experimental results exist under this milestone.
 
+Chronology clarification, 9 October 2026: the original closed implementation/dependency wording records the 7 October architecture-lock stage. Later explicit owner instructions authorized the recorded M1–M5 milestones and Phase 2 foundation; their decisions and evidence are retained in [the engineering history](SPIKE_LOG.md#historical-engineering-readme-at-checkpoint-5d00057). Those later authorizations do not weaken Architecture v1.1 or grant blanket approval for dependencies, M6 or other work. The initial 9 October documentation cleanup excluded commits and pushes; that task-specific restriction does not override later explicit owner authorization.
+
 ## Purpose and research position
 
 ChainGuard studies how individually permitted MCP tool calls can form suspicious sequences or violate scoped authorization, and how evidence supporting the resulting decisions can be independently checked. The project must be understandable in a viva, demonstrable for the Information Security progress evaluation and capable of supporting a reproducible IEEE-style paper.
