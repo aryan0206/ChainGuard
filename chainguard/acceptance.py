@@ -39,9 +39,36 @@ class RegistryAmbiguous(RegistryError):
 
 
 def commitment_digest(closure):
-    """Digest of the EXISTING M4 ECDSA-SHA256 signing input, not new crypto."""
-    validate_commitment(closure)
+    """Digest of the profile's ECDSA-SHA256 signing input."""
+    _require(type(closure) is dict, "Invalid commitment")
+    if closure.get("schema_version") == "m6-commitment-v1":
+        from chainguard.permission_profile import validate_permission_commitment
+        validate_permission_commitment(closure)
+    elif closure.get("schema_version") == "m4-commitment-v1":
+        validate_commitment(closure)
+    else:
+        raise ValueError("Unknown commitment profile")
     return sha256(DOMAINS["COMMITMENT"] + encode(closure))
+
+
+def _validate_expected_configuration(config):
+    _require(type(config) is dict, "Invalid expected configuration")
+    if config.get("schema_version") == "m6-configuration-v1":
+        from chainguard.permission_profile import validate_permission_configuration
+        validate_permission_configuration(config)
+    elif config.get("schema_version") == "m4-configuration-v1":
+        validate_configuration(config)
+    else:
+        raise ValueError("Unknown expected configuration profile")
+
+
+def _inspect_expected_run(snapshots, inventory, config, pins):
+    if config["schema_version"] == "m6-configuration-v1":
+        from chainguard.permission_profile import inspect_permission_run
+        return inspect_permission_run(snapshots, inventory, config, pins)
+    if config["schema_version"] == "m4-configuration-v1":
+        return inspect_run(snapshots, inventory, config, pins)
+    raise ValueError("Unknown expected configuration profile")
 
 
 def _encode_pins(pins):
@@ -171,7 +198,7 @@ class AcceptanceRegistry:
         expectation = ExpectedRun(*row)
         inventory = decode(expectation.inventory_bytes)
         validate_inventory(inventory)
-        validate_configuration(decode(expectation.config_bytes))
+        _validate_expected_configuration(decode(expectation.config_bytes))
         _decode_pins(expectation.pins_bytes)
         _require(inventory["run_id"] == run_id and inventory["run_challenge"] == expectation.challenge
                  and inventory_digest(inventory) == expectation.inventory_digest, "Inconsistent expected identity")
@@ -201,7 +228,7 @@ class AcceptanceRegistry:
 
     def register(self, inventory, config, pins):
         validate_inventory(inventory)
-        validate_configuration(config)
+        _validate_expected_configuration(config)
         row = (inventory["run_id"], inventory["run_challenge"], encode(inventory), inventory_digest(inventory),
                encode(config), _encode_pins(pins), "ACTIVE")
         try:
@@ -246,7 +273,7 @@ class AcceptanceRegistry:
                 return _result("REJECTED", "UNKNOWN_EXPECTATION")
             if expectation.state != "ACTIVE":
                 return _result("REJECTED", "ALREADY_ACCEPTED" if expectation.state == "ACCEPTED" else "EXPECTATION_" + expectation.state, expectation)
-            verification = inspect_run(snapshots, decode(expectation.inventory_bytes),
+            verification = _inspect_expected_run(snapshots, decode(expectation.inventory_bytes),
                 decode(expectation.config_bytes), _decode_pins(expectation.pins_bytes))
             statuses = {d["status"] for d in verification["dimensions"].values()}
             if not verification["inspection_passed"]:
