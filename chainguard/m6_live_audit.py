@@ -10,6 +10,7 @@ signing, sealing, or restoring execution state from SQLite.
 from copy import deepcopy
 from dataclasses import dataclass
 from datetime import datetime, timezone
+from pathlib import Path
 import sqlite3
 import threading
 from uuid import uuid4
@@ -336,12 +337,15 @@ class LiveAuditSession:
             validate_live_manifest(manifest, inventory)
             _encode(manifest)
             self.manifest = deepcopy(manifest)
+            self._manifest_bytes = _encode(self.manifest)
             self.identity = {key: self.manifest[key] for key in IDENTITY_KEYS}
             self.state = LiveContinuity(0, genesis(self.manifest), "CREATED")
         except (ValueError, TypeError, KeyError, RecursionError, UnicodeError) as exc:
             raise LiveAuditError("Invalid live manifest or inventory") from exc
         self._phase = _initial_phase()
         self._lock = threading.RLock()
+        self._path = Path(path)
+        self._closed = False
         try:
             self._connection = sqlite3.connect(path, isolation_level=None, timeout=5)
         except sqlite3.Error as exc:
@@ -404,11 +408,12 @@ class LiveAuditSession:
                 raise LiveAmbiguousCommit("Storage initialization commit acknowledgement ambiguous") from exc
             raise LiveAuditError("Live storage initialization failed") from exc
 
-    def _validate_storage_schema(self):
-        _require(self._transaction_open(), "Schema check requires transaction")
-        _require(not self._connection.execute("SELECT 1 FROM temp.sqlite_schema LIMIT 1").fetchone(),
+    def _validate_storage_schema(self, connection=None):
+        connection = self._connection if connection is None else connection
+        _require(connection.in_transaction, "Schema check requires transaction")
+        _require(not connection.execute("SELECT 1 FROM temp.sqlite_schema LIMIT 1").fetchone(),
                  "Unexpected temporary schema")
-        _require(self._connection.execute("PRAGMA main.user_version").fetchone()[0] ==
+        _require(connection.execute("PRAGMA main.user_version").fetchone()[0] ==
                  self.database_version, "Wrong live database version")
         normalized = lambda sql: " ".join(sql.split()) if sql is not None else None
         expected = {
@@ -419,9 +424,59 @@ class LiveAuditSession:
             ("index", "sqlite_autoindex_m6_live_records_2", "m6_live_records", None),
         }
         actual = {(kind, name, table, normalized(sql)) for kind, name, table, sql in
-                  self._connection.execute(
+                  connection.execute(
                       "SELECT type,name,tbl_name,sql FROM main.sqlite_schema").fetchall()}
         _require(actual == expected, "Unapproved live database schema")
+
+    def _snapshot_for_export(self, frozen):
+        """Reconcile one read-only storage snapshot with confirmed writer state."""
+        with self._lock:
+            _require(self._closed and frozen == self.state and
+                     frozen.lifecycle == "CLOSED_UNSEALED" and not frozen.failure and
+                     self._phase["closed"] and not self._phase["unknown"] and
+                     self._phase["pending"] is None and
+                     _encode(self.manifest) == self._manifest_bytes,
+                     "Live writer did not finish cleanly")
+            manifest = decode(self._manifest_bytes)
+            uri = self._path.resolve().as_uri() + "?mode=ro"
+            connection = sqlite3.connect(uri, uri=True, isolation_level=None)
+            try:
+                connection.execute("PRAGMA query_only=ON")
+                connection.execute("BEGIN")
+                try:
+                    self._validate_storage_schema(connection)
+                    rows = connection.execute("""SELECT session_id,seq,event_id,event_type,
+                        call_id,run_id,task_id,monitor_instance_id,record_bytes,event_hash
+                        FROM main.m6_live_records WHERE session_id=? OR task_id=?
+                        ORDER BY seq""", (self.identity["session_id"],
+                                           self.identity["task_id"])).fetchall()
+                finally:
+                    connection.rollback()
+            finally:
+                connection.close()
+            _require(len(rows) == frozen.record_count and len(rows) >= 2,
+                     "Live snapshot count differs from trusted writer")
+            entries = []
+            head = genesis(manifest)
+            for seq, row in enumerate(rows, 1):
+                _require(type(row[8]) is bytes, "Invalid stored live record bytes")
+                event = decode(row[8])
+                validate_live_record(event, manifest)
+                _require(row[:8] == (event["session_id"], event["seq"],
+                         event["event_id"], event["event_type"], event.get("call_id"),
+                         event["run_id"], event["task_id"], event["monitor_instance_id"]) and
+                         event["seq"] == seq and event["prev_hash"] == head and
+                         row[0] == self.identity["session_id"] and
+                         row[6] == self.identity["task_id"],
+                         "Live snapshot metadata, order, or chain mismatch")
+                head = event_hash(event)
+                _require(row[9] == head, "Live snapshot event hash mismatch")
+                entries.append({"event": event, "event_hash": row[9]})
+            _require(entries[0]["event"]["event_type"] == "SESSION_START" and
+                     entries[-1]["event"]["event_type"] == "SESSION_END" and
+                     head == frozen.final_head,
+                     "Live snapshot lacks trusted clean closure or head")
+            return manifest, entries
 
     def _insert_prepared(self, rows):
         for row in rows:
@@ -537,3 +592,4 @@ class LiveAuditSession:
             if self.state.lifecycle in {"CREATED", "ACTIVE"}:
                 self._halt("UNFINISHED_CONTEXT")
             self._connection.close()
+            self._closed = True

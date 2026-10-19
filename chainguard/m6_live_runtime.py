@@ -18,12 +18,16 @@ from typing import BinaryIO
 from uuid import uuid4
 
 from chainguard import PROTOCOL_VERSION
+from chainguard.canonical import encode
 from chainguard.detectors import B2Reference, B2Streaming, b0, b1, equivalent
+from chainguard.evidence import validate_inventory
 from chainguard.m6_live_audit import LiveAuditSession
 from chainguard.m6_live_authorization import DispatchPermit, LiveAuthorizationTask
 from chainguard.m6_live_profile import (POLICY, TOOL_CONTRACTS, live_configuration,
                                         make_live_manifest, result_contract,
+                                        validate_live_manifest,
                                         validate_tool_arguments)
+from chainguard.m6_live_seal import _seal_live_snapshot
 from chainguard.semantics import Scope, attach_references, project_b1
 
 
@@ -183,6 +187,8 @@ class HostTask:
                                ("run_id", "task_id", "session_id", "monitor_instance_id"))
         self._lock = Lock()
         self._state = "STARTING"
+        self._clean_shutdown = False
+        self._export_attempted = False
         self._ticket = 0
         self._seen_requests = set()
         self._admissions = []
@@ -332,6 +338,43 @@ class HostTask:
             else:
                 done.set_exception(LiveRuntimeError("Task cannot close cleanly"))
         return done
+
+    def export_live_evidence(self, *, expected_inventory, expected_configuration,
+                             private_key, signer_key_id, pinned_public_keys,
+                             output_path):
+        """Host-only one-shot export after confirmed clean task shutdown.
+
+        Expected inventory/configuration and public-key pins are supplied by
+        the assessor through this host call, never by client frames or SQLite.
+        A caller that copies these values from the package has not established
+        an independent trust anchor.
+        """
+        with self._lock:
+            if (self._state != "CLOSED" or not self._clean_shutdown or
+                    self._export_attempted or self._audit is None or
+                    self._authority is None or not self._authority._closed or
+                    self._authority._halted or self._authority._pending is not None):
+                raise LiveRuntimeError("Task did not close cleanly for live export")
+            self._export_attempted = True
+        try:
+            validate_inventory(expected_inventory)
+            validate_live_manifest(self._manifest, expected_inventory)
+            if (type(expected_configuration) is not dict or
+                    encode(expected_inventory) != encode(self._inventory) or
+                    encode(expected_configuration) !=
+                    encode(self._manifest["configuration"])):
+                raise ValueError("Assessor-trusted live context differs from host task")
+            if Path(output_path).resolve() == self._db_path.resolve():
+                raise ValueError("Live export cannot replace audit storage")
+            frozen = self._audit.state
+            manifest, entries = self._audit._snapshot_for_export(frozen)
+            if encode(manifest) != encode(self._manifest):
+                raise ValueError("Trusted live manifest changed before export")
+            return _seal_live_snapshot(manifest, entries, frozen,
+                private_key=private_key, signer_key_id=signer_key_id,
+                pinned_public_keys=pinned_public_keys, output_path=output_path)
+        except Exception as exc:
+            raise LiveRuntimeError("Live sealing/export incomplete") from exc
 
     def _read_stdout(self):
         while True:
@@ -568,6 +611,7 @@ class HostTask:
             if self._authority is not None and self._state == "HALTED":
                 self._authority.halt_uncertain()
             cleanup_error = None
+            child_clean = True
             if self._audit is not None:
                 try:
                     self._audit.close()
@@ -576,8 +620,9 @@ class HostTask:
             if self._child is not None:
                 try:
                     self._child.stdin.close()
-                    self._child.wait(timeout=5)
+                    child_clean = self._child.wait(timeout=5) == 0
                 except (OSError, subprocess.TimeoutExpired):
+                    child_clean = False
                     self._child.kill()
                     self._child.wait(timeout=5)
             if self._stdout_reader is not None:
@@ -588,15 +633,17 @@ class HostTask:
                 self._child.stdout.close()
                 self._child.stderr.close()
             with self._lock:
-                if cleanup_error is not None:
+                if cleanup_error is not None or not child_clean:
                     self._state = "HALTED"
                 elif self._state != "HALTED":
                     self._state = "CLOSED"
+                    self._clean_shutdown = True
             if stop is not None and not stop.done():
-                if cleanup_error is None:
+                if self._clean_shutdown:
                     stop.set_result(None)
                 else:
-                    stop.set_exception(cleanup_error)
+                    stop.set_exception(cleanup_error or
+                                       LiveRuntimeError("Controlled child did not close cleanly"))
             failure = LiveRuntimeError("M6 task halted before queued admission")
             while True:
                 try:

@@ -65,7 +65,9 @@ EXECUTION_PROFILE = {"mode": "observation", "supported_tools": sorted(TOOL_CONTR
                      "synthetic_local_sink_override": False, "release_calls_enabled": True}
 ARTIFACT_NAMES = tuple(sorted(("__init__.py", "authorization.py", "canonical.py",
     "detectors.py", "evidence.py", "m6_controlled_server.py", "m6_live_audit.py",
+    "m6_live_evidence.py",
     "m6_live_authorization.py", "m6_live_profile.py", "m6_live_runtime.py",
+    "m6_live_seal.py",
     "permission_evidence.py", "semantics.py")))
 MANIFEST_KEYS = {"schema_version", "record_schema_version", "canonicalization_version",
                  "protocol_version", "observation_scope", "mode", "execution_profile",

@@ -41,7 +41,8 @@ class LiveProfileTests(unittest.TestCase):
         validate_live_manifest(self.manifest, self.expected)
         self.assertEqual(self.config["implementation_stage"], "GATED_RUNTIME")
         for name in ("m6_controlled_server.py", "m6_live_audit.py",
-                     "m6_live_authorization.py", "m6_live_runtime.py"):
+                     "m6_live_authorization.py", "m6_live_evidence.py",
+                     "m6_live_runtime.py", "m6_live_seal.py"):
             self.assertIn(name, ARTIFACT_NAMES)
             digest = next(row["digest"] for row in self.config["artifacts"]
                           if row["name"] == name)
