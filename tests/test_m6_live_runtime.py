@@ -16,7 +16,7 @@ from unittest.mock import patch
 from uuid import uuid4
 
 from chainguard.canonical import decode
-from chainguard.m6_live_audit import LiveAuditError, LiveAuditSession
+from chainguard.m6_live_audit import LiveAmbiguousCommit, LiveAuditError, LiveAuditSession
 from chainguard.m6_live_authorization import (AuthorizationError, DispatchPermit,
                                                LiveAuthorizationTask)
 from chainguard.m6_live_profile import POLICY
@@ -28,6 +28,30 @@ from tests.test_m1 import request
 
 def wire(request_value):
     return json.dumps(request_value, ensure_ascii=False).encode("utf-8") + b"\n"
+
+
+class FaultingStdin:
+    def __init__(self, stream, mode):
+        self.stream, self.mode = stream, mode
+
+    def write(self, data):
+        if self.mode == "partial":
+            size = len(data) // 2
+            self.stream.write(data[:size])
+            return size
+        if self.mode == "raise_after_write":
+            self.stream.write(data)
+            self.stream.flush()
+            raise OSError("downstream write acknowledgement lost")
+        return self.stream.write(data)
+
+    def flush(self):
+        self.stream.flush()
+        if self.mode == "flush":
+            raise OSError("downstream flush acknowledgement lost")
+
+    def close(self):
+        self.stream.close()
 
 
 class RuntimeTests(unittest.TestCase):
@@ -77,10 +101,12 @@ class RuntimeTests(unittest.TestCase):
         with closing(sqlite3.connect(self.path)) as connection:
             if kind is None:
                 data = connection.execute(
-                    "SELECT record_bytes FROM m6_live_records ORDER BY seq").fetchall()
+                    "SELECT record_bytes FROM m6_live_records WHERE session_id=? ORDER BY seq",
+                    (self.session_id,)).fetchall()
             else:
                 data = connection.execute("""SELECT record_bytes FROM m6_live_records
-                    WHERE event_type=? ORDER BY seq""", (kind,)).fetchall()
+                    WHERE session_id=? AND event_type=? ORDER BY seq""",
+                    (self.session_id, kind)).fetchall()
         return [decode(raw) for (raw,) in data]
 
     def test_real_handler_requires_taken_permit(self):
@@ -91,7 +117,10 @@ class RuntimeTests(unittest.TestCase):
         self.task._thread.join(timeout=10)
         self.assertFalse(any(event["phase"] == "tool_received"
                              for event in self.task.child_events))
+        self.assertFalse(any(event["phase"] == "sink_arrival"
+                             for event in self.task.child_events))
         self.assertEqual(len(self.rows("DISPATCH_INTENT")), 1)
+        self.assertEqual(self.rows("TOOL_OUTCOME"), [])
 
     def test_nonworker_cannot_write_even_auxiliary_request(self):
         item = _Auxiliary("tools/list", "outside", b"invalid\n", None, None)
@@ -191,6 +220,24 @@ class RuntimeTests(unittest.TestCase):
         self.assertEqual(len(self.rows("DISPATCH_INTENT")), 2)  # Read and first send.
         self.assertEqual([r["body"]["status"] for r in self.rows("TOOL_OUTCOME")],
                          ["succeeded", "succeeded", "denied"])
+
+    def test_denied_and_forged_client_override_never_arrive_downstream(self):
+        forged = request("forged-arguments", "tools/call", name="send_sink",
+                         arguments={"payload": "SYNTHETIC_CANARY_A",
+                                    "synthetic_local_sink_override": True})
+        with self.assertRaises(ValueError):
+            self.task._submit_client_frame(wire(forged), BytesIO())
+        proposal = request("forged-metadata", "tools/call", name="send_sink",
+                           arguments={"payload": "SYNTHETIC_CANARY_A"})
+        proposal["params"]["_meta"]["synthetic_local_sink_override"] = True
+        output = BytesIO()
+        self.task._submit_client_frame(wire(proposal), output).result(timeout=15)
+        self.assertEqual(json.loads(output.getvalue())["error"]["code"], -32003)
+        self.stop_task()
+        self.assertEqual(self.rows("DISPATCH_INTENT"), [])
+        self.assertEqual(self.rows("TOOL_OUTCOME")[-1]["body"]["status"], "denied")
+        self.assertFalse(any(e["phase"] in {"tool_received", "sink_arrival"}
+                             for e in self.task.child_events))
 
     def test_exact_revoke_and_new_grant_restore_scope(self):
         self.task.grant("old", self.scope).result(timeout=10)
@@ -302,8 +349,112 @@ class RuntimeTests(unittest.TestCase):
                 self.task._thread.join(timeout=10)
                 self.assertFalse(any(e["phase"] == "tool_received"
                                      for e in self.task.child_events))
+                self.assertFalse(any(e["phase"] == "sink_arrival"
+                                     for e in self.task.child_events))
                 with self.assertRaises(LiveRuntimeError):
                     self.exchange("retry", "read_public")
+
+    def test_pre_dispatch_audit_failure_prevents_sink_arrival(self):
+        self.task.grant("g", self.scope).result(timeout=10)
+        with patch.object(self.task._audit, "_commit",
+                          side_effect=sqlite3.OperationalError("intent refused")):
+            with self.assertRaises(LiveAuditError):
+                self.exchange("blocked-send", "send_sink",
+                              {"payload": "SYNTHETIC_CANARY_A"})
+        self.task._thread.join(timeout=10)
+        self.assertEqual(self.rows("DISPATCH_INTENT"), [])
+        self.assertIn("g", self.task._authority._active)
+        self.assertFalse(any(e["phase"] in {"tool_received", "sink_arrival"}
+                             for e in self.task.child_events))
+
+    def test_partial_write_and_flush_failure_record_unknown_without_replay(self):
+        for mode in ("partial", "flush", "raise_after_write"):
+            with self.subTest(mode=mode):
+                if mode != "partial":
+                    self.stop_task()
+                    self.open_new_task()
+                self.task.grant("g", self.scope).result(timeout=10)
+                self.read_secret()
+                self.task._child.stdin = FaultingStdin(self.task._child.stdin, mode)
+                with self.assertRaises(Exception):
+                    self.exchange("uncertain-send", "send_sink", {"payload": "public"})
+                self.task._thread.join(timeout=10)
+                rows = [r for r in self.rows("TOOL_OUTCOME")
+                        if r["body"]["tool"] == "send_sink"]
+                self.assertEqual([r["body"]["status"] for r in rows], ["unknown"])
+                self.assertEqual(self.task._audit.state.failure, "UNKNOWN_OUTCOME")
+                self.assertNotIn("g", self.task._authority._active)
+                self.assertEqual(self.rows("DISPATCH_INTENT")[-1]["body"]
+                                 ["selected_grants"][0]["grant_id"], "g")
+                if mode == "partial":
+                    self.assertFalse(any(e["phase"] in {"tool_received", "sink_arrival"}
+                                         and e["request_id"] == "uncertain-send"
+                                         for e in self.task.child_events))
+                self.assertLessEqual(len([e for e in self.task.child_events
+                                          if e["phase"] == "sink_arrival"]), 1)
+                with self.assertRaises(LiveRuntimeError):
+                    self.exchange("retry", "send_sink", {"payload": "public"})
+
+    def test_failed_unknown_append_retains_consumed_intent_and_halts(self):
+        self.task.grant("g", self.scope).result(timeout=10)
+        self.read_secret()
+        self.task._child.stdin = FaultingStdin(self.task._child.stdin, "partial")
+        audit = self.task._audit
+        real_commit = audit._commit
+        commits = 0
+
+        def fail_unknown():
+            nonlocal commits
+            commits += 1
+            if commits == 2:
+                raise sqlite3.OperationalError("unknown outcome refused")
+            return real_commit()
+
+        with patch.object(audit, "_commit", side_effect=fail_unknown):
+            with self.assertRaises(LiveAuditError):
+                self.exchange("uncertain-send", "send_sink", {"payload": "public"})
+        self.task._thread.join(timeout=10)
+        self.assertEqual(audit.state.failure, "ROLLED_BACK")
+        self.assertEqual(self.rows("DISPATCH_INTENT")[-1]["body"]
+                         ["selected_grants"][0]["grant_id"], "g")
+        self.assertNotIn("g", self.task._authority._active)
+        self.assertEqual([r for r in self.rows("TOOL_OUTCOME")
+                          if r["body"]["tool"] == "send_sink"], [])
+        self.assertFalse(any(e["phase"] in {"tool_received", "sink_arrival"}
+                             and e["request_id"] == "uncertain-send"
+                             for e in self.task.child_events))
+        with self.assertRaises(LiveRuntimeError):
+            self.exchange("retry", "send_sink", {"payload": "public"})
+
+    def test_ambiguous_unknown_append_retains_consumed_intent_and_halts(self):
+        self.task.grant("g", self.scope).result(timeout=10)
+        self.read_secret()
+        self.task._child.stdin = FaultingStdin(self.task._child.stdin, "partial")
+        audit = self.task._audit
+        real_commit = audit._commit
+        commits = 0
+
+        def lose_unknown_ack():
+            nonlocal commits
+            commits += 1
+            real_commit()
+            if commits == 2:
+                raise OSError("unknown outcome commit acknowledgement lost")
+
+        with patch.object(audit, "_commit", side_effect=lose_unknown_ack):
+            with self.assertRaises(LiveAmbiguousCommit):
+                self.exchange("uncertain-send", "send_sink", {"payload": "public"})
+        self.task._thread.join(timeout=10)
+        self.assertEqual(audit.state.failure, "AMBIGUOUS_COMMIT")
+        self.assertEqual(self.task._state, "HALTED")
+        self.assertEqual(self.rows("DISPATCH_INTENT")[-1]["body"]
+                         ["selected_grants"][0]["grant_id"], "g")
+        self.assertNotIn("g", self.task._authority._active)
+        self.assertFalse(any(e["phase"] in {"tool_received", "sink_arrival"}
+                             and e["request_id"] == "uncertain-send"
+                             for e in self.task.child_events))
+        with self.assertRaises(LiveRuntimeError):
+            self.exchange("retry", "send_sink", {"payload": "public"})
 
     def test_outcome_write_failure_never_refunds_or_replays(self):
         self.task.grant("g", self.scope).result(timeout=10)
@@ -353,6 +504,105 @@ class RuntimeTests(unittest.TestCase):
                 self.assertEqual(self.rows("TOOL_OUTCOME")[-1]["body"]["status"], "unknown")
                 with self.assertRaises(LiveRuntimeError):
                     self.exchange("retry", "read_public")
+
+    def test_missing_or_malformed_is_error_is_unknown(self):
+        for invalid in ("missing", None, "false"):
+            with self.subTest(invalid=invalid):
+                if invalid != "missing":
+                    self.stop_task()
+                    self.open_new_task()
+                real_wait = self.task._await_response
+
+                def changed(request_id, timeout=30):
+                    response = real_wait(request_id, timeout)
+                    if invalid == "missing":
+                        del response["result"]["isError"]
+                    else:
+                        response["result"]["isError"] = invalid
+                    return response
+
+                with patch.object(self.task, "_await_response", side_effect=changed):
+                    with self.assertRaises(LiveRuntimeError):
+                        self.exchange("bad-result", "read_public")
+                self.task._thread.join(timeout=10)
+                self.assertEqual(self.rows("TOOL_OUTCOME")[-1]["body"]["status"],
+                                 "unknown")
+
+    def test_raw_duplicate_response_keys_halt_with_unknown(self):
+        cases = (
+            ("conflicting", b'"isError":"malformed","isError":false'),
+            ("identical", b'"isError":false,"isError":false'),
+            ("nested", b'"type":"text","type":"text"'),
+        )
+        for index, (kind, duplicate) in enumerate(cases):
+            with self.subTest(kind=kind):
+                if index:
+                    self.stop_task()
+                    self.open_new_task()
+                self.task.grant("g", self.scope).result(timeout=10)
+                self.read_secret()
+                content = (b'{"type":"text","text":"captured by local sink"}'
+                           if kind != "nested" else
+                           b'{"type":"text","type":"text",'
+                           b'"text":"captured by local sink"}')
+                result_flag = (duplicate if kind != "nested" else b'"isError":false')
+                raw = (b'{"jsonrpc":"2.0","id":"duplicate",'
+                       b'"result":{"content":[' + content + b'],' + result_flag + b'}}\n')
+                with patch.object(self.task._responses, "get", return_value=raw):
+                    with self.assertRaises(ValueError):
+                        self.exchange("duplicate", "send_sink", {"payload": "public"})
+                self.task._thread.join(timeout=10)
+                self.assertEqual([r["body"]["status"] for r in self.rows("TOOL_OUTCOME")
+                                  if r["body"]["tool"] == "send_sink"], ["unknown"])
+                self.assertEqual(self.task._audit.state.failure, "UNKNOWN_OUTCOME")
+                self.assertEqual(self.task._state, "HALTED")
+                self.assertEqual(self.rows("DISPATCH_INTENT")[-1]["body"]
+                                 ["selected_grants"][0]["grant_id"], "g")
+                self.assertNotIn("g", self.task._authority._active)
+                self.assertLessEqual(len([e for e in self.task.child_events
+                                          if e["phase"] == "sink_arrival" and
+                                          e["request_id"] == "duplicate"]), 1)
+                with self.assertRaises(LiveRuntimeError):
+                    self.exchange("retry", "send_sink", {"payload": "public"})
+
+    def test_timeout_eof_mismatch_and_jsonrpc_error_remain_unknown(self):
+        cases = {
+            "timeout": queue.Empty(),
+            "eof": b"",
+            "mismatch": wire({"jsonrpc": "2.0", "id": "other", "result": {}}),
+            "jsonrpc-error": wire({"jsonrpc": "2.0", "id": "uncertain",
+                                   "error": {"code": -32000, "message": "downstream error"}}),
+        }
+        for index, (kind, answer) in enumerate(cases.items()):
+            with self.subTest(kind=kind):
+                if index:
+                    self.stop_task()
+                    self.open_new_task()
+                with patch.object(self.task._responses, "get", side_effect=(
+                        answer if isinstance(answer, Exception) else lambda timeout: answer)):
+                    with self.assertRaises(Exception):
+                        self.exchange("uncertain", "read_public")
+                self.task._thread.join(timeout=10)
+                self.assertEqual(self.rows("TOOL_OUTCOME")[-1]["body"]["status"],
+                                 "unknown")
+                self.assertEqual(self.task._audit.state.failure, "UNKNOWN_OUTCOME")
+                with self.assertRaises(LiveRuntimeError):
+                    self.exchange("retry", "read_public")
+
+    def test_client_delivery_failure_preserves_committed_known_outcome(self):
+        class FailedOutput(BytesIO):
+            def write(self, _data):
+                raise OSError("client response delivery failed")
+
+        output = FailedOutput()
+        with self.assertRaises(OSError):
+            self.task._submit_client_frame(wire(request("known", "tools/call",
+                name="read_public", arguments={})), output).result(timeout=15)
+        self.task._thread.join(timeout=10)
+        self.assertEqual([r["body"]["status"] for r in self.rows("TOOL_OUTCOME")],
+                         ["succeeded"])
+        self.assertEqual(len([e for e in self.task.child_events
+                              if e["phase"] == "tool_received"]), 1)
 
 
 class InitializationTests(unittest.TestCase):

@@ -234,9 +234,14 @@ class LiveAuthorizationTask:
                 chosen = config["enforcement_detector"]
                 allow &= findings[chosen]["hypothetical_recommendation"] == "ALLOW"
             decision = "ALLOW" if allow else "DENY"
+            reason = "Confirmed task permission" if allow else "Controller refusal"
+            if (not allow and not plan.complete and not current.static_prohibition
+                    and profile["mode"] == "observation"
+                    and profile["synthetic_local_sink_override"] is False):
+                reason = "Required permission unavailable; observation override disabled"
             drafts.append(live_draft("DISPATCH_DECISION", {
                 "dispatch_decision": decision, "authorization_assessment": assessment,
-                "reason": "Confirmed task permission" if allow else "Controller refusal"},
+                "reason": reason},
                 call_id=call_id))
             if allow:
                 status = "AUTHORIZED" if required else "NO_RELEASE_OBLIGATION"

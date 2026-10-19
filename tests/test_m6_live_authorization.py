@@ -130,6 +130,25 @@ class LiveAuthorizationTests(unittest.TestCase):
         self.task.record_outcome(permit, "succeeded")
         self.assertIsNone(self.call("missing-b-again", "send_sink", {"payload": "public"}))
 
+    def test_missing_permission_names_disabled_override_without_consumption(self):
+        self.task.grant("g-a", self.a)
+        self.read_secret("a")
+        self.read_secret("b")
+        self.assertIsNone(self.call("denied-send", "send_sink", {"payload": "public"}))
+        decision = decode(self.audit._connection.execute("""SELECT record_bytes
+            FROM m6_live_records WHERE call_id='denied-send'
+            AND event_type='DISPATCH_DECISION'""").fetchone()[0])["body"]
+        outcome = decode(self.audit._connection.execute("""SELECT record_bytes
+            FROM m6_live_records WHERE call_id='denied-send'
+            AND event_type='TOOL_OUTCOME'""").fetchone()[0])["body"]
+        self.assertEqual(decision, {"dispatch_decision": "DENY",
+            "authorization_assessment": "UNAUTHORIZED",
+            "reason": "Required permission unavailable; observation override disabled"})
+        self.assertEqual(outcome["status"], "denied")
+        self.assertEqual(self.task._active, {"g-a": self.a})
+        self.assertFalse(any(r["call_id"] == "denied-send"
+                             for r in self.intent_bodies()))
+
     def test_task_isolation_and_owner_exclusivity(self):
         with self.assertRaises(ValueError):
             LiveAuthorizationTask(self.audit)

@@ -86,6 +86,15 @@ def _reject_constant(value):
     raise ValueError("Non-JSON numeric constant: " + value)
 
 
+def _reject_duplicate_keys(pairs):
+    value = {}
+    for key, item in pairs:
+        if key in value:
+            raise ValueError("Duplicate JSON object key")
+        value[key] = item
+    return value
+
+
 def _canonical_bytes(value):
     return json.dumps(value, sort_keys=True, separators=(",", ":"),
                       ensure_ascii=False, allow_nan=False).encode("utf-8")
@@ -101,7 +110,8 @@ def _frame(value):
 def _decode(frame):
     if type(frame) is not bytes or not frame.endswith(b"\n") or len(frame) > MAX_FRAME_BYTES:
         raise ValueError("Invalid M6 frame boundary")
-    value = json.loads(frame.decode("utf-8"), parse_constant=_reject_constant)
+    value = json.loads(frame.decode("utf-8"), parse_constant=_reject_constant,
+                       object_pairs_hook=_reject_duplicate_keys)
     if type(value) is not dict or value.get("jsonrpc") != "2.0":
         raise ValueError("Expected one JSON-RPC 2.0 object")
     return value
@@ -392,12 +402,21 @@ class HostTask:
             raise LiveRuntimeError("Unknown downstream request type")
         wire = _frame({"jsonrpc": "2.0", "id": item.request_id,
                        "method": method, "params": params})
+        taken = False
         if type(item) is _Proposal:
             self._authority.take_dispatch(permit)
-        written = self._child.stdin.write(wire)
-        if written != len(wire):
-            raise LiveRuntimeError("Incomplete downstream write")
-        self._child.stdin.flush()
+            taken = True
+        try:
+            written = self._child.stdin.write(wire)
+            if written != len(wire):
+                raise LiveRuntimeError("Incomplete downstream write")
+            self._child.stdin.flush()
+        except Exception:
+            # A taken permit may have reached the tool even if the write or
+            # flush failed. Its committed intent remains consumed.
+            if taken:
+                self._authority.record_outcome(permit, "unknown")
+            raise
 
     def _startup(self):
         self._audit = LiveAuditSession(self._db_path, self._manifest, self._inventory)
@@ -490,7 +509,8 @@ class HostTask:
             if (type(result) is not dict or type(content) is not list or len(content) != 1 or
                     type(content[0]) is not dict or content[0].get("type") != "text" or
                     content[0].get("text") != expected or
-                    result.get("isError", False) is not rule["is_error"]):
+                    type(result.get("isError")) is not bool or
+                    result["isError"] is not rule["is_error"]):
                 raise LiveRuntimeError("Unrecognized downstream tool result")
         except Exception:
             self._authority.record_outcome(permit, "unknown")
