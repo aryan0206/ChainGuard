@@ -14,7 +14,7 @@ from chainguard.authorization import plan_reservation
 from chainguard.m6_live_audit import LiveAuditSession, live_draft
 from chainguard.m6_live_profile import POLICY, SERVER_ID, validate_tool_arguments
 from chainguard.permission_evidence import DETECTOR_IDS, LIFECYCLE_BODY_KEYS
-from chainguard.semantics import Scope, extract_current
+from chainguard.semantics import Fact, Scope, extract_current
 
 
 class AuthorizationError(RuntimeError):
@@ -78,11 +78,13 @@ class LiveAuthorizationTask:
         self._active = {}
         self._issued = set()
         self._exposed = set()
+        self._facts = ()
         self._calls = set()
         self._ordinal = 0
         self._pending = None
         self._halted = False
         self._closed = False
+        self._evaluating = False
         claim = self._identity[1]
         with _claims_lock:
             if claim in _claimed_tasks:
@@ -93,6 +95,8 @@ class LiveAuthorizationTask:
     def _ready(self):
         if not self._usable:
             raise AuthorizationError("Task authority was not initialized")
+        if self._evaluating:
+            raise AuthorizationError("Authority transition inside findings callback")
         if get_ident() != self._owner_thread:
             raise AuthorizationError("Admission must run on the audit owner's thread")
         if self._halted or self._closed:
@@ -137,10 +141,13 @@ class LiveAuthorizationTask:
                 raise ValueError("Invalid, duplicate, or cross-task grant")
             body = {"grant_id": grant_id, "scope": _scope_body(scope),
                     "host_origin": "trusted_host", "admission_ordinal": self._ordinal + 1}
-            self._append((live_draft("GRANT", body),))
+            control = live_draft("GRANT", body)
+            fact = Fact("GRANT", control.event_id, scope=scope, grant_id=grant_id)
+            self._append((control,))
             self._issued.add(grant_id)
             self._active[grant_id] = scope
             self._ordinal += 1
+            self._facts += (fact,)
 
     def revoke(self, scope: Scope):
         with self._lock:
@@ -151,11 +158,15 @@ class LiveAuthorizationTask:
                 raise ValueError("Invalid or cross-task revocation")
             body = {"scope": _scope_body(scope), "host_origin": "trusted_host",
                     "admission_ordinal": self._ordinal + 1}
-            self._append((live_draft("REVOKE_SCOPE", body),))
+            control = live_draft("REVOKE_SCOPE", body)
+            fact = Fact("REVOKE_SCOPE", control.event_id, scope=scope)
+            self._append((control,))
             self._active = {g: s for g, s in self._active.items() if s != scope}
             self._ordinal += 1
+            self._facts += (fact,)
 
-    def admit_call(self, call_id, tool, request_id, arguments, findings):
+    def admit_call(self, call_id, tool, request_id, arguments, findings=None, *,
+                   findings_factory=None):
         """Commit a whole decision turn; return a permit only for confirmed intent."""
         with self._lock:
             self._ready()
@@ -172,18 +183,35 @@ class LiveAuthorizationTask:
             current = extract_current(raw, POLICY)
             if not current.supported:
                 raise ValueError("Unsupported normalized M6 call")
-            if type(findings) is not dict or set(findings) != set(DETECTOR_IDS):
-                raise ValueError("Expected all trusted detector findings")
             proposal = live_draft("CALL_PROPOSAL", {"server": SERVER_ID, "tool": tool,
                 "request_id": request_id, "admission_ordinal": self._ordinal + 1,
                 "current": {**asdict(current),
                             "sensitive_resources": list(current.sensitive_resources)}},
                 call_id=call_id)
+            if (findings is None) == (findings_factory is None):
+                raise ValueError("Supply exactly one trusted findings source")
+            if findings_factory is not None:
+                if not callable(findings_factory):
+                    raise ValueError("Invalid trusted findings factory")
+                self._evaluating = True
+                try:
+                    findings = findings_factory(current, proposal.event_id, self._facts)
+                except Exception:
+                    self._halted = True
+                    raise
+                finally:
+                    self._evaluating = False
+            if type(findings) is not dict or set(findings) != set(DETECTOR_IDS):
+                if findings_factory is not None:
+                    self._halted = True
+                raise ValueError("Expected all trusted detector findings")
             drafts = [proposal]
             for detector in DETECTOR_IDS:
                 body = deepcopy(findings[detector])
                 if (type(body) is not dict or set(body) != LIFECYCLE_BODY_KEYS["DETECTOR_FINDING"]
                         or body.get("detector_id") != detector):
+                    if findings_factory is not None:
+                        self._halted = True
                     raise ValueError("Invalid trusted detector finding")
                 body["evaluated_event_id"] = proposal.event_id
                 drafts.append(live_draft("DETECTOR_FINDING", body, call_id=call_id))
@@ -220,12 +248,19 @@ class LiveAuthorizationTask:
                     "selected_grants": selected, "reservation_status": status},
                     call_id=call_id)
                 drafts.append(intent)
+                facts = tuple(Fact("USE", intent.event_id, scope=scope, grant_id=grant)
+                              for scope, grant in plan.selections)
             else:
-                drafts.append(live_draft("TOOL_OUTCOME", _outcome_body(tool, current, "denied"),
-                                         call_id=call_id))
+                outcome = live_draft("TOOL_OUTCOME", _outcome_body(tool, current, "denied"),
+                                     call_id=call_id)
+                drafts.append(outcome)
+                facts = (Fact("TOOL_OUTCOME", outcome.event_id, current.operation,
+                              current.resource, current.destination, "denied",
+                              current.sensitivity, current.transformation),)
             self._append(drafts)
             self._ordinal += 1
             self._calls.add(call_id)
+            self._facts += facts
             if not allow:
                 return None
             for _, grant_id in plan.selections:
@@ -252,9 +287,14 @@ class LiveAuthorizationTask:
             if status not in {"succeeded", "failed", "unknown"}:
                 self._halted = True
                 raise AuthorizationError("Unrecognized dispatched outcome; task halted")
-            self._append((live_draft("TOOL_OUTCOME", _outcome_body(
-                pending.tool, pending.current, status), call_id=permit.call_id),),
+            outcome = live_draft("TOOL_OUTCOME", _outcome_body(
+                pending.tool, pending.current, status), call_id=permit.call_id)
+            fact = Fact("TOOL_OUTCOME", outcome.event_id, pending.current.operation,
+                        pending.current.resource, pending.current.destination, status,
+                        pending.current.sensitivity, pending.current.transformation)
+            self._append((outcome,),
                 "HALTED" if status == "unknown" else "ACTIVE")
+            self._facts += (fact,)
             if status == "succeeded" and pending.current.operation == "read" and \
                     pending.current.sensitivity == "sensitive":
                 self._exposed.add(pending.current.resource)

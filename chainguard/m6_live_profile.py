@@ -1,8 +1,8 @@
-"""Increment 1 contract for an isolated synthetic M6 live profile.
+"""Installed contract for the isolated synthetic M6 gated runtime.
 
 This module binds the fixed tool/server contract and manifest context. It does
-not create live authority, dispatch calls, sign evidence, or accept packages.
-The installed artifact inventory covers only code present in this increment.
+not sign evidence or accept packages. The installed artifact inventory covers
+the live writer, authority, runtime, and controlled tool surface.
 """
 
 from copy import deepcopy
@@ -27,7 +27,7 @@ PROFILE_VERSIONS = (PACKAGE_FORMAT, MANIFEST_SCHEMA, RECORD_SCHEMA,
                     COMMITMENT_SCHEMA, CONFIGURATION_SCHEMA)
 OBSERVATION_SCOPE = "synthetic-live-permission-lifecycle/sequential-stdio"
 SERVER_ID = "chainguard-m6-synthetic"
-IMPLEMENTATION_STAGE = "CONTRACT_ONLY"
+IMPLEMENTATION_STAGE = "GATED_RUNTIME"
 
 POLICY = Policy((("secret-a", "SYNTHETIC_CANARY_A"),
                  ("secret-b", "SYNTHETIC_CANARY_B")),
@@ -64,7 +64,8 @@ TOOL_CONTRACTS = MappingProxyType({
 EXECUTION_PROFILE = {"mode": "observation", "supported_tools": sorted(TOOL_CONTRACTS),
                      "synthetic_local_sink_override": False, "release_calls_enabled": True}
 ARTIFACT_NAMES = tuple(sorted(("__init__.py", "authorization.py", "canonical.py",
-    "detectors.py", "evidence.py", "m6_controlled_server.py", "m6_live_profile.py",
+    "detectors.py", "evidence.py", "m6_controlled_server.py", "m6_live_audit.py",
+    "m6_live_authorization.py", "m6_live_profile.py", "m6_live_runtime.py",
     "permission_evidence.py", "semantics.py")))
 MANIFEST_KEYS = {"schema_version", "record_schema_version", "canonicalization_version",
                  "protocol_version", "observation_scope", "mode", "execution_profile",
@@ -151,7 +152,7 @@ def registry_definition():
 
 
 def live_configuration():
-    """Bind current installed contract code; no package supplies its authority."""
+    """Bind current installed runtime code; no package supplies its authority."""
     revision = subprocess.run(["git", "rev-parse", "HEAD"], cwd=ROOT, check=True,
                               capture_output=True, text=True).stdout.strip()
     registry = registry_definition()
@@ -166,9 +167,9 @@ def live_configuration():
                        "max_payload_bytes": POLICY.max_payload_bytes},
             "tool_registry": {"version": "m6-live-synthetic-fixed-v1",
                               "digest": sha256(encode(registry)), "definition": registry},
-            "normalizer": {"version": "m6-live-contract-only-v1",
+            "normalizer": {"version": "m6-live-gated-v1",
                            "extraction_version": EXTRACTION_VERSION,
-                           "digest": sha256(b"m6-live-contract-only\0" + source +
+                           "digest": sha256(b"m6-live-gated\0" + source +
                                             (ROOT / "chainguard/semantics.py").read_bytes())},
             "detectors": [{"id": name, "version": "m2-v1", "digest": ARTIFACT_DIGEST}
                           for name in DETECTOR_IDS],

@@ -1,11 +1,11 @@
-"""Contract-only M6 live profile validation, independent of package acceptance."""
+"""Installed M6 live profile validation, independent of package acceptance."""
 
 from copy import deepcopy
 import unittest
 from unittest.mock import patch
 
 from chainguard.canonical import encode
-from chainguard.evidence import INVENTORY_SCHEMA, sha256
+from chainguard.evidence import INVENTORY_SCHEMA, ROOT, sha256
 from chainguard.m6_live_profile import (ARTIFACT_NAMES, CONFIGURATION_SCHEMA,
     MANIFEST_SCHEMA, PACKAGE_FORMAT, POLICY, PROFILE_VERSIONS, TOOL_CONTRACTS,
     input_schema, live_configuration, make_live_manifest, registry_definition,
@@ -39,8 +39,18 @@ class LiveProfileTests(unittest.TestCase):
         validate_profile_versions(PROFILE_VERSIONS)
         validate_live_configuration(self.config)
         validate_live_manifest(self.manifest, self.expected)
-        self.assertEqual(self.config["implementation_stage"], "CONTRACT_ONLY")
-        self.assertIn("m6_controlled_server.py", ARTIFACT_NAMES)
+        self.assertEqual(self.config["implementation_stage"], "GATED_RUNTIME")
+        for name in ("m6_controlled_server.py", "m6_live_audit.py",
+                     "m6_live_authorization.py", "m6_live_runtime.py"):
+            self.assertIn(name, ARTIFACT_NAMES)
+            digest = next(row["digest"] for row in self.config["artifacts"]
+                          if row["name"] == name)
+            self.assertEqual(digest, sha256((ROOT / "chainguard" / name).read_bytes()))
+            changed = deepcopy(self.config)
+            changed["artifacts"] = [row for row in changed["artifacts"]
+                                     if row["name"] != name]
+            with self.assertRaises(ValueError):
+                validate_live_configuration(changed)
 
     def test_mixed_and_wrong_type_profile_versions_fail(self):
         for versions in (OFFLINE_VERSIONS, tuple(PROFILE_VERSIONS[:-1]) + ("m6-configuration-v1",),

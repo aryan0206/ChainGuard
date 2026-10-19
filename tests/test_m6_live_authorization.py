@@ -348,6 +348,46 @@ class LiveAuthorizationTests(unittest.TestCase):
         with self.assertRaises(AuthorizationError):
             self.task.grant("own", self.a)
 
+    def test_findings_factory_receives_actual_proposal_and_confirmed_facts(self):
+        self.task.grant("g", self.a)
+        self.read_secret()
+        seen = []
+
+        def produce(current, proposal_id, facts):
+            seen.append((current, proposal_id, facts))
+            return findings()
+
+        permit = self.task.admit_call("send", "send_sink", "request", {"payload": "public"},
+                                      findings_factory=produce)
+        self.assertIsInstance(permit, DispatchPermit)
+        self.assertEqual([fact.category for fact in seen[0][2]], ["GRANT", "TOOL_OUTCOME"])
+        self.assertEqual(seen[0][1], self.audit._connection.execute(
+            "SELECT event_id FROM m6_live_records WHERE call_id='send' AND event_type='CALL_PROPOSAL'").fetchone()[0])
+        self.assertEqual(seen[0][2], self.task._facts[:2])
+        self.assertEqual(self.task._facts[-1].category, "USE")
+        self.assertEqual(self.task._facts[-1].event_id, permit.intent_event_id)
+        self.assertIs(type(seen[0][2]), tuple)
+
+    def test_findings_factory_reentry_halts_before_intent(self):
+        def reenter(_current, _proposal_id, _facts):
+            self.task.grant("nested", self.a)
+            return findings()
+
+        with self.assertRaises(AuthorizationError):
+            self.task.admit_call("call", "read_public", "request", {},
+                                 findings_factory=reenter)
+        self.assertEqual(self.audit.state.record_count, 1)
+        self.assertEqual(self.task._facts, ())
+        with self.assertRaises(AuthorizationError):
+            self.task.grant("later", self.a)
+
+    def test_failed_fact_write_does_not_advance_semantic_history(self):
+        with patch.object(self.audit, "_commit",
+                          side_effect=sqlite3.OperationalError("grant refused")):
+            with self.assertRaises(LiveAuditError):
+                self.task.grant("g", self.a)
+        self.assertEqual(self.task._facts, ())
+
 
 if __name__ == "__main__":
     unittest.main()
