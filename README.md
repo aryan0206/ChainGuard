@@ -33,11 +33,17 @@ M1–M5 and the Phase 2 workflow/oracle foundation are committed in checkpoint *
 
 **187 M1–M5 tests + 29 foundation tests = 216 recorded passing regression/qualification tests across separately executed suites.** This is not 216 independent research experiments or a new 216-test project-wide discovery run. Package campaign cases are reported separately.
 
+## M6.4 bounded engineering status — 21 October 2026
+
+All four M6.4 technical gates PASS within the tested live workflow: (1) an exact canonical evidence contract and fixed signing-byte/digest vector, where structural validity is separate from cryptographic verification; (2) clean-close, trusted count/head snapshot reconciliation and signed export; (3) offline chain, pinned-signature, assessor-context, lifecycle and finding checks with mutation tests; and (4) durable complete-run acceptance. The Gate 4 regression confirms full expectation readback before `M6Host.open_task`, exact intended signer-pin readback after a post-commit lost acknowledgement, and duplicate rejection after registry restart. It does not establish a global runtime preregistration gate.
+
+The [engineering log](docs/SPIKE_LOG.md#m64-four-gate-technical-completion--21-october-2026), [results ledger](docs/RESULTS_LEDGER.md) and [claims register](docs/CLAIMS_REGISTER.md) separate recorded runs and review decisions from the earlier final read-only audit, which ran no tests. A subsequent local M6.4 readiness audit passed 28 focused tests in 58.395s and 466 full-discovery tests in 670.885s; these are engineering tests, not independent research experiments. Gate 3/4 verifier and test files are new in this M6.4 change set. The earlier combined-suite child-startup timeout remains unexplained, and shared test setup remains a test-isolation follow-up.
+
 ## Current scope and limitations
 
-The live demonstrations use only public, non-release `echo` and `controlled_failure` calls. Sensitive-release and grant/revoke/use examples are replay qualification. These demonstrations establish bounded mediation, persistence, verification and acceptance behavior; they do not establish general detector superiority or real-world protection.
+The Evaluation-1 M4 demonstration uses public, non-release `echo` and `controlled_failure` calls. M6.3/M6.4 add controlled synthetic live grant/revoke/release and evidence tests; independent final-workflow source/sink qualification is still pending. These engineering checks do not establish general detector superiority or real-world protection. Trust inputs must be supplied by the assessor; signatures authenticate commitments, not observation truth or downstream tool behavior. Registry rollback and directory-entry crash durability remain outside the established claims.
 
-**M6 live lifecycle, E01–E13, held-out evaluation, external comparison and final cost/scaling measurements remain pending.** Evidence-label and external-baseline pin conflicts remain documented in the [protocol](docs/EVALUATION_PROTOCOL.md#authority-and-open-ambiguities).
+**Final M6 qualification, E01–E13, held-out evaluation, external comparison and final cost/scaling measurements remain pending.** Evidence-label and external-baseline pin conflicts remain documented in the [protocol](docs/EVALUATION_PROTOCOL.md#authority-and-open-ambiguities).
 
 ## Run the demonstration
 

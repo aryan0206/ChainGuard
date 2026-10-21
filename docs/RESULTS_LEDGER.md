@@ -2,6 +2,8 @@
 
 Snapshot: 8 October 2026. Strict separation of engineering checks, final research observations and unmeasured work. Sources: owner-supplied Phase 1 status and [the archived engineering README](SPIKE_LOG.md#historical-engineering-readme-at-checkpoint-5d00057), especially Actual M5 validation and M4 durability correction. These results were recorded previously; no code, regression, campaign or experiment was run in Phase 1. Raw artifacts were not independently rerun or revalidated here.
 
+M6.4 bounded engineering addendum: 21 October 2026. The dated entry below supplements this historical snapshot. The earlier final read-only completion audit ran no tests. A subsequent local M6.4 readiness audit executed the focused and full-discovery commands recorded below; this documentation edit did not rerun tests.
+
 ## A. COMPLETED ENGINEERING RESULTS
 
 | ID | Completed engineering check | Recorded result | Interpretation / limit |
@@ -45,6 +47,28 @@ The initial concurrent M1/M3/M4/M5 run produced an M1 discovery timeout in setUp
 
 Final separately executed suite counts: M1/M2/M3/M4/M5 = 12/41/40/67/27 (187 existing tests), plus 29 new foundation tests = **216 passing tests across the executed suites**. This is an aggregate of suite results, not a new project-wide discovery run, research sample size or count that includes failed/repeated attempts.
 
+### M6.4 bounded engineering gate addendum — 21 October 2026
+
+| Gate | Completion-audit decision | Evidence and limit |
+| --- | --- | --- |
+| 1 — Contract | PASS | Committed `m6_live_profile.py`/`m6_live_evidence.py` define exact versions, canonical package/closure fields and domain-separated signing bytes; `test_m6_live_evidence.py` includes a fixed byte/digest vector. Structural checks alone neither authenticate a signature nor recompute the chain. |
+| 2 — Seal | PASS | Committed host exporter requires clean shutdown, reconciles one read-only snapshot against retained writer count/head, signs and exports it. The 19 October [engineering record](SPIKE_LOG.md#m64-gate-2-live-clean-close-sealing--19-october-2026) supplies historical fault and test coverage. |
+| 3 — Independent verification | PASS | The new M6.4 `m6_live_verifier.py` and `test_m6_live_verifier.py` check chain, pinned signature, assessor context, lifecycle, normalized finding reproduction and mutation/inventory cases. Assessor inventory, configuration, challenge and signer pin must be supplied independently of the package. |
+| 4 — Acceptance and ordering | PASS | The new M6.4 `test_m6_live_acceptance.py` exercises confirmed registration and full reopened expectation readback before the real live open; a call is sealed, independently inspected, accepted with `COMMITTED` durability, then rejected as a duplicate after restart. Both lost-acknowledgement cases prevent execution; the post-commit case checks exact intended signer-pin bytes. The strict-string malformed-report and valid-report tests pass. Gate 4's final independent review returned APPROVED. |
+
+| Provenance | Recorded result | Interpretation |
+| --- | --- | --- |
+| 19 October Gate 2 engineering record | Focused 78 tests in 291.271s and combined 279 in 450.325s passed; initial full discovery of 438 had one child startup-handshake timeout, followed by 438 passed in 541.125s | Historical tests at Gate 2, not rerun for this addendum |
+| Earlier M4/M5/all-M6 combined run reported for Gate 4 | 344 tests, exit 1 from one M6 child startup-handshake timeout; isolated case passed | Failed run retained; root cause unknown |
+| Subsequent in-chat combined rerun in the repository `.venv` | 344 tests passed in 531.264s, exit 0 | Includes Gate 3/4 tests; does not explain the prior timeout |
+| Subsequent full discovery reported to the review | 466 passed | Reported result; exact command/output was not retained in the completion audit |
+| Signer-pin remediation check and final independent Gate 4 review | Three lost-ack tests passed in 7.040s; acceptance module 15 passed in 33.951s. Later focused review 4 passed in 20.058s; acceptance module 15 passed in 33.321s | Separate runs, not additive samples; final review APPROVED after P2 signer-pin fix |
+| Final read-only completion audit | No tests run; source, test, documentation and Git state inspected | Gate 1/3 PASS decisions are this audit's source-and-test assessment; standalone Gate 1/3 approval reports were not located. Gate 2 engineering record and Gate 4 APPROVED review are available |
+| Subsequent local M6.4 readiness audit — focused | `.\.venv\Scripts\python.exe -B -m unittest -v tests.test_m6_live_verifier tests.test_m6_live_acceptance`: 28 tests in 58.395s, `OK` | Later local engineering run; not part of the earlier read-only audit or an independent research experiment |
+| Subsequent local M6.4 readiness audit — full discovery | `.\.venv\Scripts\python.exe -B -m unittest discover -s tests`: 466 tests in 670.885s, `OK` | Later local engineering run; does not resolve the earlier child-startup timeout or establish detector superiority/observation truth |
+
+All four gates are bounded engineering checks, not final M6 or E01–E13 results. Shared class setup is a residual P3 test-isolation follow-up, not a failing test. The ordering test does not establish a global runtime preregistration gate. Signatures authenticate commitments, not observation truth or downstream tool behavior; registry rollback and directory-entry crash durability are outside the established claims. At the historical pre-commit checkpoint `3990258`, `chainguard/m6_live_verifier.py`, `tests/test_m6_live_verifier.py`, and `tests/test_m6_live_acceptance.py` were untracked, while `chainguard/acceptance.py` was tracked and modified; this records that checkpoint's Git status, not current status.
+
 ## B. COMPLETED RESEARCH/EXPERIMENTAL RESULTS
 
 No completed final E01-E13 research results are established by the supplied status. Existing fixture checks, mutation checks and package campaigns remain engineering evidence above. No final held-out sample count, effect size, uncertainty interval, comparative superiority or novelty result is recorded.
@@ -60,7 +84,7 @@ E01-E13 are specified in the [matrix](EXPERIMENT_MATRIX.md) and [protocol](EVALU
 | Final authorization, coverage/abstention, unnecessary denial, unsafe recommendations | Qualified independently labeled workflow-level results |
 | Unauthorized disclosure, legitimate completion and disruption | Independent live source/sink/task observations across study workflows |
 | B1 mixed-label ambiguity and held-out B2 benefit | Matched B1-input groups and frozen independent parent holdouts |
-| Live M6 grant/revoke/consumption and failure semantics | M6 implementation and independent live observations; replay checks insufficient |
+| Final live M6 grant/revoke/consumption and failure semantics | Independent qualified source/sink/task observations across study workflows; M6.3/M6.4 controlled engineering tests do not complete E06/E07 |
 | External comparison | Resolved pin, conformance, common supported domain, paired outcomes |
 | A3/A3T and A4/A4T assurance/cost tradeoffs | Equivalent-format experiments; resolve conflicting A1/A2 labels |
 | Authentic wrong facts / omissions versus independent truth | Qualified E10 cases; prior incorrect-finding checks do not complete E10 |
