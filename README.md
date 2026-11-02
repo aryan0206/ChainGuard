@@ -58,6 +58,7 @@ The first command demonstrates mediation and success/error/success. The second r
 
 ## Project documentation
 
+- [Approved 36-hour completion sprint and execution tracker](docs/COMPLETION_SPRINT_2026-11-02.md).
 - [Architecture lock](docs/ARCHITECTURE_LOCK.md), [threat model](docs/THREAT_MODEL.md) and [engineering playbook](ENGINEERING_PLAYBOOK.md).
 - [Evaluation protocol](docs/EVALUATION_PROTOCOL.md), [experiment matrix](docs/EXPERIMENT_MATRIX.md), [results ledger](docs/RESULTS_LEDGER.md) and [claims register](docs/CLAIMS_REGISTER.md).
 - [Evaluation-1 report source](docs/overleaf-evaluation1/main.tex) and [figure documentation](docs/overleaf-evaluation1/figures/README.md). The original supplied proposal is historical; this is the current Evaluation-1 report.

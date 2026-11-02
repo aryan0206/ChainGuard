@@ -1,0 +1,14 @@
+{
+  "run": "focused",
+  "evidence_name": "focused_retry_1",
+  "command": ".\\.venv\\Scripts\\python.exe -B -m unittest -v tests.test_m6_live_verifier tests.test_m6_live_acceptance",
+  "working_directory": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard",
+  "start_local": "2026-11-02T16:24:10.5382551+05:30",
+  "end_local": "2026-11-02T16:25:11.5501305+05:30",
+  "start_utc": "2026-11-02T10:54:10.5382551Z",
+  "end_utc": "2026-11-02T10:55:11.5501305Z",
+  "elapsed_seconds": 61.0010541,
+  "exit_code": 0,
+  "stdout_log": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\H0-H2\\focused_retry_1.stdout.log",
+  "stderr_log": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\H0-H2\\focused_retry_1.stderr.log"
+}

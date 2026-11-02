@@ -1,0 +1,13 @@
+{
+  "run": "focused",
+  "command": ".\\.venv\\Scripts\\python.exe -B -m unittest -v tests.test_m6_live_verifier tests.test_m6_live_acceptance",
+  "working_directory": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard",
+  "start_local": "2026-11-02T16:21:50.1414491+05:30",
+  "end_local": "2026-11-02T16:22:48.1994620+05:30",
+  "start_utc": "2026-11-02T10:51:50.1414491Z",
+  "end_utc": "2026-11-02T10:52:48.1994620Z",
+  "elapsed_seconds": 58.0484599,
+  "exit_code": -1073741510,
+  "stdout_log": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\H0-H2\\focused.stdout.log",
+  "stderr_log": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\H0-H2\\focused.stderr.log"
+}

@@ -1,0 +1,6 @@
+test_worker_rejects_auxiliary_label_with_tool_call_frame (tests.test_m6_live_runtime.RuntimeTests.test_worker_rejects_auxiliary_label_with_tool_call_frame) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 4.732s
+
+OK

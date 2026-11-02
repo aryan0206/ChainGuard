@@ -1,0 +1,20 @@
+{
+  "plan_recorded_local": "2026-11-02T16:55:16+05:30",
+  "status": "BLOCKED_UNEXECUTED",
+  "scope": "bounded synthetic live M6 qualification, not E01-E13 research execution",
+  "common_blockers": [
+    "M6Host.open_task calls live_configuration, which invokes git rev-parse HEAD; the user prohibits Git commands",
+    "The current local sink event retains destination and byte count but no received payload bytes or digest",
+    "No separately assessor-held raw child stderr or independent reservation-commit witness collector is exposed"
+  ],
+  "cases": [
+    {"id": "M6Q-01", "case": "sensitive source read", "expected": "read_secret_a returns the fixture canary and source handler arrival is observed", "status": "BLOCKED", "actual": null},
+    {"id": "M6Q-02", "case": "unauthorized sink send before grant", "expected": "authorization denied; no matching handler or sink arrival by clean closure", "status": "BLOCKED", "actual": null},
+    {"id": "M6Q-03", "case": "grant and first authorized use", "expected": "confirmed grant and reservation, one matching sink arrival, task receives expected acknowledgement", "status": "BLOCKED", "actual": null},
+    {"id": "M6Q-04", "case": "one-use reuse without new grant", "expected": "denial and no new matching sink arrival", "status": "BLOCKED", "actual": null},
+    {"id": "M6Q-05", "case": "revoke active unconsumed grant", "expected": "confirmed grant then revoke; attempted release denied without matching sink arrival", "status": "BLOCKED", "actual": null},
+    {"id": "M6Q-06", "case": "regrant after revoke", "expected": "new confirmed grant permits one subsequent release with matching sink arrival and task acknowledgement", "status": "BLOCKED", "actual": null},
+    {"id": "M6Q-07", "case": "duplicate request ID or replayed use", "expected": "duplicate request ID rejected at admission or a new use without a fresh grant denied; no extra sink arrival", "status": "BLOCKED", "actual": null},
+    {"id": "M6Q-08", "case": "audit persistence failure before dispatch", "expected": "declared fault prevents handler and sink arrival; consumption is unknown if commit witness is unavailable; no clean signed export from halted run", "status": "BLOCKED", "actual": null}
+  ]
+}

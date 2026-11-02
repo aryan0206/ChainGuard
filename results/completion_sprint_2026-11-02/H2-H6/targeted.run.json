@@ -1,0 +1,9 @@
+{
+  "command": ".\\.venv\\Scripts\\python.exe -B -m unittest -v tests.test_m6_live_runtime.RuntimeTests.test_timeout_and_malformed_response_halt_without_replay tests.test_m6_live_runtime.RuntimeTests.test_worker_rejects_auxiliary_label_with_tool_call_frame",
+  "start_local": "2026-11-02T16:52:54.1424353+05:30",
+  "end_local": "2026-11-02T16:53:28.8354296+05:30",
+  "elapsed_seconds": 34.5912861,
+  "exit_code": 0,
+  "stdout_log": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\H2-H6\\targeted.stdout.log",
+  "stderr_log": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\H2-H6\\targeted.stderr.log"
+}

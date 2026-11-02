@@ -1,0 +1,172 @@
+# ChainGuard 36-hour completion sprint — execution tracker
+
+Approved 2 November 2026. This document records the approved sprint; it does not record sprint execution or authorize a change to [Architecture v1.1](ARCHITECTURE_LOCK.md). The clock begins at **H0 when execution starts**, not when this tracker was written. Target: the strongest defensible submission state within **36 elapsed hours**, including six hours of sleep and one hour of breaks. Record the actual local start and end timestamps below. A missed target remains incomplete; no evidence, result, or completion claim may be invented to fit H36.
+
+| Clock / outcome | Actual entry |
+| --- | --- |
+| H0 local timestamp (Asia/Calcutta) | 2026-11-02 16:21:50.1414491 +05:30 (first test execution) |
+| H36 local deadline | 2026-11-04 04:21:50.1414491 +05:30 (36 elapsed hours from H0) |
+| Actual sprint end | NOT STARTED |
+| Immediate submission scope and owner decision | NOT STARTED |
+| End-of-sprint status | NOT STARTED |
+
+## Objective, authority, and outputs
+
+**Immediate writing deliverable:** a complete IEEE-formatted **project report** describing the implemented bounded system, executed methodology, actual results, architecture, security design, limitations, and evidence-supported conclusions. **Later writing deliverable:** an expanded research paper after this sprint, potentially including remaining locked-study requirements, the external baseline, additional experiments, larger held-out evaluation, stronger statistics, and expanded related work. The immediate report must never be described as completion of the full locked study unless that study is actually completed.
+
+All E01–E13 are in sprint scope and must be addressed individually. Addressing an experiment may yield a valid result, a partial result, or an explicit blocker/deferral. This tracker does not redefine any experiment, research question, evidence label, or architecture contract. The authoritative definitions remain [Experiment Matrix](EXPERIMENT_MATRIX.md), [Evaluation Protocol](EVALUATION_PROTOCOL.md), and [Architecture Lock](ARCHITECTURE_LOCK.md). The [Results Ledger](RESULTS_LEDGER.md) and [Claims Register](CLAIMS_REGISTER.md) distinguish historical engineering tests from unexecuted final research. The protocol records unresolved evidence-label and external-baseline pin conflicts; do not silently resolve either.
+
+Before later implementation, experiments, dependencies, commits, or publication, follow the applicable owner authorization and verification gates in [AGENTS.md](../AGENTS.md) and [Engineering Playbook](../ENGINEERING_PLAYBOOK.md). This sprint approval sets priorities and a deadline; it does not turn a planned experiment into a result or relax a prerequisite. Never claim signatures prove observation truth, tests prove detector superiority, replay qualifies live M6, B2-R reconstruction measures retained B2-S scaling, or duplicate evidence rejection prevents tool-execution replay.
+
+**Status vocabulary for each experiment:** `NOT STARTED`, `IN PROGRESS`, `BLOCKED`, `PARTIALLY COMPLETED`, `EXECUTED — ANALYSIS PENDING`, `VERIFIED COMPLETE`. A script or passing test alone cannot earn `VERIFIED COMPLETE`. A valid result needs its relevant frozen protocol/configuration, independent labels where required, raw observations, denominators, exclusions, and reproducibility record. Record exact output paths, not an undocumented verbal pass.
+
+## Approved schedule and checkpoints
+
+For each block, replace `NOT STARTED` with actual local start/end timestamps, the exact evidence location, and achieved/not achieved. After every major block, add a short checkpoint summary with the next action and blocker so another model can resume. Work that loses a prerequisite must be marked blocked while independent eligible work continues. The schedule is a target, never permission to bypass validity.
+
+| Time | Task | Expected deliverable | Actual start | Actual end | Evidence / checkpoint summary | Achieved? |
+| --- | --- | --- | --- | --- | --- | --- |
+| H0–H2 | Reproduce M6.4 focused and full-discovery tests | Fresh output, environment details, exit codes, failure records | 2026-11-02 16:21:50 +05:30 | 2026-11-02 16:45:22 +05:30 | [H0–H2 evidence](../results/completion_sprint_2026-11-02/H0-H2/): focused first attempt interrupted (exit -1073741510; no summary), retry 28 passed (exit 0), full discovery 466 run / 1 error (exit 1), isolated failing case 1 passed (exit 0). See run JSON and raw stderr per attempt. | PARTIAL — focused reproduced; full discovery failed |
+| H2–H6 | Qualify independent live M6 observations | Source, handler, sink, control, consumption, task witnesses | 2026-11-02 16:51:34 +05:30 (first recorded inspection time; read-only inspection began earlier) | 2026-11-02 16:55:16 +05:30 (case plan recorded; tracker update followed) | [H2–H6 diagnosis and qualification gate](../results/completion_sprint_2026-11-02/H2-H6/diagnosis_and_qualification.md): targeted predecessor plus failed case 2 passed, exit 0; full-suite startup cause unresolved. [Eight frozen case expectations](../results/completion_sprint_2026-11-02/H2-H6/qualification_plan.json) are blocked and unexecuted because the unmodified live opener invokes Git and independent sink-byte/commit witnesses are unavailable. | BLOCKED — no live qualification executed |
+| H6–H8 | End-to-end integration and demo | Allow, deny/non-arrival, signed evidence, valid/tampered inspection | NOT STARTED | NOT STARTED | NOT STARTED | NOT STARTED |
+| H8–H9 | Break | One-hour break | NOT STARTED | NOT STARTED | NOT STARTED | NOT STARTED |
+| H9–H12 | Freeze research corpus and experiment contract | Case IDs, parent groups, labels, configuration, metrics, splits, denominators | NOT STARTED | NOT STARTED | NOT STARTED | NOT STARTED |
+| H12–H16 | E01–E05 | Execute eligible cases and retain raw results; mark unmet prerequisites | NOT STARTED | NOT STARTED | NOT STARTED | NOT STARTED |
+| H16–H22 | Sleep | Six-hour sleep | NOT STARTED | NOT STARTED | NOT STARTED | NOT STARTED |
+| H22–H25 | E06–E09 | Execute eligible cases and retain raw results; mark unmet prerequisites | NOT STARTED | NOT STARTED | NOT STARTED | NOT STARTED |
+| H25–H28 | E10–E13 | Execute eligible cases and retain raw results; mark unmet prerequisites | NOT STARTED | NOT STARTED | NOT STARTED | NOT STARTED |
+| H28–H31 | Analysis | Recomputed metrics, tables, plots, documented limitations | NOT STARTED | NOT STARTED | NOT STARTED | NOT STARTED |
+| H31–H35 | IEEE project report | Complete source and compiled PDF | NOT STARTED | NOT STARTED | NOT STARTED | NOT STARTED |
+| H35–H36 | Final rehearsal and handoff | Verified demo commands, outputs, remaining-work summary | NOT STARTED | NOT STARTED | NOT STARTED | NOT STARTED |
+
+### Milestone checklist
+
+| Checkpoint | Present starting evidence | Required sprint outcome | Status / evidence |
+| --- | --- | --- | --- |
+| M1–M5 regression | Historical suites and results in [ledger](RESULTS_LEDGER.md) | Retain fresh exact commands, environment, exit codes, output | Full discovery ran 466 tests with one M6 runtime setup error; M1–M5 individual fresh suite counts were not collected. [Raw output](../results/completion_sprint_2026-11-02/H0-H2/full.stderr.log) |
+| M6.4 Gates 1–4 | Source/tests and recorded 28 focused / 466 full-discovery passes in [ledger](RESULTS_LEDGER.md#m64-bounded-engineering-gate-addendum--21-october-2026) | Reproduce, retain failures as well as passes; do not equate gates with final M6 | Focused 28 passed, exit 0; full discovery 466 tests, one M6 runtime setup error, exit 1. [Focused output](../results/completion_sprint_2026-11-02/H0-H2/focused_retry_1.stderr.log); [full output](../results/completion_sprint_2026-11-02/H0-H2/full.stderr.log). Historical full pass not reproduced. |
+| Final M6 qualification | Live controller and engineering tests; final independent workflow observations pending | Qualify live source/sink/control/commit/consumption/task truth and failure boundaries | BLOCKED / NOT EXECUTED in H2–H6. [Case plan and witness limits](../results/completion_sprint_2026-11-02/H2-H6/qualification_plan.json); no live package, verifier output, or independent qualification result. |
+| Evidence and acceptance | M4/M5/M6.4 mechanisms and engineering tests | Retain valid/tampered packages, offline dimensions, fresh/duplicate/restart outcomes | NOT STARTED |
+| B0/B1/B2 research comparison | Replay and Phase 2 development foundation | Frozen, independently labeled cases with attribution and valid denominators | NOT STARTED |
+| IEEE project report | Existing [Evaluation-1 IEEEtran source](overleaf-evaluation1/main.tex) | Complete evidence-aligned immediate report and PDF | NOT STARTED |
+
+## E01–E13 experiment tracker
+
+The following protocol-local research questions are quoted by ID from [Evaluation Protocol](EVALUATION_PROTOCOL.md#research-questions-and-hypotheses): **RQ1** What changes between current-event, unordered-history, and ordered-state representations? **RQ2** Where does event ordering materially change security decisions? **RQ3** Does ordered history improve useful authorization decisions on held-out workflows? **RQ4** Can detector, controller, and independent oracle outcomes be separated? **RQ5** Can evidence be independently verified, reproduced, and accepted without treating evidence authenticity as truth? **RQ6** Do guarantees survive execution and persistence failures? **RQ7** How does ChainGuard compare fairly with an external policy baseline? **RQ8** What cost does stronger representation/evidence impose? These are protocol-local IDs; the Architecture Lock and charter retain their own RQ contract.
+
+The `Existing` column records pre-sprint engineering support, never a completed final experiment. `Raw` and `Analysis` are result-path fields; enter exact paths only after the files exist. `Report` indicates whether an actual result is suitable for the immediate IEEE project report, initially `NOT ASSESSED`. An incomplete experiment can still be discussed as a limitation or future work without presenting a result.
+
+| Experiment (exact matrix name) / RQ | Prerequisites and existing implementation/evidence | Planned execution and completion criteria | Actual execution status | Raw result location | Analysis/output location | Blocker or deferral reason | Report result? |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| **E01 order-insensitive controls** — RQ1/RQ2 | Qualified S1/S2 replay fixtures; B0/B1/B2 code and Phase 2 development contracts exist. | Freeze benign reorderings and equal current/policy/non-order facts; run paired controls; retain projections, independent labels, outcomes, agreement and denominators. | NOT STARTED | NOT STARTED | NOT STARTED | NOT ASSESSED | NOT ASSESSED |
+| **E02 matched order-sensitive groups** — RQ1/RQ2 | Valid S4/S5/S6 lifecycle fixtures and independently ordered control/commit labels; one development matched group exists. | Run valid mixed-label groups with byte-identical B1 inputs; save order journals, labels, abstention/denial/completion and group error bounds. | NOT STARTED | NOT STARTED | NOT STARTED | NOT ASSESSED | NOT ASSESSED |
+| **E03 historical recognition** — RQ1/RQ2 | Freeze direct-recognition coverage; independent source/canary/sink observations; replay detector cases exist. | Test prior exposure outside frozen direct coverage with unrelated public send and failed-read controls; retain sink receipts, raw proposals, covered disclosure and disruption. | NOT STARTED | NOT STARTED | NOT STARTED | NOT ASSESSED | NOT ASSESSED |
+| **E04 detector/controller attribution** — RQ4/RQ6 | Shared shadows and separate equivalent enforcement runs; live gate tests exist. | Hold static envelope and fixtures constant; save recommendation, controller refusal, dispatch, handler, consumption, disclosure and completion separately. | NOT STARTED | NOT STARTED | NOT STARTED | NOT ASSESSED | NOT ASSESSED |
+| **E05 held-out workflows** — RQ1/RQ2/RQ3 | Requires a qualified oracle, frozen parent-level S1–S6 split and prerequisite comparisons; no held-out study exists. | Run only after rules/facts/splits freeze, with no clone leakage or tuning; retain actual parents, raw paired outcomes, exclusions and uncertainty. Do not imply external-subset comparison without E08 conformance. | NOT STARTED | NOT STARTED | NOT STARTED | NOT ASSESSED | NOT ASSESSED |
+| **E06 live M6 lifecycle** — RQ4/RQ6 | Live grant/revoke/use engineering code/tests exist; qualified independent live observations still required. | Exercise grant/use/reuse, active-unconsumed revoke, new grant, multi-scope, failure/no-refund and denial; retain source/sink/control/reservation witnesses and task outcomes. | NOT STARTED | NOT STARTED | NOT STARTED | NOT ASSESSED | NOT ASSESSED |
+| **E07 execution/failure boundaries** — RQ4/RQ6 | Live fault hooks and persistence engineering tests exist; qualified effects/fault ledger required. | Inject declared faults at control, intent, commit, forward, result and close; distinguish known from ambiguous outcomes and record no-forward/no-replay/no-refund observations. | NOT STARTED | NOT STARTED | NOT STARTED | NOT ASSESSED | NOT ASSESSED |
+| **E08 external baseline** — RQ1/RQ3/RQ7 | Locked Wang-style R02 subset, pin and conformance contract in [Baseline Notes](BASELINE_NOTES.md); no adapter/driver/result. Protocol records conflicting pin text. | Resolve pin through owner/lock process; pass pinned differential conformance on common facts first; only then run paired supported-domain comparison with independent oracle. | NOT STARTED | NOT STARTED | NOT STARTED | Pin ambiguity and conformance pending; do not substitute a revision. | NOT ASSESSED |
+| **E09 evidence integrity** — RQ5/RQ6/RQ8 | M4/M5/M6 mutation engineering tests exist; A1/A2 label conflict and A3T/A4T/other variants require resolution/implementation. | Predeclare A0–A4/A3T/A4T cases under repository labels; hold semantic content, durability and signing frequency equal; save originals/mutants, digests, expected and actual verifier dimensions, denominators and cost. | NOT STARTED | NOT STARTED | NOT STARTED | Label authority and missing variants unresolved. | NOT ASSESSED |
+| **E10 authentic-but-wrong facts/findings** — RQ4/RQ5 | Wrong-finding tests exist; independent truth journal and legitimate test signer needed. | Sign wrong observations, wrong findings and witnessed omissions; compare authenticity, reproduction and oracle truth without inferring truth from signatures. | NOT STARTED | NOT STARTED | NOT STARTED | NOT ASSESSED | NOT ASSESSED |
+| **E11 acceptance** — RQ5/RQ6 | M5 and M6.4 acceptance/restart engineering tests exist; A4T study support pending. | Predeclare singleton/multi-session, stale/wrong context, missing/extra, duplicate, restart, concurrency and commit-fault cases; retain durable-registry and dimension results. | NOT STARTED | NOT STARTED | NOT STARTED | A4T comparison pending where required. | NOT ASSESSED |
+| **E12 cost/scaling** — RQ8 | Test durations exist but no valid staged benchmark or retained-state measurement. | Instrument common boundaries and varied session lengths/scopes; record hardware/versions, repetitions, correctness, stage latency, storage, retained/reference/export memory; report only measured scope. | NOT STARTED | NOT STARTED | NOT STARTED | Instrumentation and variants pending; B2-R prefix replay is not retained B2-S scaling. | NOT ASSESSED |
+| **E13 invariance/explanation** — RQ1/RQ2/RQ4 | Identifier-renaming and related development tests exist; qualified metamorphic cases needed. | Run harmless gaps, opaque-ID renaming and valid scope interleaving; save before/after projections, independent invariants, verdict/rule/reference agreement and explanation outputs. | NOT STARTED | NOT STARTED | NOT STARTED | NOT ASSESSED | NOT ASSESSED |
+
+At H36, do not leave a row silently unreviewed. Set its true execution status, provide raw/analysis paths where applicable, explain the missing prerequisite if blocked or deferred, and decide whether its result can appear in the immediate report. E08 requires conformance before comparison; E05 requires frozen held-out parent groups; E12 requires appropriate instrumentation before scaling claims. Engineering test totals remain separate from research sample counts.
+
+## Final M6 qualification tracker
+
+| Qualification case | Independent witness and completion criterion | Status / exact evidence |
+| --- | --- | --- |
+| Pre-decision authorization for allowed and denied proposals | Assessor-held control/commit order and raw proposals; labels do not come from detector findings or SQLite alone | BLOCKED / UNEXECUTED in H2–H6; no compliant live opener or independent commit witness. [Plan](../results/completion_sprint_2026-11-02/H2-H6/qualification_plan.json) |
+| First one-use release and second denial | Source/sink bytes, selected-grant commit, handler arrival for first call and non-arrival for second | BLOCKED / UNEXECUTED in H2–H6; sink bytes/digest unavailable. [Report](../results/completion_sprint_2026-11-02/H2-H6/diagnosis_and_qualification.md) |
+| Active unconsumed revoke and new grant | Control/commit witnesses; denied release after revoke; authorized release only after fresh grant | BLOCKED / UNEXECUTED in H2–H6. [Plan](../results/completion_sprint_2026-11-02/H2-H6/qualification_plan.json) |
+| Multi-scope all-or-nothing | No partial consumption or forwarding on missing scope; full selection on authorized case | NOT STARTED |
+| Failed/unknown outcome and retry | Actual handler/result witness; consumed intent not refunded; ambiguity halts without replay | NOT STARTED |
+| Audit failure before dispatch | Fault location and independent handler/sink non-arrival | BLOCKED / UNEXECUTED in H2–H6. [Plan](../results/completion_sprint_2026-11-02/H2-H6/qualification_plan.json) |
+| Evidence and acceptance | Clean-close signed package, independent pinned verification, wrong-context/tamper rejection, durable duplicate rejection after restart | No H2–H6 live package or verifier output; live opener blocked. Historical engineering tests remain separate. |
+| Honest limits | Unknown observations remain unknown; no broad MCP or raw-truth claim | H2–H6 [report](../results/completion_sprint_2026-11-02/H2-H6/diagnosis_and_qualification.md) records missing witnesses and unexecuted cases; final qualification remains open. |
+
+## Immediate IEEE project report checklist
+
+Existing [Evaluation-1 source](overleaf-evaluation1/main.tex) is a starting point, not current final-study evidence. For each item, add the source/output reference and mark complete only after review.
+
+| Section or artifact | Status / evidence |
+| --- | --- |
+| Title, abstract and index terms reflect actual submission scope | NOT STARTED |
+| Introduction, research problem, gap and bounded contribution | NOT STARTED |
+| Related work and verified primary references | NOT STARTED |
+| Architecture diagram and actual integrated M6 boundary | NOT STARTED |
+| Threat model, authorization and evidence security design | NOT STARTED |
+| Methodology, frozen corpus, independent oracle and experimental setup | NOT STARTED |
+| Results tables/plots trace to raw observations and valid denominators | NOT STARTED |
+| Discussion separates detector, controller, oracle and verification outcomes | NOT STARTED |
+| Limitations, blocked E cases and later expanded-paper work | NOT STARTED |
+| Conclusion contains only measured findings | NOT STARTED |
+| Compiled IEEE-format PDF and final formatting/proofread check | NOT STARTED |
+
+## Final demonstration checklist
+
+Record exact commands/inputs, exit codes, actual output locations and a short professor-facing explanation; do not fill expected-output fields with unrun examples.
+
+| Demonstration | Exact command/input | Actual output/evidence | Status |
+| --- | --- | --- | --- |
+| Authorized tool operation and observed arrival | NOT STARTED | NOT STARTED | NOT STARTED |
+| Unauthorized denial and independently observed non-arrival | NOT STARTED | NOT STARTED | NOT STARTED |
+| Audit records, chain and signed clean-close package | NOT STARTED | NOT STARTED | NOT STARTED |
+| Offline valid-versus-tampered package inspection | NOT STARTED | NOT STARTED | NOT STARTED |
+| Fresh acceptance and duplicate rejection after verifier restart | NOT STARTED | NOT STARTED | NOT STARTED |
+| B0/B1/B2 comparison with independent labels where supported | NOT STARTED | NOT STARTED | NOT STARTED |
+| Two-minute contribution, trust assumptions and limits explanation | NOT STARTED | NOT STARTED | NOT STARTED |
+
+## Model Efficiency and Execution Log
+
+Log every meaningful task/checkpoint with a stable ID. Use actual local timestamps and duration. Enter token counts only when the platform exposes a reliable count; otherwise write `NOT EXPOSED`. Distinguish model generation time from command/execution time where measurable. Record prompt retries and unnecessary rework. Prefer small task-specific prompts and an adequate model for mechanical inspection; use the strongest available reasoning model for research validity, architecture decisions and paper-claim review. Efficiency never overrides evidence quality.
+
+| Task ID | Task name | Start time (local) | End time (local) | Elapsed time | Model/tool | Input tokens | Output tokens | Retries | Files inspected | Files changed | Tests/experiments (exact command/ID) | Outcome | Evidence location | Generation vs execution time / rework |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| H0-H2-20261102 | Fresh M6.4 reproduction and timeout investigation | 2026-11-02 16:14:09 +05:30 (first recorded baseline inspection time) | 2026-11-02 16:47:14 +05:30 (documentation verification) | 33m 05s from first recorded time; test execution from H0 to isolated-test end 23m 33s | GPT-6 Codex / PowerShell 7.6.5 / CPython 3.14.3 unittest | NOT EXPOSED | NOT EXPOSED | 1 focused retry after interrupted process; 1 isolated diagnostic after full error; baseline version check retried with required execution permission | AGENTS.md; docs/PROJECT_CHARTER.md, ARCHITECTURE_LOCK.md, THREAT_MODEL.md, EVALUATION_PROTOCOL.md, RESULTS_LEDGER.md, COMPLETION_SPRINT_2026-11-02.md; ENGINEERING_PLAYBOOK.md; tests/test_m6_live_verifier.py, test_m6_live_acceptance.py, test_m6_live_runtime.py; chainguard/m6_live_runtime.py | docs/COMPLETION_SPRINT_2026-11-02.md; generated H0-H2 evidence files | [Exact commands and run metadata](../results/completion_sprint_2026-11-02/H0-H2/) | Focused 28 OK; full 466 with 1 error; isolated case OK; historical full pass not reproduced | [H0-H2](../results/completion_sprint_2026-11-02/H0-H2/) | Model generation time NOT EXPOSED; execution elapsed per run JSON; no source/test rework |
+| H2-H6-20261102 | Startup diagnosis and live M6 qualification gate | 2026-11-02 16:51:34 +05:30 (first recorded clock read; earlier inspection start NOT EXPOSED) | 2026-11-02 16:56:22 +05:30 (tracker verification) | At least 4m 48s from first recorded time; complete task duration NOT EXPOSED; targeted execution 34.591s wall | GPT-6 Codex / PowerShell 7.6.5 / CPython 3.14.3 unittest | NOT EXPOSED | NOT EXPOSED | No retry; one targeted predecessor-pair diagnostic | docs/COMPLETION_SPRINT_2026-11-02.md, ARCHITECTURE_LOCK.md, EVALUATION_PROTOCOL.md, EXPERIMENT_MATRIX.md, THREAT_MODEL.md; H0-H2 raw logs/metadata; chainguard/m6_live_runtime.py, m6_controlled_server.py, m6_live_profile.py, m6_live_verifier.py; tests/test_m6_live_runtime.py, test_m6_live_verifier.py, test_m6_live_seal.py, test_m1.py | docs/COMPLETION_SPRINT_2026-11-02.md; generated H2-H6 diagnosis, case plan, runner, raw logs/metadata | [Exact targeted command](../results/completion_sprint_2026-11-02/H2-H6/targeted.run.json); no live or E01–E13 run | Targeted 2 OK; startup root cause unresolved; live qualification blocked/unexecuted | [H2-H6 report](../results/completion_sprint_2026-11-02/H2-H6/diagnosis_and_qualification.md) | Model generation time NOT EXPOSED; internal Git invocation discovered after targeted test; no source/test rework |
+
+### Checkpoint summaries for model handoff
+
+| Checkpoint / actual time | Completed work and evidence | Current blocker/decision | Next precise action |
+| --- | --- | --- | --- |
+| H0–H2 / 2026-11-02 16:45:22 +05:30 | [Baseline and four retained attempts](../results/completion_sprint_2026-11-02/H0-H2/): focused 28/28 passed on retry; full discovery 466 with one setup error; the isolated error case passed. No E01–E13 or live qualification was run. | BD-04 remains OPEN. Full discovery did not reproduce the historical 466-pass result. Failure is a 15-second controlled-child startup handshake timeout during M6 runtime test setup; root cause unverified. First focused attempt was interrupted with Windows exit -1073741510 and no summary. | H2–H6: review the retained timeout and, if needed, repeat the exact full suite under controlled load before treating regression as clean; then qualify independent live M6 source/sink/control/commit/consumption/task witnesses. Obtain owner approval before any source/test/timeout fix. |
+| H2–H6 / 2026-11-02 16:55:16 +05:30 | [Diagnosis report](../results/completion_sprint_2026-11-02/H2-H6/diagnosis_and_qualification.md), [targeted raw output](../results/completion_sprint_2026-11-02/H2-H6/targeted.stderr.log), and [eight unexecuted frozen case IDs](../results/completion_sprint_2026-11-02/H2-H6/qualification_plan.json). Targeted 2 passed in 30.213s unittest time, exit 0; no full suite rerun, live case, or E01–E13 execution. | BD-04 startup root cause unresolved. BD-03 live qualification blocked: unmodified `M6Host.open_task` invokes Git, which the owner prohibits; sink emits only destination/byte count, and independent reservation-commit witness collection is absent. | H6–H9: resolve the no-Git runtime conflict and independent witness plan with owner approval before live execution; prepare an evidence-aligned demo plan without claiming final M6. |
+| H6–H8 / NOT STARTED | NOT STARTED | NOT STARTED | NOT STARTED |
+| H9–H12 / NOT STARTED | NOT STARTED | NOT STARTED | NOT STARTED |
+| H12–H16 / NOT STARTED | NOT STARTED | NOT STARTED | NOT STARTED |
+| H22–H25 / NOT STARTED | NOT STARTED | NOT STARTED | NOT STARTED |
+| H25–H28 / NOT STARTED | NOT STARTED | NOT STARTED | NOT STARTED |
+| H28–H31 / NOT STARTED | NOT STARTED | NOT STARTED | NOT STARTED |
+| H31–H35 / NOT STARTED | NOT STARTED | NOT STARTED | NOT STARTED |
+| H35–H36 / NOT STARTED | NOT STARTED | NOT STARTED | NOT STARTED |
+
+## Blockers and decisions log
+
+Existing open items are context, not newly approved changes. Add the owner decision and evidence when resolved. Do not silently amend locked contracts to meet the clock.
+
+| ID | Blocker / decision | Current state | Resolution and evidence | Owner decision / date |
+| --- | --- | --- | --- | --- |
+| BD-01 | E08 baseline revision discrepancy and required conformance | OPEN; [protocol authority note](EVALUATION_PROTOCOL.md#authority-and-open-ambiguities) and [baseline notes](BASELINE_NOTES.md) | NOT STARTED | NOT STARTED |
+| BD-02 | E09 A1/A2 evidence-label discrepancy and missing variants | OPEN; [protocol authority note](EVALUATION_PROTOCOL.md#authority-and-open-ambiguities) | NOT STARTED | NOT STARTED |
+| BD-03 | Independent live source/sink/control/commit/consumption/task observations for final M6 | OPEN; no H2–H6 live run. `M6Host.open_task` calls Git through `live_configuration`; no-Git boundary blocks unmodified execution. Sink event lacks bytes/digest; assessor-held raw child stderr and independent reservation-commit witness collector are absent. | [Diagnosis and blocked case plan](../results/completion_sprint_2026-11-02/H2-H6/diagnosis_and_qualification.md) | Owner decision needed on a compliant no-Git live path and witness collection before any code/protocol change. |
+| BD-04 | Earlier intermittent child startup-handshake timeout | OPEN; fresh full discovery on 2026-11-02 reproduced one setup timeout at `test_worker_rejects_auxiliary_label_with_tool_call_frame` (466 tests, 1 error, exit 1); isolated case passed (1 test, exit 0); targeted predecessor pair passed (2 tests, exit 0). Root cause remains unverified. | [Full stderr](../results/completion_sprint_2026-11-02/H0-H2/full.stderr.log), [targeted stderr and report](../results/completion_sprint_2026-11-02/H2-H6/diagnosis_and_qualification.md). No implementation/test/timeout change made. | No source fix proposed without a discriminating measurement; owner approval required if a fix is later justified. |
+| BD-05 | Held-out parent freeze and E12 instrumentation | OPEN; [protocol](EVALUATION_PROTOCOL.md) prerequisites | NOT STARTED | NOT STARTED |
+
+## H36 handoff template
+
+Complete this from retained evidence, then compare every paper claim with the [Claims Register](CLAIMS_REGISTER.md). Any unmet mandatory final-study requirement remains on the later expanded-paper list; the immediate report must state the boundary.
+
+| Handoff field | Actual entry |
+| --- | --- |
+| Actual H0/H36 and focused time; missed/reallocated blocks | NOT STARTED |
+| Software state, fresh regression/qualification commands, exit codes, known critical failures | NOT STARTED |
+| E01–E13 status summary and exact raw/configuration/analysis locations | NOT STARTED |
+| Independent oracle coverage, unknowns/exclusions and split inventory | NOT STARTED |
+| Valid result tables/plots and claims they support | NOT STARTED |
+| IEEE project report source, compiled PDF and reference/format verification | NOT STARTED |
+| Demo commands, actual outputs and professor-facing explanation | NOT STARTED |
+| Remaining locked-study work for expanded research paper | NOT STARTED |
+| Student review, milestone commit and publication authorizations, if separately given | NOT STARTED |

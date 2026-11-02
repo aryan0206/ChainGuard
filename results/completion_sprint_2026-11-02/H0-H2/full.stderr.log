@@ -1,0 +1,47 @@
+......................................................................................................................................................................................................................................................................................................................................................................................................E...........................................................................
+======================================================================
+ERROR: test_worker_rejects_auxiliary_label_with_tool_call_frame (test_m6_live_runtime.RuntimeTests.test_worker_rejects_auxiliary_label_with_tool_call_frame)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\Laptop\OneDrive\Documents\MIT\ChainGuard\chainguard\m6_live_runtime.py", line 213, in __init__
+    self._ready.result(timeout=2 * _HANDSHAKE_TIMEOUT_SECONDS + 5)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Laptop\AppData\Local\Python\pythoncore-3.14-64\Lib\concurrent\futures\_base.py", line 450, in result
+    return self.__get_result()
+           ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Laptop\AppData\Local\Python\pythoncore-3.14-64\Lib\concurrent\futures\_base.py", line 395, in __get_result
+    raise self._exception
+  File "C:\Users\Laptop\OneDrive\Documents\MIT\ChainGuard\chainguard\m6_live_runtime.py", line 568, in _work
+    self._startup()
+    ~~~~~~~~~~~~~^^
+  File "C:\Users\Laptop\OneDrive\Documents\MIT\ChainGuard\chainguard\m6_live_runtime.py", line 481, in _startup
+    response = self._await_response(request_id, _HANDSHAKE_TIMEOUT_SECONDS)
+  File "C:\Users\Laptop\OneDrive\Documents\MIT\ChainGuard\chainguard\m6_live_runtime.py", line 405, in _await_response
+    frame = self._responses.get(timeout=timeout)
+  File "C:\Users\Laptop\AppData\Local\Python\pythoncore-3.14-64\Lib\queue.py", line 209, in get
+    raise Empty
+_queue.Empty
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Laptop\OneDrive\Documents\MIT\ChainGuard\tests\test_m6_live_runtime.py", line 61, in setUp
+    self.open_new_task()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Laptop\OneDrive\Documents\MIT\ChainGuard\tests\test_m6_live_runtime.py", line 76, in open_new_task
+    self.task = M6Host().open_task(db_path=self.path,
+                ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+        trusted_inventory=self.inventory, task_id=self.task_id,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        session_id=self.session_id, monitor_instance_id=self.monitor_id)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Laptop\OneDrive\Documents\MIT\ChainGuard\chainguard\m6_live_runtime.py", line 176, in open_task
+    return HostTask(Path(db_path), inventory, manifest, _HOST_TOKEN)
+  File "C:\Users\Laptop\OneDrive\Documents\MIT\ChainGuard\chainguard\m6_live_runtime.py", line 224, in __init__
+    raise LiveRuntimeError("M6 task did not become ready") from exc
+chainguard.m6_live_runtime.LiveRuntimeError: M6 task did not become ready
+
+----------------------------------------------------------------------
+Ran 466 tests in 1045.989s
+
+FAILED (errors=1)
