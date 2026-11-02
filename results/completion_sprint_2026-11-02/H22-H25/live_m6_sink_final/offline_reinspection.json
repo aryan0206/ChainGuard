@@ -1,0 +1,41 @@
+{
+  "mode": "INSPECT",
+  "fresh_submission": "NOT_CHECKED",
+  "inspection_passed": true,
+  "dimensions": {
+    "package_schema": {
+      "status": "PASS",
+      "reason": "CANONICAL_LIVE_PACKAGE"
+    },
+    "commitment_integrity": {
+      "status": "PASS",
+      "reason": "CHAIN_AND_CLOSURE_MATCH"
+    },
+    "trusted_signature": {
+      "status": "PASS",
+      "reason": "PINNED_SIGNER_VERIFIED"
+    },
+    "expected_binding": {
+      "status": "PASS",
+      "reason": "ASSESSOR_CONTEXT_MATCH"
+    },
+    "inventory_completeness": {
+      "status": "PASS",
+      "reason": "SESSION_PRESENT"
+    },
+    "lifecycle_semantics": {
+      "status": "PASS",
+      "reason": "LIVE_LIFECYCLE_RECONSTRUCTED"
+    },
+    "finding_reproduction": {
+      "status": "PASS",
+      "reason": "NORMALIZED_FINDINGS_REPRODUCED"
+    }
+  },
+  "reproduction": {
+    "proposals": 6,
+    "findings_reproduced": 24,
+    "b2_agreeing_prefixes": 6,
+    "basis": "recorded_normalized_facts_only"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "case_id": "M6Q-04",
+  "request_id": "q4-reuse",
+  "started_local": "2026-11-02T20:09:58.632319+05:30",
+  "ended_local": "2026-11-02T20:09:58.672839+05:30",
+  "status": "RETURNED",
+  "exception": null,
+  "request_sha256": "4d38009a6a86701f813c9021061e6899b34a18305424b65e1e230f47b96a65f2",
+  "response_sha256": "3c31849177ba7d14d373098b8491c878a6cc1b168d950c9d6db09814de7bfdb0"
+}

@@ -1,0 +1,12 @@
+{
+  "command": ".\\.venv\\Scripts\\python.exe -B results/completion_sprint_2026-11-02/H22-H25/qualify_live.py",
+  "revision_pin": "8b27b5a980a87887be66c409c5a6a31d415a3326",
+  "revision_source": "explicit project owner reply; no Git command run by agent",
+  "output_directory": "live_m6_final",
+  "start_local": "2026-11-02T20:09:51.6651890+05:30",
+  "end_local": "2026-11-02T20:10:05.3204216+05:30",
+  "elapsed_seconds": 13.6475624,
+  "exit_code": 0,
+  "stdout_log": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\H22-H25\\live_final.stdout.log",
+  "stderr_log": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\H22-H25\\live_final.stderr.log"
+}

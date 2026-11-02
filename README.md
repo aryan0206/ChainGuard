@@ -41,9 +41,9 @@ The [engineering log](docs/SPIKE_LOG.md#m64-four-gate-technical-completion--21-o
 
 ## Current scope and limitations
 
-The Evaluation-1 M4 demonstration uses public, non-release `echo` and `controlled_failure` calls. M6.3/M6.4 add controlled synthetic live grant/revoke/release and evidence tests; independent final-workflow source/sink qualification is still pending. These engineering checks do not establish general detector superiority or real-world protection. Trust inputs must be supplied by the assessor; signatures authenticate commitments, not observation truth or downstream tool behavior. Registry rollback and directory-entry crash durability remain outside the established claims.
+The Evaluation-1 M4 demonstration uses public, non-release `echo` and `controlled_failure` calls. M6.3/M6.4 add controlled synthetic live grant/revoke/release and evidence tests. The [H22–H25 sprint checkpoint](results/completion_sprint_2026-11-02/H22-H25/implementation_and_qualification.md) adds a no-Git M6 entry, assessor-held control/commit/handler/loopback-sink witnesses, and eight bounded synthetic M6Q case checks for the immediately preceding source state. A final child-environment guard has a focused test but was not live requalified after the owner stopped reruns. These checks do not establish general detector superiority or real-world protection. Trust inputs must be supplied by the assessor; signatures authenticate commitments, not observation truth or downstream tool behavior. Registry rollback and directory-entry crash durability remain outside the established claims.
 
-**Final M6 qualification, E01–E13, held-out evaluation, external comparison and final cost/scaling measurements remain pending.** Evidence-label and external-baseline pin conflicts remain documented in the [protocol](docs/EVALUATION_PROTOCOL.md#authority-and-open-ambiguities).
+**Broader final M6 qualification, E01–E13, held-out evaluation, external comparison and final cost/scaling measurements remain pending.** Evidence-label and external-baseline pin conflicts remain documented in the [protocol](docs/EVALUATION_PROTOCOL.md#authority-and-open-ambiguities).
 
 ## Run the demonstration
 

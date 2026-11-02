@@ -1,0 +1,6 @@
+test_unavailable_assessor_sink_halts_without_successful_arrival (tests.test_m6_live_runtime.RuntimeTests.test_unavailable_assessor_sink_halts_without_successful_arrival) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 9.064s
+
+OK

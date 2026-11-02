@@ -1,0 +1,13 @@
+{
+  "case_id": "M6Q-07",
+  "request_id": "q1-read",
+  "started_local": "2026-11-02T20:09:58.856043+05:30",
+  "ended_local": "2026-11-02T20:09:58.857688+05:30",
+  "status": "EXCEPTION",
+  "exception": {
+    "type": "_ClientRequestError",
+    "message": "Duplicate request ID"
+  },
+  "request_sha256": "389d12155b02adaf5a800731da70b42914a4834140cce972eeda3fcb30dbd207",
+  "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

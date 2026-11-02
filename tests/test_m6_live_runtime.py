@@ -1,13 +1,17 @@
 """Real M6 gateway dispatch, ordering, and persistence-failure boundaries."""
 
 from concurrent.futures import Future, TimeoutError as FutureTimeout
+import base64
+import hashlib
 from contextlib import closing
 from dataclasses import replace
 from io import BytesIO
 import inspect
 import json
+import os
 from pathlib import Path
 import queue
+import socket
 import sqlite3
 import tempfile
 from threading import Event
@@ -61,7 +65,7 @@ class RuntimeTests(unittest.TestCase):
         self.open_new_task()
         self.addCleanup(self.stop_task)
 
-    def open_new_task(self):
+    def open_new_task(self, witness_dir=None, assessor_sink_endpoint=None):
         nonce = uuid4().hex
         self.task_id = "runtime-task-" + nonce
         self.session_id = "runtime-session-" + nonce
@@ -75,7 +79,9 @@ class RuntimeTests(unittest.TestCase):
                                         "monitor_instance_id": self.monitor_id}]}
         self.task = M6Host().open_task(db_path=self.path,
             trusted_inventory=self.inventory, task_id=self.task_id,
-            session_id=self.session_id, monitor_instance_id=self.monitor_id)
+            session_id=self.session_id, monitor_instance_id=self.monitor_id,
+            witness_dir=witness_dir,
+            assessor_sink_endpoint=assessor_sink_endpoint)
         self.scope = Scope(self.task_id, "secret-a", "sink")
 
     def stop_task(self):
@@ -108,6 +114,87 @@ class RuntimeTests(unittest.TestCase):
                     WHERE session_id=? AND event_type=? ORDER BY seq""",
                     (self.session_id, kind)).fetchall()
         return [decode(raw) for (raw,) in data]
+
+    def test_assessor_stream_retains_commit_handler_and_exact_sink_bytes(self):
+        self.stop_task()
+        witness_dir = Path(self.temp.name) / "assessor"
+        self.open_new_task(witness_dir=witness_dir)
+        self.task.grant("g-witness", self.scope).result(timeout=10)
+        self.read_secret("witness-read")
+        payload = "SYNTHETIC_CANARY_A-π"
+        response = self.exchange("witness-send", "send_sink", {"payload": payload})
+        self.assertIn("result", response)
+        self.stop_task()
+        host = [json.loads(line) for line in (witness_dir / "host.jsonl").read_text().splitlines()]
+        child = [json.loads(line) for line in (witness_dir / "child.jsonl").read_text().splitlines()]
+        self.assertEqual([row["sequence"] for row in host], list(range(1, len(host) + 1)))
+        self.assertTrue(any(row["phase"] == "commit_confirmed" and
+            row["control_or_intent"] and row["control_or_intent"][0]["event_type"] == "GRANT"
+            for row in host))
+        self.assertTrue(any(row["phase"] == "commit_confirmed" and
+            any(entry["event_type"] == "DISPATCH_INTENT" and
+                any(grant["grant_id"] == "g-witness"
+                    for grant in entry["body"]["selected_grants"])
+                for entry in row["control_or_intent"]) for row in host))
+        self.assertTrue(any(row["phase"] == "dispatch_write_confirmed" and
+                            row["request_id"] == "witness-send" for row in host))
+        self.assertTrue(any(row["phase"] == "client_response" and
+                            row["request_id"] == "witness-send" for row in host))
+        self.assertTrue(any(row["phase"] == "tool_received" and
+                            row["request_id"] == "witness-send" for row in child))
+        arrivals = [row for row in child if row["phase"] == "sink_arrival"]
+        self.assertEqual(len(arrivals), 1)
+        self.assertEqual(base64.b64decode(arrivals[0]["payload_base64"]), payload.encode())
+        self.assertEqual(arrivals[0]["payload_sha256"], hashlib.sha256(payload.encode()).hexdigest())
+        self.assertFalse(any("payload_base64" in row or "payload_sha256" in row
+                             for row in self.task.child_events))
+        self.assertTrue(any(row["phase"] == "child_exiting" for row in child))
+        self.assertTrue(any(row["phase"] == "child_process_closed" and row["clean"]
+                            for row in host))
+
+    def test_child_launch_failure_reports_startup_phase_without_timeout_change(self):
+        nonce = uuid4().hex
+        identity = {"task_id": "failed-task-" + nonce,
+                    "session_id": "failed-session-" + nonce,
+                    "monitor_instance_id": "failed-monitor-" + nonce}
+        inventory = {"schema_version": "m4-expected-inventory-v1",
+            "run_id": "failed-run-" + nonce, "run_challenge": "b" * 64,
+            "sessions": [identity]}
+        with patch("chainguard.m6_live_runtime.subprocess.Popen",
+                   side_effect=OSError("declared child launch failure")):
+            with self.assertRaisesRegex(LiveRuntimeError,
+                "phase=child_launch; child_pid=none; child_exit=not_started"):
+                M6Host().open_task(db_path=Path(self.temp.name) / "failed.sqlite",
+                    trusted_inventory=inventory, **identity)
+
+    def test_unavailable_assessor_sink_halts_without_successful_arrival(self):
+        self.stop_task()
+        with socket.socket() as probe:
+            probe.bind(("127.0.0.1", 0))
+            port = probe.getsockname()[1]
+        self.open_new_task(witness_dir=Path(self.temp.name) / "closed-sink-witness",
+                           assessor_sink_endpoint=f"127.0.0.1:{port}")
+        self.task.grant("g-closed-sink", self.scope).result(timeout=10)
+        self.read_secret("closed-sink-read")
+        with self.assertRaises(Exception):
+            self.exchange("closed-sink-send", "send_sink",
+                          {"payload": "SYNTHETIC_CANARY_A"})
+        self.task._thread.join(timeout=10)
+        self.assertEqual(self.task._state, "HALTED")
+        self.assertFalse(any(row["phase"] == "sink_arrival"
+                             for row in self.task.child_events))
+
+    def test_inherited_assessor_endpoint_cannot_redirect_child_sink(self):
+        self.stop_task()
+        with patch.dict(os.environ, {
+                "CHAINGUARD_ASSESSOR_SINK_ENDPOINT": "127.0.0.1:1",
+                "CHAINGUARD_ASSESSOR_CHILD_WITNESS": "nonexistent-witness-file"}):
+            self.open_new_task()
+            self.task.grant("g-inherited", self.scope).result(timeout=10)
+            self.read_secret("inherited-read")
+            response = self.exchange("inherited-send", "send_sink",
+                                     {"payload": "SYNTHETIC_CANARY_A"})
+            self.assertIn("result", response)
 
     def test_real_handler_requires_taken_permit(self):
         with patch.object(LiveAuthorizationTask, "take_dispatch",

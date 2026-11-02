@@ -1,0 +1,6 @@
+test_child_launch_failure_reports_startup_phase_without_timeout_change (tests.test_m6_live_runtime.RuntimeTests.test_child_launch_failure_reports_startup_phase_without_timeout_change) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 5.149s
+
+OK

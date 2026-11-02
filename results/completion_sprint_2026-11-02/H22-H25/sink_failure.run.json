@@ -1,0 +1,10 @@
+{
+  "command": ".\\.venv\\Scripts\\python.exe -B -m unittest -v tests.test_m6_live_runtime.RuntimeTests.test_unavailable_assessor_sink_halts_without_successful_arrival",
+  "revision_source": "synthetic engineering environment value, not a real Git revision",
+  "start_local": "2026-11-02T20:19:20.1383288+05:30",
+  "end_local": "2026-11-02T20:19:30.9078479+05:30",
+  "elapsed_seconds": 10.7600021,
+  "exit_code": 0,
+  "stdout_log": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\H22-H25\\sink_failure.stdout.log",
+  "stderr_log": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\H22-H25\\sink_failure.stderr.log"
+}

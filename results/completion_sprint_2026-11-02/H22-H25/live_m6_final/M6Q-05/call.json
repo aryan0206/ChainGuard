@@ -1,0 +1,10 @@
+{
+  "case_id": "M6Q-05",
+  "request_id": "q5-revoked",
+  "started_local": "2026-11-02T20:09:58.719133+05:30",
+  "ended_local": "2026-11-02T20:09:58.752507+05:30",
+  "status": "RETURNED",
+  "exception": null,
+  "request_sha256": "51cb1668e1cfda8120f392a47caad5f876de119b5e39d7b340ba924c33b7100b",
+  "response_sha256": "b349aac51412a0b1849261fd1c5c346689626dfb8f17d2b3993d7424ee74976f"
+}

@@ -7,7 +7,7 @@ the live writer, authority, runtime, and controlled tool surface.
 
 from copy import deepcopy
 from dataclasses import dataclass
-import subprocess
+import os
 from types import MappingProxyType
 
 from chainguard import PROTOCOL_VERSION
@@ -28,6 +28,7 @@ PROFILE_VERSIONS = (PACKAGE_FORMAT, MANIFEST_SCHEMA, RECORD_SCHEMA,
 OBSERVATION_SCOPE = "synthetic-live-permission-lifecycle/sequential-stdio"
 SERVER_ID = "chainguard-m6-synthetic"
 IMPLEMENTATION_STAGE = "GATED_RUNTIME"
+REVISION_ENV = "CHAINGUARD_TRUSTED_CODE_REVISION"
 
 POLICY = Policy((("secret-a", "SYNTHETIC_CANARY_A"),
                  ("secret-b", "SYNTHETIC_CANARY_B")),
@@ -68,6 +69,7 @@ ARTIFACT_NAMES = tuple(sorted(("__init__.py", "authorization.py", "canonical.py"
     "m6_live_evidence.py",
     "m6_live_authorization.py", "m6_live_profile.py", "m6_live_runtime.py",
     "m6_live_seal.py",
+    "m6_live_witness.py",
     "permission_evidence.py", "semantics.py")))
 MANIFEST_KEYS = {"schema_version", "record_schema_version", "canonicalization_version",
                  "protocol_version", "observation_scope", "mode", "execution_profile",
@@ -154,9 +156,11 @@ def registry_definition():
 
 
 def live_configuration():
-    """Bind current installed runtime code; no package supplies its authority."""
-    revision = subprocess.run(["git", "rev-parse", "HEAD"], cwd=ROOT, check=True,
-                              capture_output=True, text=True).stdout.strip()
+    """Bind installed code to a trusted host-provisioned revision assertion."""
+    revision = os.environ.get(REVISION_ENV)
+    _require(type(revision) is str and len(revision) == 40 and
+             all(c in "0123456789abcdef" for c in revision),
+             "Trusted live code revision is missing or malformed")
     registry = registry_definition()
     source = (ROOT / "chainguard/m6_live_profile.py").read_bytes()
     return {"schema_version": CONFIGURATION_SCHEMA, "implementation_stage": IMPLEMENTATION_STAGE,

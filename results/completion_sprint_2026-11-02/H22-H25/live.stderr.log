@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "C:\Users\Laptop\OneDrive\Documents\MIT\ChainGuard\results\completion_sprint_2026-11-02\H22-H25\qualify_live.py", line 18, in <module>
+    from chainguard import PROTOCOL_VERSION
+ModuleNotFoundError: No module named 'chainguard'

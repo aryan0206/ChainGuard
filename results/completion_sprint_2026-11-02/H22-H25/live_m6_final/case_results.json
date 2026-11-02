@@ -1,0 +1,211 @@
+{
+  "ended_local": "2026-11-02T20:10:05.205177+05:30",
+  "cases": {
+    "M6Q-01": {
+      "status": "PASSED",
+      "checks": [
+        {
+          "check": "complete child stream and clean process closure",
+          "passed": true
+        },
+        {
+          "check": "signed offline inspection",
+          "passed": true
+        },
+        {
+          "check": "source handler arrival",
+          "passed": true
+        },
+        {
+          "check": "independent client source result",
+          "passed": true
+        }
+      ],
+      "handler_count": 1,
+      "sink_count": 0
+    },
+    "M6Q-02": {
+      "status": "PASSED",
+      "checks": [
+        {
+          "check": "complete child stream and clean process closure",
+          "passed": true
+        },
+        {
+          "check": "signed offline inspection",
+          "passed": true
+        },
+        {
+          "check": "refusal observed",
+          "passed": true
+        },
+        {
+          "check": "no matching sink arrival by clean closure",
+          "passed": true
+        }
+      ],
+      "handler_count": 0,
+      "sink_count": 0
+    },
+    "M6Q-03": {
+      "status": "PASSED",
+      "checks": [
+        {
+          "check": "complete child stream and clean process closure",
+          "passed": true
+        },
+        {
+          "check": "signed offline inspection",
+          "passed": true
+        },
+        {
+          "check": "grant and selected reservation committed",
+          "passed": true
+        },
+        {
+          "check": "handler and sink arrival",
+          "passed": true
+        },
+        {
+          "check": "exact sink bytes and digest",
+          "passed": true
+        },
+        {
+          "check": "client task acknowledgement",
+          "passed": true
+        }
+      ],
+      "handler_count": 1,
+      "sink_count": 1
+    },
+    "M6Q-04": {
+      "status": "PASSED",
+      "checks": [
+        {
+          "check": "complete child stream and clean process closure",
+          "passed": true
+        },
+        {
+          "check": "signed offline inspection",
+          "passed": true
+        },
+        {
+          "check": "refusal observed",
+          "passed": true
+        },
+        {
+          "check": "no matching sink arrival by clean closure",
+          "passed": true
+        }
+      ],
+      "handler_count": 0,
+      "sink_count": 0
+    },
+    "M6Q-05": {
+      "status": "PASSED",
+      "checks": [
+        {
+          "check": "complete child stream and clean process closure",
+          "passed": true
+        },
+        {
+          "check": "signed offline inspection",
+          "passed": true
+        },
+        {
+          "check": "revoke committed before attempted send",
+          "passed": true
+        },
+        {
+          "check": "refusal observed",
+          "passed": true
+        },
+        {
+          "check": "no matching sink arrival by clean closure",
+          "passed": true
+        }
+      ],
+      "handler_count": 0,
+      "sink_count": 0
+    },
+    "M6Q-06": {
+      "status": "PASSED",
+      "checks": [
+        {
+          "check": "complete child stream and clean process closure",
+          "passed": true
+        },
+        {
+          "check": "signed offline inspection",
+          "passed": true
+        },
+        {
+          "check": "grant and selected reservation committed",
+          "passed": true
+        },
+        {
+          "check": "handler and sink arrival",
+          "passed": true
+        },
+        {
+          "check": "exact sink bytes and digest",
+          "passed": true
+        },
+        {
+          "check": "client task acknowledgement",
+          "passed": true
+        }
+      ],
+      "handler_count": 1,
+      "sink_count": 1
+    },
+    "M6Q-07": {
+      "status": "PASSED",
+      "checks": [
+        {
+          "check": "complete child stream and clean process closure",
+          "passed": true
+        },
+        {
+          "check": "signed offline inspection",
+          "passed": true
+        },
+        {
+          "check": "refusal observed",
+          "passed": true
+        },
+        {
+          "check": "no matching sink arrival by clean closure",
+          "passed": true
+        }
+      ],
+      "handler_count": 1,
+      "sink_count": 0
+    },
+    "M6Q-08": {
+      "status": "PASSED",
+      "checks": [
+        {
+          "check": "declared pre-dispatch persistence fault halted task",
+          "passed": true
+        },
+        {
+          "check": "no handler or sink arrival",
+          "passed": true
+        },
+        {
+          "check": "child process closure observed",
+          "passed": true
+        },
+        {
+          "check": "no signed export from halted task",
+          "passed": true
+        }
+      ],
+      "handler_count": 0,
+      "sink_count": 0
+    }
+  },
+  "qualification_claim": "bounded trusted-host synthetic M6 only",
+  "warning": "Witnesses are independent of SQLite, not cryptographic proof of host truth."
+}

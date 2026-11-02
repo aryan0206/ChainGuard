@@ -1,0 +1,10 @@
+{
+  "command": ".\\.venv\\Scripts\\python.exe -B results/completion_sprint_2026-11-02/H22-H25/offline_reinspect.py",
+  "revision_pin": "8b27b5a980a87887be66c409c5a6a31d415a3326",
+  "start_local": "2026-11-02T20:27:47.5243687+05:30",
+  "end_local": "2026-11-02T20:27:48.5482757+05:30",
+  "elapsed_seconds": 1.0152783,
+  "exit_code": 0,
+  "stdout_log": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\H22-H25\\reinspect.stdout.log",
+  "stderr_log": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\H22-H25\\reinspect.stderr.log"
+}

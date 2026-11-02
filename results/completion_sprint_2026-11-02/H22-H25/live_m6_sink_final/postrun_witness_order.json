@@ -1,0 +1,17 @@
+{
+  "checks": {
+    "g1_before_first_send_intent": true,
+    "g2_revoke_before_denied_send": true,
+    "g3_before_regrant_send_intent": true,
+    "duplicate_id_not_readmitted": true,
+    "only_expected_sink_receipts": true,
+    "primary_child_and_sink_closed": true,
+    "fault_no_handler_or_sink": true
+  },
+  "passed": true,
+  "scope": "final assessor-held M6Q streams only",
+  "started_local": "2026-11-02T20:23:35.339998+05:30",
+  "ended_local": "2026-11-02T20:23:35.343578+05:30",
+  "command": ".\\.venv\\Scripts\\python.exe -B results/completion_sprint_2026-11-02/H22-H25/verify_witness_order.py",
+  "exit_code": 0
+}

@@ -1,0 +1,13 @@
+{
+  "case_id": "M6Q-08",
+  "request_id": "q8-fault",
+  "started_local": "2026-11-02T20:18:07.340362+05:30",
+  "ended_local": "2026-11-02T20:18:07.362369+05:30",
+  "status": "EXCEPTION",
+  "exception": {
+    "type": "LiveAuditError",
+    "message": "Live commit failed; rollback confirmed"
+  },
+  "request_sha256": "24cf0b6cd5cfc65e7165d2a1d10724eba575643d49060b518bd384d6f37e9f94",
+  "response_sha256": "d3fbfaf5ca4c1376f93d5132e8684151c0193953516ede99c2ba4fc12bc14989"
+}

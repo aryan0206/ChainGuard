@@ -1,0 +1,10 @@
+{
+  "command": ".\\.venv\\Scripts\\python.exe -B -m unittest -v tests.test_m6_live_profile tests.test_m6_live_runtime tests.test_m6_live_server tests.test_m6_live_authorization tests.test_m6_live_evidence tests.test_m6_live_seal tests.test_m6_live_verifier tests.test_m6_live_acceptance",
+  "revision_source": "synthetic engineering environment value, not a real Git revision",
+  "start_local": "2026-11-02T20:10:20.6591688+05:30",
+  "end_local": "2026-11-02T20:15:45.6172654+05:30",
+  "elapsed_seconds": 324.9433185,
+  "exit_code": 0,
+  "stdout_log": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\H22-H25\\focused_final.stdout.log",
+  "stderr_log": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\H22-H25\\focused_final.stderr.log"
+}

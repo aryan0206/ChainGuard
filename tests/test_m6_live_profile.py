@@ -1,13 +1,14 @@
 """Installed M6 live profile validation, independent of package acceptance."""
 
 from copy import deepcopy
+import os
 import unittest
 from unittest.mock import patch
 
 from chainguard.canonical import encode
 from chainguard.evidence import INVENTORY_SCHEMA, ROOT, sha256
 from chainguard.m6_live_profile import (ARTIFACT_NAMES, CONFIGURATION_SCHEMA,
-    MANIFEST_SCHEMA, PACKAGE_FORMAT, POLICY, PROFILE_VERSIONS, TOOL_CONTRACTS,
+    MANIFEST_SCHEMA, PACKAGE_FORMAT, POLICY, PROFILE_VERSIONS, REVISION_ENV, TOOL_CONTRACTS,
     input_schema, live_configuration, make_live_manifest, registry_definition,
     validate_live_configuration, validate_live_manifest, validate_profile_versions)
 from chainguard.permission_evidence import RECORD_SCHEMA
@@ -28,6 +29,18 @@ class LiveProfileTests(unittest.TestCase):
         cls.expected = inventory()
         cls.manifest = make_live_manifest(cls.expected, cls.config,
                                           **cls.expected["sessions"][0])
+
+    def test_trusted_revision_is_required_and_never_looked_up_with_git(self):
+        with patch("subprocess.run", side_effect=AssertionError("subprocess forbidden")):
+            with patch.dict(os.environ, {REVISION_ENV: "b" * 40}):
+                config = live_configuration()
+                self.assertEqual(config["code_revision"], "b" * 40)
+            for invalid in (None, "", "B" * 40, "g" * 40, "b" * 39):
+                with self.subTest(invalid=invalid):
+                    environment = {} if invalid is None else {REVISION_ENV: invalid}
+                    with patch.dict(os.environ, environment, clear=True):
+                        with self.assertRaisesRegex(ValueError, "revision"):
+                            live_configuration()
 
     def test_exact_distinct_profile_versions_and_installed_binding(self):
         self.assertEqual(PROFILE_VERSIONS, ("m6-live-evidence-v1", "m6-live-manifest-v1",

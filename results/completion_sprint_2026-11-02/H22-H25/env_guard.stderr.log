@@ -1,0 +1,6 @@
+test_inherited_assessor_endpoint_cannot_redirect_child_sink (tests.test_m6_live_runtime.RuntimeTests.test_inherited_assessor_endpoint_cannot_redirect_child_sink) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 7.588s
+
+OK

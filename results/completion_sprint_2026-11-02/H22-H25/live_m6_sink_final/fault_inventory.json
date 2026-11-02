@@ -1,0 +1,12 @@
+{
+  "schema_version": "m4-expected-inventory-v1",
+  "run_id": "M6Q-08-run-63ae9ceb619c4693b5bde42708a8126b",
+  "run_challenge": "928a402ccba504ea4c8a78922f19e2cbdd76f61d64ac2c50e7b3f8d414b2f62f",
+  "sessions": [
+    {
+      "task_id": "M6Q-08-task-63ae9ceb619c4693b5bde42708a8126b",
+      "session_id": "M6Q-08-session-63ae9ceb619c4693b5bde42708a8126b",
+      "monitor_instance_id": "M6Q-08-monitor-63ae9ceb619c4693b5bde42708a8126b"
+    }
+  ]
+}

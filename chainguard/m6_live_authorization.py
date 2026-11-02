@@ -11,6 +11,7 @@ from threading import RLock, get_ident
 from uuid import uuid4
 
 from chainguard.authorization import plan_reservation
+from chainguard.canonical import decode
 from chainguard.m6_live_audit import LiveAuditSession, live_draft
 from chainguard.m6_live_profile import POLICY, SERVER_ID, validate_tool_arguments
 from chainguard.permission_evidence import DETECTOR_IDS, LIFECYCLE_BODY_KEYS
@@ -62,12 +63,13 @@ def _outcome_body(tool, current, status):
 class LiveAuthorizationTask:
     """One fresh task; all transitions are serialized through its audit writer."""
 
-    def __init__(self, audit: LiveAuditSession):
+    def __init__(self, audit: LiveAuditSession, witness=None):
         self._lock = RLock()
         self._usable = False
         if type(audit) is not LiveAuditSession or audit.state.lifecycle != "ACTIVE":
             raise ValueError("A confirmed, active live audit session is required")
         self._audit = audit
+        self._witness = witness
         # The existing SQLite connection uses check_same_thread=True. The
         # controller's FIFO owner thread is therefore the only admission thread.
         self._owner_thread = get_ident()
@@ -128,6 +130,22 @@ class LiveAuthorizationTask:
             self._halted = True
             raise AuthorizationError("Live audit receipt does not match committed batch")
         self._continuity = after
+        if self._witness is not None:
+            try:
+                self._witness.record({"phase": "commit_confirmed",
+                    "run_id": self._identity[0], "task_id": self._identity[1],
+                    "session_id": receipt.session_id,
+                    "first_seq": receipt.first_seq, "last_seq": receipt.last_seq,
+                    "final_head": receipt.final_head,
+                    "event_ids": list(receipt.event_ids),
+                    "event_types": list(receipt.event_types),
+                    "control_or_intent": [{"event_type": d.event_type,
+                        "call_id": d.call_id, "body": decode(d.body_bytes)}
+                        for d in drafts if d.event_type in
+                        {"GRANT", "REVOKE_SCOPE", "DISPATCH_INTENT"}]})
+            except Exception as exc:
+                self._halted = True
+                raise AuthorizationError("Assessor commit witness failed") from exc
         return receipt
 
     def grant(self, grant_id: str, scope: Scope):

@@ -1,0 +1,10 @@
+test_trusted_revision_is_required_and_never_looked_up_with_git (tests.test_m6_live_profile.LiveProfileTests.test_trusted_revision_is_required_and_never_looked_up_with_git) ... ok
+test_assessor_stream_retains_commit_handler_and_exact_sink_bytes (tests.test_m6_live_runtime.RuntimeTests.test_assessor_stream_retains_commit_handler_and_exact_sink_bytes) ... ok
+test_malformed_protocol_frame_is_distinct_from_rejected_tool_call (tests.test_m6_live_server.LiveServerTests.test_malformed_protocol_frame_is_distinct_from_rejected_tool_call) ... ok
+test_real_stdio_multibyte_byte_boundary (tests.test_m6_live_server.LiveServerTests.test_real_stdio_multibyte_byte_boundary) ... ok
+test_real_stdio_valid_mcp_rejections_have_zero_arrivals (tests.test_m6_live_server.LiveServerTests.test_real_stdio_valid_mcp_rejections_have_zero_arrivals) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 41.758s
+
+OK

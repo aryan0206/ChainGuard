@@ -5,9 +5,11 @@ code receives HostTask; this module does not coordinate separate processes.
 """
 
 from concurrent.futures import Future, TimeoutError as FutureTimeout
+import base64
 from copy import deepcopy
 from dataclasses import dataclass
 import json
+import hashlib
 import os
 from pathlib import Path
 import queue
@@ -28,6 +30,7 @@ from chainguard.m6_live_profile import (POLICY, TOOL_CONTRACTS, live_configurati
                                         validate_live_manifest,
                                         validate_tool_arguments)
 from chainguard.m6_live_seal import _seal_live_snapshot
+from chainguard.m6_live_witness import WitnessWriter
 from chainguard.semantics import Scope, attach_references, project_b1
 
 
@@ -163,7 +166,7 @@ class M6Host:
     """Trusted in-process control ingress; the client sees only stdio."""
 
     def open_task(self, *, db_path, trusted_inventory, task_id, session_id,
-                  monitor_instance_id):
+                  monitor_instance_id, witness_dir=None, assessor_sink_endpoint=None):
         inventory = deepcopy(trusted_inventory)
         manifest = make_live_manifest(inventory, live_configuration(), task_id,
                                       session_id, monitor_instance_id)
@@ -173,16 +176,31 @@ class M6Host:
                 raise LiveRuntimeError("Task or session identity already attempted in this process")
             _claimed_tasks.add(task_id)
             _claimed_sessions.add(session_id)
-        return HostTask(Path(db_path), inventory, manifest, _HOST_TOKEN)
+        witness = (WitnessWriter(witness_dir, db_path)
+                   if witness_dir is not None else None)
+        if assessor_sink_endpoint is not None:
+            try:
+                host, port_text = assessor_sink_endpoint.split(":", 1)
+                port = int(port_text)
+            except (AttributeError, ValueError) as exc:
+                raise ValueError("Invalid local assessor sink endpoint") from exc
+            if witness is None or host != "127.0.0.1" or not (1 <= port <= 65535):
+                raise ValueError("Assessor sink requires local witness capture")
+        return HostTask(Path(db_path), inventory, manifest, _HOST_TOKEN, witness,
+                        assessor_sink_endpoint)
 
 
 class HostTask:
     """Opaque host handle; one worker exclusively owns all live authority."""
 
-    def __init__(self, db_path, inventory, manifest, host_token):
+    def __init__(self, db_path, inventory, manifest, host_token, witness=None,
+                 assessor_sink_endpoint=None):
         if host_token is not _HOST_TOKEN:
             raise LiveRuntimeError("Only the trusted host may create a task handle")
         self._db_path, self._inventory, self._manifest = db_path, inventory, manifest
+        self._witness = witness
+        self._assessor_sink_endpoint = assessor_sink_endpoint
+        self._startup_phase = "not_started"
         self._identity = tuple(manifest[key] for key in
                                ("run_id", "task_id", "session_id", "monitor_instance_id"))
         self._lock = Lock()
@@ -194,6 +212,7 @@ class HostTask:
         self._admissions = []
         self._events_lock = Lock()
         self._child_events = []
+        self._stderr_tail = []
         self._queue = queue.Queue()
         self._responses = queue.Queue(maxsize=1)
         self._ready = Future()
@@ -217,11 +236,23 @@ class HostTask:
                     self._ready.result()
                     return
                 self._abort_startup = True
-            raise LiveRuntimeError("M6 task did not become ready") from exc
+            raise LiveRuntimeError("M6 task did not become ready: " +
+                                   self._startup_diagnostic()) from exc
         except Exception as exc:
             with self._lock:
                 self._abort_startup = True
-            raise LiveRuntimeError("M6 task did not become ready") from exc
+            raise LiveRuntimeError("M6 task did not become ready: " +
+                                   self._startup_diagnostic() + "; " + str(exc)) from exc
+
+    def _startup_diagnostic(self):
+        child = self._child
+        with self._events_lock:
+            phases = [e.get("phase") for e in self._child_events[-8:]]
+            stderr_tail = list(self._stderr_tail[-8:])
+        return (f"phase={self._startup_phase}; child_pid="
+                f"{child.pid if child is not None else 'none'}; child_exit="
+                f"{child.poll() if child is not None else 'not_started'}; "
+                f"child_event_phases={phases}; stderr_tail={stderr_tail}")
 
     @property
     def admissions(self):
@@ -240,6 +271,11 @@ class HostTask:
                 raise LiveRuntimeError("Task is not admitting controls")
             self._ticket += 1
             ticket = self._ticket
+            if self._witness is not None:
+                self._witness.record({"phase": "control_admitted", "ticket": ticket,
+                    "kind": kind, "grant_id": grant_id,
+                    "scope": {"task_id": scope.task_id, "resource": scope.resource,
+                              "destination": scope.destination, "release": scope.release}})
             self._queue.put_nowait(_Control(ticket, kind, scope, grant_id, done))
             self._admissions.append((ticket, kind, grant_id))
         return done
@@ -300,6 +336,11 @@ class HostTask:
             if method == "tools/call":
                 self._ticket += 1
                 ticket = self._ticket
+                if self._witness is not None:
+                    self._witness.record({"phase": "proposal_admitted", "ticket": ticket,
+                        "request_id": request_id, "tool": tool,
+                        "raw_base64": base64.b64encode(frame).decode("ascii"),
+                        "raw_sha256": hashlib.sha256(frame).hexdigest()})
                 item = _Proposal(ticket, request_id, uuid4().hex, tool, arguments_bytes,
                                  params_bytes, output, done)
                 self._admissions.append((ticket, "CALL_PROPOSAL", request_id))
@@ -379,6 +420,10 @@ class HostTask:
     def _read_stdout(self):
         while True:
             frame = self._child.stdout.readline(MAX_FRAME_BYTES + 1)
+            if self._witness is not None:
+                self._witness.record({"phase": "child_stdout_frame",
+                    "raw_base64": base64.b64encode(frame).decode("ascii"),
+                    "raw_sha256": hashlib.sha256(frame).hexdigest()})
             while True:
                 try:
                     self._responses.put(frame, timeout=0.1)
@@ -392,6 +437,9 @@ class HostTask:
 
     def _read_stderr(self):
         for line in self._child.stderr:
+            with self._events_lock:
+                self._stderr_tail.append(line[:512].decode("utf-8", errors="replace").rstrip())
+                del self._stderr_tail[:-8]
             try:
                 event = json.loads(line)
             except (ValueError, UnicodeError):
@@ -449,11 +497,18 @@ class HostTask:
         if type(item) is _Proposal:
             self._authority.take_dispatch(permit)
             taken = True
+            if self._witness is not None:
+                self._witness.record({"phase": "dispatch_attempt", "call_id": item.call_id,
+                    "request_id": item.request_id, "intent_event_id": permit.intent_event_id,
+                    "wire_sha256": hashlib.sha256(wire).hexdigest()})
         try:
             written = self._child.stdin.write(wire)
             if written != len(wire):
                 raise LiveRuntimeError("Incomplete downstream write")
             self._child.stdin.flush()
+            if self._witness is not None and type(item) is _Proposal:
+                self._witness.record({"phase": "dispatch_write_confirmed",
+                    "call_id": item.call_id, "request_id": item.request_id})
         except Exception:
             # A taken permit may have reached the tool even if the write or
             # flush failed. Its committed intent remains consumed.
@@ -462,12 +517,23 @@ class HostTask:
             raise
 
     def _startup(self):
+        self._startup_phase = "audit_initialization"
         self._audit = LiveAuditSession(self._db_path, self._manifest, self._inventory)
-        self._authority = LiveAuthorizationTask(self._audit)
+        self._authority = LiveAuthorizationTask(self._audit, self._witness)
+        self._startup_phase = "child_launch"
+        child_env = {**os.environ, "PYTHONUTF8": "1"}
+        child_env.pop("CHAINGUARD_ASSESSOR_CHILD_WITNESS", None)
+        child_env.pop("CHAINGUARD_ASSESSOR_SINK_ENDPOINT", None)
+        if self._witness is not None:
+            child_env["CHAINGUARD_ASSESSOR_CHILD_WITNESS"] = str(self._witness.child_path)
+        if self._assessor_sink_endpoint is not None:
+            child_env["CHAINGUARD_ASSESSOR_SINK_ENDPOINT"] = self._assessor_sink_endpoint
         self._child = subprocess.Popen(
             [sys.executable, "-u", "-m", "chainguard.m6_controlled_server"],
-            cwd=ROOT, env={**os.environ, "PYTHONUTF8": "1"}, stdin=subprocess.PIPE,
+            cwd=ROOT, env=child_env, stdin=subprocess.PIPE,
             stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        if self._witness is not None:
+            self._witness.record({"phase": "child_launched", "pid": self._child.pid})
         self._stdout_reader = Thread(target=self._read_stdout, daemon=True)
         self._stderr_reader = Thread(target=self._read_stderr, daemon=True)
         self._stdout_reader.start()
@@ -475,6 +541,7 @@ class HostTask:
         meta = {"io.modelcontextprotocol/protocolVersion": PROTOCOL_VERSION,
                 "io.modelcontextprotocol/clientCapabilities": {}}
         for method in ("server/discover", "tools/list"):
+            self._startup_phase = method
             request_id = "m6-host-ready-" + method
             self._write_downstream(_Auxiliary(method, request_id,
                 _canonical_bytes({"_meta": meta}), None, None))
@@ -488,6 +555,7 @@ class HostTask:
             elif (sorted(tool.get("name") for tool in result.get("tools", [])) !=
                   sorted(TOOL_CONTRACTS) or result.get("nextCursor") is not None):
                 raise LiveRuntimeError("Controlled child has wrong tool registry")
+        self._startup_phase = "ready"
 
     def _findings(self, current, proposal_id, facts):
         for fact in facts[self._shadow_count:]:
@@ -508,7 +576,13 @@ class HostTask:
                 for finding in findings}
 
     def _deliver(self, item, response):
-        item.output.write(_frame(response))
+        raw = _frame(response)
+        if self._witness is not None and type(item) is _Proposal:
+            self._witness.record({"phase": "client_response", "call_id": item.call_id,
+                "request_id": item.request_id,
+                "raw_base64": base64.b64encode(raw).decode("ascii"),
+                "raw_sha256": hashlib.sha256(raw).hexdigest()})
+        item.output.write(raw)
         item.output.flush()
 
     def _handle_auxiliary(self, item):
@@ -625,6 +699,13 @@ class HostTask:
                     child_clean = False
                     self._child.kill()
                     self._child.wait(timeout=5)
+                if self._witness is not None:
+                    try:
+                        self._witness.record({"phase": "child_process_closed",
+                            "pid": self._child.pid, "exit_code": self._child.returncode,
+                            "clean": child_clean})
+                    except Exception:
+                        child_clean = False
             if self._stdout_reader is not None:
                 self._stdout_reader.join(timeout=1)
             if self._stderr_reader is not None:

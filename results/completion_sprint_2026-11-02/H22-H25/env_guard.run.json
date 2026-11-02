@@ -1,0 +1,10 @@
+{
+  "command": ".\\.venv\\Scripts\\python.exe -B -m unittest -v tests.test_m6_live_runtime.RuntimeTests.test_inherited_assessor_endpoint_cannot_redirect_child_sink",
+  "revision_source": "synthetic engineering environment value, not a real Git revision",
+  "start_local": "2026-11-02T20:33:18.3407388+05:30",
+  "end_local": "2026-11-02T20:33:27.7220372+05:30",
+  "elapsed_seconds": 9.3731056,
+  "exit_code": 0,
+  "stdout_log": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\H22-H25\\env_guard.stdout.log",
+  "stderr_log": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\H22-H25\\env_guard.stderr.log"
+}
