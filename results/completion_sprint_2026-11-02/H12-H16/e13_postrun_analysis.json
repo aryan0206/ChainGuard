@@ -1,0 +1,11 @@
+{
+  "status": "DEVELOPMENT_STAGED_ONLY",
+  "original_case_id": "CG-DEV-005",
+  "transformed_case_id": "CG-DEV-005-RENAME-01",
+  "compared_rows": 2,
+  "b1_input_bytes_equal_all_rows": true,
+  "supporting_event_ids_equal_after_renamed_prefix": true,
+  "staged_oracle_authorization_equal": true,
+  "source": "retained e13_original_output.json and e13_renamed_output.json",
+  "limitation": "No independent live effects or population-level metamorphic study"
+}

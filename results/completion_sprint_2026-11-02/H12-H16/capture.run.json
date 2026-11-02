@@ -1,0 +1,9 @@
+{
+  "command": ".\\.venv\\Scripts\\python.exe -B results/completion_sprint_2026-11-02/H12-H16/capture_development.py",
+  "start_local": "2026-11-02T19:13:28.7472026+05:30",
+  "end_local": "2026-11-02T19:13:30.7271442+05:30",
+  "elapsed_seconds": 1.9663615,
+  "exit_code": 0,
+  "stdout_log": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\H12-H16\\capture.stdout.log",
+  "stderr_log": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\H12-H16\\capture.stderr.log"
+}
