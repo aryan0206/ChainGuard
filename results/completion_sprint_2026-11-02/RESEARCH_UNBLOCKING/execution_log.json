@@ -1,0 +1,99 @@
+{
+  "task_id": "RESEARCH-UNBLOCKING-20261103",
+  "model_tool": "GPT-6 Codex; PowerShell 7.6.5; CPython 3.14.3",
+  "first_recorded_local": "2026-11-03T12:14:42+05:30",
+  "last_recorded_validation_local": "2026-11-03T12:30:31+05:30",
+  "elapsed_between_recorded_markers": "at least 15m 49s; initial inspection and final documentation outside markers",
+  "input_tokens": "NOT EXPOSED",
+  "output_tokens": "NOT EXPOSED",
+  "model_generation_time": "NOT EXPOSED",
+  "owner_decisions": {
+    "a1_a2": "Owner approved repository labels on 3 November 2026",
+    "e08": "Owner confirmed Architecture Lock section 17 full revision on 3 November 2026"
+  },
+  "commands": [
+    {
+      "command": "rg --files -g '*enforcer.py' -g '*label_tracker.py' -g '*rules.py' -g '*datatypes.py' -g '*mcp-pep*' .",
+      "exit_code": 1,
+      "interpretation": "No local baseline source file-name matches; source identity remains unverified"
+    },
+    {
+      "command": "& 'results/completion_sprint_2026-11-02/RESEARCH_UNBLOCKING/run_focused_current.ps1'",
+      "exit_code": 1,
+      "interpretation": "Preflight script error: incorrect acceptance source filename; no test started"
+    },
+    {
+      "command": "& 'results/completion_sprint_2026-11-02/RESEARCH_UNBLOCKING/run_focused_current.ps1'",
+      "exit_code": 1,
+      "child_exit_code": 101,
+      "interpretation": "Corrected preflight, sandbox denied execution of existing .venv Python; no test started",
+      "metadata": "focused_current.run.json",
+      "stderr": "focused_current.stderr.log"
+    },
+    {
+      "command": "& 'results/completion_sprint_2026-11-02/RESEARCH_UNBLOCKING/run_focused_current.ps1'",
+      "permission": "require_escalated after sandbox access denied",
+      "exit_code": 0,
+      "start_local": "2026-11-03T12:18:06.6867866+05:30",
+      "end_local": "2026-11-03T12:24:10.4674114+05:30",
+      "elapsed_seconds": 363.788633,
+      "tests": 125,
+      "failures": 0,
+      "errors": 0,
+      "metadata": "focused_current_retry.run.json",
+      "stdout": "focused_current_retry.stdout.log",
+      "stderr": "focused_current_retry.stderr.log"
+    },
+    {
+      "command": "& '.\\.venv\\Scripts\\python.exe' -B 'results/completion_sprint_2026-11-02/RESEARCH_UNBLOCKING/analysis_preflight.py'",
+      "exit_code": 0,
+      "interpretation": "Development-only E02/E13 metric and SVG smoke preflight; zero research observations",
+      "result": "analysis_preflight_development.json"
+    },
+    {
+      "command": "[xml](Get-Content -Raw results/completion_sprint_2026-11-02/RESEARCH_UNBLOCKING/analysis_preflight_development.svg)",
+      "exit_code": 0,
+      "interpretation": "SVG parsed"
+    }
+  ],
+  "current_source_focused_m6": {
+    "suite": "tests.test_m6_live_profile tests.test_m6_live_runtime tests.test_m6_live_server tests.test_m6_live_authorization tests.test_m6_live_evidence tests.test_m6_live_seal tests.test_m6_live_verifier tests.test_m6_live_acceptance",
+    "revision_input": "synthetic a*40 engineering-test value only",
+    "tests_passed": 125,
+    "tests_failed": 0,
+    "exit_code": 0,
+    "runtime_sha256": "c136f3c68306a3fb2b377da9002738bcf3fab6276e84fef57c2047f47c0dd15d",
+    "source_hashes": "focused_current_retry.run.json"
+  },
+  "live_m6_qualification": "BLOCKED: no owner-attested revision demonstrably matching exact current source; prior pin is stale",
+  "research_experiments_executed": [],
+  "research_observations": 0,
+  "eligible_research_parent_denominator": 0,
+  "files_changed": [
+    "docs/EVALUATION_PROTOCOL.md",
+    "docs/EXPERIMENT_MATRIX.md",
+    "docs/BASELINE_NOTES.md",
+    "docs/COMPLETION_SPRINT_2026-11-02.md",
+    "results/completion_sprint_2026-11-02/RESEARCH_UNBLOCKING/owner_decision_brief.md",
+    "results/completion_sprint_2026-11-02/RESEARCH_UNBLOCKING/contract_completion_matrix.md",
+    "results/completion_sprint_2026-11-02/RESEARCH_UNBLOCKING/run_focused_current.ps1",
+    "results/completion_sprint_2026-11-02/RESEARCH_UNBLOCKING/qualify_current_after_pin.py",
+    "results/completion_sprint_2026-11-02/RESEARCH_UNBLOCKING/live_qualification_gate.md",
+    "results/completion_sprint_2026-11-02/RESEARCH_UNBLOCKING/analysis_preflight.py",
+    "results/completion_sprint_2026-11-02/RESEARCH_UNBLOCKING/analysis_preflight_development.json",
+    "results/completion_sprint_2026-11-02/RESEARCH_UNBLOCKING/analysis_preflight_development.svg",
+    "results/completion_sprint_2026-11-02/RESEARCH_UNBLOCKING/ranked_execution_plan.md",
+    "results/completion_sprint_2026-11-02/RESEARCH_UNBLOCKING/execution_log.json",
+    "results/completion_sprint_2026-11-02/RESEARCH_UNBLOCKING/focused_current.run.json",
+    "results/completion_sprint_2026-11-02/RESEARCH_UNBLOCKING/focused_current.stderr.log",
+    "results/completion_sprint_2026-11-02/RESEARCH_UNBLOCKING/focused_current.stdout.log",
+    "results/completion_sprint_2026-11-02/RESEARCH_UNBLOCKING/focused_current_retry.run.json",
+    "results/completion_sprint_2026-11-02/RESEARCH_UNBLOCKING/focused_current_retry.stderr.log",
+    "results/completion_sprint_2026-11-02/RESEARCH_UNBLOCKING/focused_current_retry.stdout.log"
+  ],
+  "git_commands": 0,
+  "dependencies_installed": 0,
+  "ieee_report_written_or_compiled": false,
+  "audit_sqlite_in_deliverables": false,
+  "sprint_elapsed_at_last_clock": "20h 08m 41s from H0=2026-11-02T16:21:50.1414491+05:30"
+}

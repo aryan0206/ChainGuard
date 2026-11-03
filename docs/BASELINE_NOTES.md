@@ -4,7 +4,7 @@
 
 ## Pin and narrow scope
 
-Authoritative [Architecture Lock](ARCHITECTURE_LOCK.md) Section 17 references [mcp-pep-agent-security](https://github.com/wilesanGH/mcp-pep-agent-security), revision `3dd9690b5b6f9c4ef385289714b314d13f6ad9a1`. The supplied Astra task instead states `3dd9690b5b6f9c4ef385289714b314d13f6ad1`. Preserve this discrepancy; the latter is not a full 40-character SHA. Do not silently fetch a substitute or amend the lock. Resolve with the owner before baseline implementation/conformance. No external revision was fetched or verified here.
+Authoritative [Architecture Lock](ARCHITECTURE_LOCK.md) Section 17 references [mcp-pep-agent-security](https://github.com/wilesanGH/mcp-pep-agent-security), revision `3dd9690b5b6f9c4ef385289714b314d13f6ad9a1`. The supplied Astra task instead states `3dd9690b5b6f9c4ef385289714b314d13f6ad1`. The owner confirmed the Lock's full pin on 3 November 2026; the shorter string remains recorded for provenance. No external revision was fetched or verified locally, and the adapter and conformance gate remain pending.
 
 The intended subset is R02 with default-allow behavior on the declared common surface, using `prototype/pep/enforcer.py`, `prototype/pep/label_tracker.py`, `prototype/pep/rules.py` and `prototype/datatypes.py` at the locked revision. Keep the baseline's name distinct from B0/B1/B2. This is a Wang-style sensitivity-policy subset adaptation, not full reproduction of the published system.
 

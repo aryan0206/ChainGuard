@@ -1,0 +1,27 @@
+{
+  "classification": "DEVELOPMENT_ANALYSIS_PREFLIGHT_ONLY",
+  "research_observations": 0,
+  "eligible_research_parent_denominator": 0,
+  "research_confidence_interval": null,
+  "development_group_id": "revocation_boundary_01",
+  "development_pair_member_count": 2,
+  "identical_b1_sha256": "04f3855f76dfef35d7b20948939ebf5cb849c10c29f63bb4a001df413f7435c1",
+  "development_authored_labels": {
+    "UNAUTHORIZED": 1,
+    "AUTHORIZED": 1
+  },
+  "authored_label_group_bound": 1,
+  "bound_is_research_result": false,
+  "e13_development_pair": {
+    "original": "CG-DEV-005",
+    "transformed": "CG-DEV-005-RENAME-01",
+    "compared_rows": 2,
+    "b1_equal": true,
+    "reference_equal_after_renaming": true
+  },
+  "exclusions": [
+    "All development-authored labels excluded from research authorization denominators",
+    "No independent live control/commit/effect witness",
+    "No validation or held-out parent"
+  ]
+}

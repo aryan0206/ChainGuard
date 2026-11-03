@@ -8,8 +8,8 @@ Architecture v1.1 remains authoritative and unchanged. README corroborates M1-M5
 
 | Issue | Supplied protocol | Repository contract / treatment |
 | --- | --- | --- |
-| Evidence labels | A0 no integrity; A1 hash chain; A2 signed closure | Charter: A0 structured records, A1 independent hashes, A2 unkeyed chain, A3 signed canonical chain, A3T signed ordered transcript. Lock Sections 13/19 preserve A3/A3T and A4/A4T. Use repository labels below; retain supplied alternatives here pending explicit resolution before ablation execution. No A2 signed-closure experiment is silently substituted. |
-| Baseline revision | `3dd9690b5b6f9c4ef385289714b314d13f6ad1` | Lock Section 17: `3dd9690b5b6f9c4ef385289714b314d13f6ad9a1`. These strings differ; supplied string is not a full 40-character SHA. Locked pin remains authoritative; owner resolution required before baseline work. |
+| Evidence labels | A0 no integrity; A1 hash chain; A2 signed closure | **Owner resolved 3 November 2026:** use repository labels below: A1 independent hashes, A2 unkeyed chain, A3 signed canonical chain, A3T signed ordered transcript, A4/A4T acceptance wrappers. The supplied shorthand is superseded; it remains here for provenance. No A2 signed-closure experiment is substituted. E09 variant/case freeze remains pending. |
+| Baseline revision | `3dd9690b5b6f9c4ef385289714b314d13f6ad1` | **Owner confirmed 3 November 2026:** Lock Section 17 full pin `3dd9690b5b6f9c4ef385289714b314d13f6ad9a1`. The short supplied string remains here for provenance. Exact source identity, adapter and differential conformance remain unverified; no E08 comparison is authorized by pin confirmation alone. |
 | RQ numbering | Eight study questions, with ordering as RQ2 | Lock Section 16 explicitly fixes RQ2 as B2-R/B2-S equivalence and cost; charter has five questions. The eight IDs below are **protocol-local**, not replacement architecture/charter IDs. Locked RQ2 remains mandatory through protocol RQ1/RQ8 and H5/H10. |
 
 ## Research questions and hypotheses
@@ -104,8 +104,8 @@ PLANNED means protocol specified but not executed as a final research experiment
 | E05 | Held-out workflows | PLANNED; frozen grouped split and completed prerequisites |
 | E06 | Live M6 lifecycle | NOT STARTED; M6 implementation/authorization and live oracle qualification |
 | E07 | Execution/failure boundaries | PLANNED; existing engineering checks retained; full M6 failure study pending |
-| E08 | External baseline | NOT STARTED / CONFORMANCE PENDING; pin ambiguity and adapter |
-| E09 | Evidence integrity | PLANNED; mutation expectations and missing evidence variants |
+| E08 | External baseline | NOT STARTED / CONFORMANCE PENDING; owner confirmed Lock pin 3 November, but exact source, adapter and conformance are absent |
+| E09 | Evidence integrity | PLANNED; owner approved repository A1/A2 labels 3 November, but mutation expectations and evidence variants are missing |
 | E10 | Authentic-but-wrong facts/findings | PLANNED; independently observed truth and legitimate test signer |
 | E11 | Acceptance | PLANNED; M5 engineering package campaign is supporting evidence only |
 | E12 | Cost/scaling | NOT STARTED; actual retained-state B2-S measurement and staged instrumentation |
@@ -117,7 +117,7 @@ Detailed controls and retained artifacts: [experiment matrix](EXPERIMENT_MATRIX.
 
 M6 must independently test grant/use/reuse, active revoke, regrant, multiple scopes, failed dispatched call without refund, denial consuming nothing and ambiguous outcomes halting without replay. Include independent source/sink/consumption observations and at least one revocation of an **unconsumed active grant**; revoking only an already-consumed grant is insufficient. Locked shorthand: first release consumes NEW grant; following release is denied WITHOUT another grant. Multi-resource selection is all-or-nothing. Proposal -> decision -> dispatch intent -> confirmed SQLite COMMIT -> trusted state update -> forwarding remains the critical boundary. SQLite and tool effects are not atomic together.
 
-Repository evidence labels pending the authority-note resolution:
+Repository evidence labels confirmed by the owner on 3 November 2026; E09 execution still requires the frozen variant/mutation campaign:
 
 | Variant | Mechanism |
 | --- | --- |

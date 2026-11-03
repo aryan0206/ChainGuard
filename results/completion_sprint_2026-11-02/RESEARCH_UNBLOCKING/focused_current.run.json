@@ -1,0 +1,24 @@
+{
+  "command": ".\\.venv\\Scripts\\python.exe -B -m unittest -v tests.test_m6_live_profile tests.test_m6_live_runtime tests.test_m6_live_server tests.test_m6_live_authorization tests.test_m6_live_evidence tests.test_m6_live_seal tests.test_m6_live_verifier tests.test_m6_live_acceptance",
+  "start_local": "2026-11-03T12:17:20.9891681+05:30",
+  "end_local": "2026-11-03T12:17:21.2072749+05:30",
+  "elapsed_seconds": 0.2128173,
+  "exit_code": 101,
+  "revision_source": "synthetic a*40 engineering-test environment value only; no current-source revision assertion",
+  "python_version": "Unable to create process using '\"C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\.venv\\Scripts\\python.exe\" --version': Access is denied.",
+  "powershell_version": "7.6.5",
+  "os": "Microsoft Windows 10.0.26200",
+  "source_sha256": {
+    "chainguard/m6_live_profile.py": "b37ecc2c175fd7f2b23ae79d06d1325eff472ecdbf633e08cc30a31b5abf51c6",
+    "chainguard/m6_live_runtime.py": "c136f3c68306a3fb2b377da9002738bcf3fab6276e84fef57c2047f47c0dd15d",
+    "chainguard/m6_live_authorization.py": "1f58c490282de9f229ea460d7aa6b58f0c978f9dbaa6574a34c71d24050c1796",
+    "chainguard/m6_live_witness.py": "eed837391f37719ecbcb3494e1c56e96687e90a958428c8cbbb0197ccdbf31a6",
+    "chainguard/m6_controlled_server.py": "d0dda97e4ccbc42143ddba5295ffde02b2bd1e3b24e352a6bc6f2545d9c9261e",
+    "chainguard/m6_live_evidence.py": "ef76f214bd84da199f192c85f0eaa669aa9ba45034594055743759b532d142ea",
+    "chainguard/m6_live_seal.py": "dd4b3a75b290f801188ee7478f28dc18f65f8f21b96719d2b5fe20cef2e99ffd",
+    "chainguard/m6_live_verifier.py": "27c101aebdfc7751dc3944115f68c1f9167234fb525fa24711a12d13c05a1c79",
+    "chainguard/acceptance.py": "24f15abdbd6ae17be992357136cba4581ecd0726b8cb3365394f8ea846694d20"
+  },
+  "stdout_log": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\RESEARCH_UNBLOCKING\\focused_current.stdout.log",
+  "stderr_log": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\RESEARCH_UNBLOCKING\\focused_current.stderr.log"
+}
