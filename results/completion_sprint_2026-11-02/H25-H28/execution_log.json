@@ -1,0 +1,84 @@
+{
+  "task_id": "H25-H28-20261102",
+  "task_name": "E01-E13 readiness audit and eligible execution gate",
+  "first_recorded_local": "2026-11-02T21:51:49+05:30",
+  "last_recorded_validation_local": "2026-11-02T21:58:32+05:30",
+  "elapsed_from_recorded_markers": "at least 6m 43s; earlier inspection and later documentation not fully timed",
+  "model_tool": "GPT-6 Codex / PowerShell read-only inspection and documentation editing",
+  "input_tokens": "NOT EXPOSED",
+  "output_tokens": "NOT EXPOSED",
+  "generation_time": "NOT EXPOSED",
+  "files_inspected": [
+    "docs/COMPLETION_SPRINT_2026-11-02.md",
+    "docs/ARCHITECTURE_LOCK.md",
+    "docs/EXPERIMENT_MATRIX.md",
+    "docs/EVALUATION_PROTOCOL.md",
+    "results/completion_sprint_2026-11-02/H9-H12/experiment_contract_audit.md",
+    "results/completion_sprint_2026-11-02/H9-H12/case_inventory.json",
+    "results/completion_sprint_2026-11-02/H9-H12/protocol_conflicts_and_freeze.md",
+    "results/completion_sprint_2026-11-02/H12-H16/development_readiness_report.md",
+    "results/completion_sprint_2026-11-02/H12-H16/authority_decision_sheet.md",
+    "results/completion_sprint_2026-11-02/H12-H16/e02_development_pair.json",
+    "results/completion_sprint_2026-11-02/H12-H16/e13_postrun_analysis.json",
+    "results/completion_sprint_2026-11-02/H22-H25/implementation_and_qualification.md",
+    "results/completion_sprint_2026-11-02/H22-H25/live_m6_sink_final/signed_package.json",
+    "chainguard/m6_live_runtime.py",
+    "tests/workflow_fixtures.py",
+    "tests/test_workflows.py"
+  ],
+  "files_changed": [
+    "docs/COMPLETION_SPRINT_2026-11-02.md",
+    "results/completion_sprint_2026-11-02/H25-H28/readiness_audit.md",
+    "results/completion_sprint_2026-11-02/H25-H28/experiment_inventory.json",
+    "results/completion_sprint_2026-11-02/H25-H28/execution_log.json"
+  ],
+  "commands_and_exit_codes": [
+    {
+      "command": "rg -n '^#|^\\| \\*\\*E[0-9]|^\\| E[0-9]|hypothes|statistic|unit|sample|oracle|denominator|freeze' docs\\EXPERIMENT_MATRIX.md",
+      "exit_code": 0,
+      "purpose": "read experiment IDs, RQs, hypotheses, variables and outcomes"
+    },
+    {
+      "command": "rg -n '^#|^\\| \\*\\*E[0-9]|^\\| E[0-9]|hypothes|statistic|unit|sample|oracle|denominator|freeze' docs\\EVALUATION_PROTOCOL.md",
+      "exit_code": 0,
+      "purpose": "read protocol freeze, oracle and statistical rules"
+    },
+    {
+      "command": "Get-FileHash chainguard\\m6_live_runtime.py -Algorithm SHA256",
+      "exit_code": 0,
+      "purpose": "compare current source digest with H22 signed-package artifact digest"
+    },
+    {
+      "command": "Get-Content results\\completion_sprint_2026-11-02\\H25-H28\\experiment_inventory.json -Raw | ConvertFrom-Json",
+      "exit_code": 0,
+      "purpose": "validate machine-readable readiness inventory"
+    },
+    {
+      "command": "rg -n 'audit.sqlite' results/completion_sprint_2026-11-02/H25-H28",
+      "exit_code": 1,
+      "purpose": "absence check: no audit.sqlite reference; rg exit 1 means no matches"
+    }
+  ],
+  "tests_executed": [],
+  "experiments_executed": [],
+  "research_results_created": [],
+  "validation": {
+    "experiment_ids_unique": 13,
+    "tracker_rows_not_started": 13,
+    "ready_experiments": 0,
+    "sqlite_deliverables": 0,
+    "current_source_differs_from_h22_package": true
+  },
+  "failures_and_retries": "No experiment command failure or retry. Final rg absence check returned expected exit 1 (no audit.sqlite match). No experiment was attempted because none met its gate.",
+  "remaining_blockers": [
+    "A1/A2 owner decision",
+    "E08 owner baseline pin decision and conformance",
+    "unfrozen independent oracle cases and denominators",
+    "current-source M6 live qualification",
+    "held-out parents",
+    "missing evidence variants",
+    "retained B2-S/staged instrumentation"
+  ],
+  "git_commands": 0,
+  "dependencies_installed": 0
+}

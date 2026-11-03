@@ -1,0 +1,34 @@
+{
+  "schema": "chainguard-h25-h28-readiness-v1",
+  "as_of_local_date": "2026-11-02",
+  "scope": "readiness only; no E01-E13 research execution",
+  "source_state": {
+    "current_m6_live_runtime_sha256": "c136f3c68306a3fb2b377da9002738bcf3fab6276e84fef57c2047f47c0dd15d",
+    "h22_package_m6_live_runtime_sha256": "ed1574f4599d61714c0d3db670d0a64dd82c74acb314433f2966334fdb96325e",
+    "current_source_live_m6_qualified": false,
+    "h22_package_research_result": false
+  },
+  "corpus": {
+    "development_cases": 9,
+    "development_parent_groups": 8,
+    "validation_parent_groups": 0,
+    "held_out_parent_groups": 0,
+    "eligible_research_parent_groups": 0,
+    "source": "../H9-H12/case_inventory.json"
+  },
+  "experiments": [
+    {"id":"E01","name":"order-insensitive controls","rq":["RQ1","RQ2"],"hypotheses":["H1","H5"],"readiness":"BLOCKED","executed":false,"available":"S1/S2 development foundations","missing":"frozen valid benign-reordering pairs, independent labels/effects, denominator","completion":"paired equal-input controls with independent outcomes and per-parent analysis"},
+    {"id":"E02","name":"matched order-sensitive groups","rq":["RQ1","RQ2"],"hypotheses":["H2","H5"],"readiness":"BLOCKED","executed":false,"available":"one 724-byte identical-B1 development pair; authored opposite labels","missing":"independent ordered commit/effect labels, final mixed-label group inventory and denominator","completion":"eligible valid-order identical-input groups, observed bound and abstention/error analysis"},
+    {"id":"E03","name":"historical recognition","rq":["RQ1","RQ2"],"hypotheses":["H1","H3","H4"],"readiness":"BLOCKED","executed":false,"available":"replay foundations and preceding-source M6Q sink mechanism","missing":"frozen direct-recognition coverage and outside-coverage cases with public/failed-read controls","completion":"independent source/sink/task observations and covered-disclosure/false-disruption denominators"},
+    {"id":"E04","name":"detector/controller attribution","rq":["RQ4","RQ6"],"hypotheses":["H4","H6"],"readiness":"CONTRACT INCOMPLETE","executed":false,"available":"shadow/controller engineering paths; preceding-source witness mechanism","missing":"equivalent enforcement profiles/cases, mapping, attribution and denominator freeze","completion":"separate detector recommendation, controller refusal, dispatch, consumption, disclosure and task outcomes per parent/configuration"},
+    {"id":"E05","name":"held-out workflows","rq":["RQ1","RQ2","RQ3"],"hypotheses":["H1","H2","H3","H4","H5"],"readiness":"BLOCKED","executed":false,"available":"eight development parent groups","missing":"validation/held-out parents, frozen split/rules/oracle and prerequisite comparisons","completion":"paired held-out independent-parent results with actual denominators, exclusions and supported uncertainty"},
+    {"id":"E06","name":"live M6 lifecycle","rq":["RQ4","RQ6"],"hypotheses":["H5","H6"],"readiness":"BLOCKED","executed":false,"available":"preceding-source eight M6Q checks, focused current-source guard test","missing":"current-source live qualification, multi-scope/failure branches and frozen full case denominator","completion":"independently witnessed full lifecycle set with authorization/consumption/task outcomes"},
+    {"id":"E07","name":"execution/failure boundaries","rq":["RQ4","RQ6"],"hypotheses":["H6","H7"],"readiness":"CONTRACT INCOMPLETE","executed":false,"available":"one preceding-source injected pre-dispatch commit refusal","missing":"frozen fault/no-fault pair matrix, expected known/ambiguous statuses and current-source hooks","completion":"boundary-by-boundary effect/unknown/no-replay/no-refund evidence"},
+    {"id":"E08","name":"external baseline","rq":["RQ1","RQ3","RQ7"],"hypotheses":["H4","H9"],"readiness":"BLOCKED","executed":false,"available":"locked R02 subset and conformance specification","missing":"owner pin resolution, adapter/driver and passing differential conformance","completion":"paired common-domain independent-oracle comparison after conformance"},
+    {"id":"E09","name":"evidence integrity","rq":["RQ5","RQ6","RQ8"],"hypotheses":["H7","H8"],"readiness":"BLOCKED","executed":false,"available":"partial M4/M5/M6 engineering mutation tests","missing":"A1/A2 owner resolution, A3T/A4T parity, frozen original/mutant matrix","completion":"dimension-specific eligible variant/mutation results and bounded cost"},
+    {"id":"E10","name":"authentic-but-wrong facts/findings","rq":["RQ4","RQ5"],"hypotheses":["H7"],"readiness":"CONTRACT INCOMPLETE","executed":false,"available":"wrong-finding engineering tests; preceding-source witnesses","missing":"predeclared signed case set, independent truth/omission journal and signer provision","completion":"authenticity/reproduction/oracle disagreement by case class with unknown exclusions"},
+    {"id":"E11","name":"acceptance","rq":["RQ5","RQ6"],"hypotheses":["H7","H8"],"readiness":"CONTRACT INCOMPLETE","executed":false,"available":"M5/M6.4 acceptance tests; preceding-source signed inspection","missing":"A4T parity, frozen submission/registry-boundary ledger; fresh submission not checked","completion":"whole-run dimension and acceptance outcomes for context, inventory, stale, duplicate, restart, concurrency and faults"},
+    {"id":"E12","name":"cost/scaling","rq":["RQ8"],"hypotheses":["H5","H8","H10"],"readiness":"CONTRACT INCOMPLETE","executed":false,"available":"engineering test runtimes only","missing":"retained B2-S and staged memory/latency/storage instrumentation, variants and benchmark contract","completion":"correctness-gated repeated common workloads with measured boundaries and median/IQR"},
+    {"id":"E13","name":"invariance/explanation","rq":["RQ1","RQ2","RQ4"],"hypotheses":["H1","H5"],"readiness":"BLOCKED","executed":false,"available":"one authored ID-renaming development pair","missing":"qualified harmless-gap/interleaving pairs, independent labels and mapping freeze","completion":"transformation-wise before/after verdict/rule/reference/explanation results per parent"}
+  ]
+}
