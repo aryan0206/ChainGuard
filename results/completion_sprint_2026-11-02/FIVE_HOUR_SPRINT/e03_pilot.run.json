@@ -1,0 +1,12 @@
+{
+  "command": ".\\.venv\\Scripts\\python.exe -B results/completion_sprint_2026-11-02/FIVE_HOUR_SPRINT/run_e03_pilot.py",
+  "trusted_revision": "89dfbf78a953701cad2eb17da03218ff2abec709",
+  "start_local": "2026-11-03T13:20:20.4595890+05:30",
+  "end_local": "2026-11-03T13:20:20.6169065+05:30",
+  "elapsed_seconds": 0.1486784,
+  "exit_code": 101,
+  "python_version": "Unable to create process using '\"C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\.venv\\Scripts\\python.exe\" --version': Access is denied.",
+  "powershell_version": "7.6.5",
+  "stdout": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\FIVE_HOUR_SPRINT\\e03_pilot.stdout.log",
+  "stderr": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\FIVE_HOUR_SPRINT\\e03_pilot.stderr.log"
+}

@@ -1,0 +1,1 @@
+{"jsonrpc":"2.0","id":"e03-p1-hex","method":"tools/call","params":{"_meta":{"io.modelcontextprotocol/protocolVersion":"2026-07-28","io.modelcontextprotocol/clientCapabilities":{}},"name":"send_sink","arguments":{"payload":"53594e5448455449435f43414e4152595f41"}}}

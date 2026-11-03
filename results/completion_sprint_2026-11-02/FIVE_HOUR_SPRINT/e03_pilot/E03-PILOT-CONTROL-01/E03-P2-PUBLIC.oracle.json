@@ -1,0 +1,9 @@
+{
+  "case_id": "E03-P2-PUBLIC",
+  "label": "AUTHORIZED",
+  "source": "prewritten static permission plus independently witnessed source/control boundary",
+  "basis": "no successful exposure, supported public payload, no release obligation",
+  "source_success": null,
+  "denied_read_no_handler": true,
+  "plan_sha256": "98c5a9168975a851d4744c54f962007bc4ede91581a9ca509f7b03a861c99c95"
+}

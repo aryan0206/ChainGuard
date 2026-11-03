@@ -1,0 +1,10 @@
+{
+  "case_id": "E03-P1-SOURCE",
+  "request_id": "e03-p1-source",
+  "started_local": "2026-11-03T13:20:46.331176+05:30",
+  "ended_local": "2026-11-03T13:20:46.393210+05:30",
+  "status": "RETURNED",
+  "exception": null,
+  "request_sha256": "adcfce74ed46b01430eca9bd0ae0a118519bc622e04e5cc99876212c65213e09",
+  "response_sha256": "604070d48555f3cf297bc91ae8f7f6cb183788802b1ac94dffa9f223824bcfe5"
+}

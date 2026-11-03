@@ -1,0 +1,23 @@
+{
+  "case_id": "E03-P1-HEX",
+  "coverage": "COMPLETE",
+  "child_handler_count": 0,
+  "sink_arrival_count": 0,
+  "sink_payload_sha256": [],
+  "sink_payload_base64": [],
+  "client_response": {
+    "request_id": "e03-p1-hex",
+    "response": {
+      "error": {
+        "code": -32003,
+        "message": "M6 authorization denied"
+      },
+      "id": "e03-p1-hex",
+      "jsonrpc": "2.0"
+    },
+    "exception": null
+  },
+  "package_sha256": "3650e4c1a50127a1fbe9871732dfa31693bdcfe7c455b10a1fc6e9bb56a7c2b4",
+  "child_stream_sha256": "ff568067ec7c13a5ffbacfad575b835a3e994e5f08f7cf8de5f45165953f2a0d",
+  "sink_stream_sha256": "fd04a0b55d0be190df45bee4606a9dd897b0316d18b62365d2c514ace830a38c"
+}

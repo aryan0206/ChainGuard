@@ -1,0 +1,34 @@
+{
+  "E03-P2-DENIED-READ": {
+    "request_id": "e03-p2-denied-read",
+    "response": null,
+    "exception": {
+      "type": "_ClientRequestError",
+      "message": "Invalid M6 tool call"
+    }
+  },
+  "E03-P2-PUBLIC": {
+    "request_id": "e03-p2-public",
+    "response": {
+      "id": "e03-p2-public",
+      "jsonrpc": "2.0",
+      "result": {
+        "_meta": {
+          "io.modelcontextprotocol/serverInfo": {
+            "name": "chainguard-m6-synthetic",
+            "version": "0.1.0"
+          }
+        },
+        "content": [
+          {
+            "text": "captured by local sink",
+            "type": "text"
+          }
+        ],
+        "isError": false,
+        "resultType": "complete"
+      }
+    },
+    "exception": null
+  }
+}

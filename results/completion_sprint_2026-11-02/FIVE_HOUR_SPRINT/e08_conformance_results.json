@@ -1,0 +1,457 @@
+{
+  "schema": "chainguard-e08-r02-conformance-v1",
+  "classification": "REFERENCE_SUBSET_CONFORMANCE_ONLY; NOT E08 COMPARATIVE RESEARCH",
+  "reference_commit": "3dd9690b5b6f9c4ef385289714b314d13f6ad9a1",
+  "reference_source": [
+    "prototype/datatypes.py",
+    "prototype/pep/label_tracker.py",
+    "prototype/pep/rules.py"
+  ],
+  "enforcer_source_retained_but_not_executed": true,
+  "input_sha256": "a59b3f560229de06824d0408a5aa7232f32f48e8e21709fd17d62c3628e5aa25",
+  "reference_provenance_sha256": "c2332dafe56e4725847594e9ca1c84669ad4807c98e1dd1c136137ba72db28a3",
+  "ended_local": "2026-11-03T13:01:19.781997+05:30",
+  "case_count": 10,
+  "pass_count": 10,
+  "all_pass": true,
+  "cases": [
+    {
+      "case_id": "E08-C01-arg-sensitive-no-history",
+      "reference": [
+        {
+          "decision": "DENY",
+          "rule": "R02",
+          "effective_ds": "DS:SENSITIVE",
+          "post_ds": "DS:NORMAL"
+        }
+      ],
+      "adapter": [
+        {
+          "decision": "DENY",
+          "rule": "R02",
+          "effective_ds": "DS:SENSITIVE",
+          "post_ds": "DS:NORMAL"
+        }
+      ],
+      "predeclared_expected": [
+        {
+          "decision": "DENY",
+          "rule": "R02",
+          "effective_ds": "DS:SENSITIVE",
+          "post_ds": "DS:NORMAL"
+        }
+      ],
+      "passed": true
+    },
+    {
+      "case_id": "E08-C02-benign-no-history",
+      "reference": [
+        {
+          "decision": "ALLOW",
+          "rule": null,
+          "effective_ds": "DS:NORMAL",
+          "post_ds": "DS:NORMAL"
+        }
+      ],
+      "adapter": [
+        {
+          "decision": "ALLOW",
+          "rule": null,
+          "effective_ds": "DS:NORMAL",
+          "post_ds": "DS:NORMAL"
+        }
+      ],
+      "predeclared_expected": [
+        {
+          "decision": "ALLOW",
+          "rule": null,
+          "effective_ds": "DS:NORMAL",
+          "post_ds": "DS:NORMAL"
+        }
+      ],
+      "passed": true
+    },
+    {
+      "case_id": "E08-C03-successful-sensitive-result",
+      "reference": [
+        {
+          "decision": "ALLOW",
+          "rule": null,
+          "effective_ds": "DS:NORMAL",
+          "post_ds": "DS:SENSITIVE"
+        },
+        {
+          "decision": "DENY",
+          "rule": "R02",
+          "effective_ds": "DS:SENSITIVE",
+          "post_ds": "DS:SENSITIVE"
+        }
+      ],
+      "adapter": [
+        {
+          "decision": "ALLOW",
+          "rule": null,
+          "effective_ds": "DS:NORMAL",
+          "post_ds": "DS:SENSITIVE"
+        },
+        {
+          "decision": "DENY",
+          "rule": "R02",
+          "effective_ds": "DS:SENSITIVE",
+          "post_ds": "DS:SENSITIVE"
+        }
+      ],
+      "predeclared_expected": [
+        {
+          "decision": "ALLOW",
+          "rule": null,
+          "effective_ds": "DS:NORMAL",
+          "post_ds": "DS:SENSITIVE"
+        },
+        {
+          "decision": "DENY",
+          "rule": "R02",
+          "effective_ds": "DS:SENSITIVE",
+          "post_ds": "DS:SENSITIVE"
+        }
+      ],
+      "passed": true
+    },
+    {
+      "case_id": "E08-C04-public-transformation-after-exposure",
+      "reference": [
+        {
+          "decision": "ALLOW",
+          "rule": null,
+          "effective_ds": "DS:NORMAL",
+          "post_ds": "DS:SENSITIVE"
+        },
+        {
+          "decision": "ALLOW",
+          "rule": null,
+          "effective_ds": "DS:SENSITIVE",
+          "post_ds": "DS:SENSITIVE"
+        },
+        {
+          "decision": "DENY",
+          "rule": "R02",
+          "effective_ds": "DS:SENSITIVE",
+          "post_ds": "DS:SENSITIVE"
+        }
+      ],
+      "adapter": [
+        {
+          "decision": "ALLOW",
+          "rule": null,
+          "effective_ds": "DS:NORMAL",
+          "post_ds": "DS:SENSITIVE"
+        },
+        {
+          "decision": "ALLOW",
+          "rule": null,
+          "effective_ds": "DS:SENSITIVE",
+          "post_ds": "DS:SENSITIVE"
+        },
+        {
+          "decision": "DENY",
+          "rule": "R02",
+          "effective_ds": "DS:SENSITIVE",
+          "post_ds": "DS:SENSITIVE"
+        }
+      ],
+      "predeclared_expected": [
+        {
+          "decision": "ALLOW",
+          "rule": null,
+          "effective_ds": "DS:NORMAL",
+          "post_ds": "DS:SENSITIVE"
+        },
+        {
+          "decision": "ALLOW",
+          "rule": null,
+          "effective_ds": "DS:SENSITIVE",
+          "post_ds": "DS:SENSITIVE"
+        },
+        {
+          "decision": "DENY",
+          "rule": "R02",
+          "effective_ds": "DS:SENSITIVE",
+          "post_ds": "DS:SENSITIVE"
+        }
+      ],
+      "passed": true
+    },
+    {
+      "case_id": "E08-C05-failed-acquisition",
+      "reference": [
+        {
+          "decision": "ALLOW",
+          "rule": null,
+          "effective_ds": "DS:NORMAL",
+          "post_ds": "DS:NORMAL"
+        },
+        {
+          "decision": "ALLOW",
+          "rule": null,
+          "effective_ds": "DS:NORMAL",
+          "post_ds": "DS:NORMAL"
+        }
+      ],
+      "adapter": [
+        {
+          "decision": "ALLOW",
+          "rule": null,
+          "effective_ds": "DS:NORMAL",
+          "post_ds": "DS:NORMAL"
+        },
+        {
+          "decision": "ALLOW",
+          "rule": null,
+          "effective_ds": "DS:NORMAL",
+          "post_ds": "DS:NORMAL"
+        }
+      ],
+      "predeclared_expected": [
+        {
+          "decision": "ALLOW",
+          "rule": null,
+          "effective_ds": "DS:NORMAL",
+          "post_ds": "DS:NORMAL"
+        },
+        {
+          "decision": "ALLOW",
+          "rule": null,
+          "effective_ds": "DS:NORMAL",
+          "post_ds": "DS:NORMAL"
+        }
+      ],
+      "passed": true
+    },
+    {
+      "case_id": "E08-C06-denied-acquisition-without-result",
+      "reference": [
+        {
+          "decision": "ALLOW",
+          "rule": null,
+          "effective_ds": "DS:NORMAL",
+          "post_ds": "DS:NORMAL"
+        },
+        {
+          "decision": "ALLOW",
+          "rule": null,
+          "effective_ds": "DS:NORMAL",
+          "post_ds": "DS:NORMAL"
+        }
+      ],
+      "adapter": [
+        {
+          "decision": "ALLOW",
+          "rule": null,
+          "effective_ds": "DS:NORMAL",
+          "post_ds": "DS:NORMAL"
+        },
+        {
+          "decision": "ALLOW",
+          "rule": null,
+          "effective_ds": "DS:NORMAL",
+          "post_ds": "DS:NORMAL"
+        }
+      ],
+      "predeclared_expected": [
+        {
+          "decision": "ALLOW",
+          "rule": null,
+          "effective_ds": "DS:NORMAL",
+          "post_ds": "DS:NORMAL"
+        },
+        {
+          "decision": "ALLOW",
+          "rule": null,
+          "effective_ds": "DS:NORMAL",
+          "post_ds": "DS:NORMAL"
+        }
+      ],
+      "passed": true
+    },
+    {
+      "case_id": "E08-C07-current-argument-no-accumulation",
+      "reference": [
+        {
+          "decision": "DENY",
+          "rule": "R02",
+          "effective_ds": "DS:SENSITIVE",
+          "post_ds": "DS:NORMAL"
+        },
+        {
+          "decision": "ALLOW",
+          "rule": null,
+          "effective_ds": "DS:NORMAL",
+          "post_ds": "DS:NORMAL"
+        }
+      ],
+      "adapter": [
+        {
+          "decision": "DENY",
+          "rule": "R02",
+          "effective_ds": "DS:SENSITIVE",
+          "post_ds": "DS:NORMAL"
+        },
+        {
+          "decision": "ALLOW",
+          "rule": null,
+          "effective_ds": "DS:NORMAL",
+          "post_ds": "DS:NORMAL"
+        }
+      ],
+      "predeclared_expected": [
+        {
+          "decision": "DENY",
+          "rule": "R02",
+          "effective_ds": "DS:SENSITIVE",
+          "post_ds": "DS:NORMAL"
+        },
+        {
+          "decision": "ALLOW",
+          "rule": null,
+          "effective_ds": "DS:NORMAL",
+          "post_ds": "DS:NORMAL"
+        }
+      ],
+      "passed": true
+    },
+    {
+      "case_id": "E08-C08-other-mapped-destination",
+      "reference": [
+        {
+          "decision": "DENY",
+          "rule": "R02",
+          "effective_ds": "DS:SENSITIVE",
+          "post_ds": "DS:NORMAL"
+        }
+      ],
+      "adapter": [
+        {
+          "decision": "DENY",
+          "rule": "R02",
+          "effective_ds": "DS:SENSITIVE",
+          "post_ds": "DS:NORMAL"
+        }
+      ],
+      "predeclared_expected": [
+        {
+          "decision": "DENY",
+          "rule": "R02",
+          "effective_ds": "DS:SENSITIVE",
+          "post_ds": "DS:NORMAL"
+        }
+      ],
+      "passed": true
+    },
+    {
+      "case_id": "E08-C09-grant-does-not-bypass-r02",
+      "reference": [
+        {
+          "decision": "ALLOW",
+          "rule": null,
+          "effective_ds": "DS:NORMAL",
+          "post_ds": "DS:SENSITIVE"
+        },
+        {
+          "decision": "DENY",
+          "rule": "R02",
+          "effective_ds": "DS:SENSITIVE",
+          "post_ds": "DS:SENSITIVE"
+        }
+      ],
+      "adapter": [
+        {
+          "decision": "ALLOW",
+          "rule": null,
+          "effective_ds": "DS:NORMAL",
+          "post_ds": "DS:SENSITIVE"
+        },
+        {
+          "decision": "DENY",
+          "rule": "R02",
+          "effective_ds": "DS:SENSITIVE",
+          "post_ds": "DS:SENSITIVE"
+        }
+      ],
+      "predeclared_expected": [
+        {
+          "decision": "ALLOW",
+          "rule": null,
+          "effective_ds": "DS:NORMAL",
+          "post_ds": "DS:SENSITIVE"
+        },
+        {
+          "decision": "DENY",
+          "rule": "R02",
+          "effective_ds": "DS:SENSITIVE",
+          "post_ds": "DS:SENSITIVE"
+        }
+      ],
+      "passed": true
+    },
+    {
+      "case_id": "E08-C10-reconnect-preserves-state",
+      "reference": [
+        {
+          "decision": "ALLOW",
+          "rule": null,
+          "effective_ds": "DS:NORMAL",
+          "post_ds": "DS:SENSITIVE"
+        },
+        {
+          "post_ds": "DS:SENSITIVE"
+        },
+        {
+          "decision": "DENY",
+          "rule": "R02",
+          "effective_ds": "DS:SENSITIVE",
+          "post_ds": "DS:SENSITIVE"
+        }
+      ],
+      "adapter": [
+        {
+          "decision": "ALLOW",
+          "rule": null,
+          "effective_ds": "DS:NORMAL",
+          "post_ds": "DS:SENSITIVE"
+        },
+        {
+          "post_ds": "DS:SENSITIVE"
+        },
+        {
+          "decision": "DENY",
+          "rule": "R02",
+          "effective_ds": "DS:SENSITIVE",
+          "post_ds": "DS:SENSITIVE"
+        }
+      ],
+      "predeclared_expected": [
+        {
+          "decision": "ALLOW",
+          "rule": null,
+          "effective_ds": "DS:NORMAL",
+          "post_ds": "DS:SENSITIVE"
+        },
+        {
+          "post_ds": "DS:SENSITIVE"
+        },
+        {
+          "decision": "DENY",
+          "rule": "R02",
+          "effective_ds": "DS:SENSITIVE",
+          "post_ds": "DS:SENSITIVE"
+        }
+      ],
+      "passed": true
+    }
+  ],
+  "limitations": [
+    "Common sensitivity facts supplied, not extracted by either system",
+    "R02 rule/label tracker subset only; full enforcer, token, rate, path, intent, logger and tool execution excluded",
+    "Conformance does not establish independent workflow-oracle correctness or E08 performance"
+  ]
+}

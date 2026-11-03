@@ -1,0 +1,53 @@
+[
+  {
+    "case_id": "M6Q-03",
+    "kind": "GRANT",
+    "grant_id": "g1",
+    "scope": {
+      "task_id": "M6Q-01-07-task-24ad1c56a25d4142980292b7cafd64f1",
+      "resource": "secret-a",
+      "destination": "sink",
+      "release": "release"
+    },
+    "issued_local": "2026-11-03T13:06:56.841181+05:30",
+    "completed_local": "2026-11-03T13:06:56.863474+05:30"
+  },
+  {
+    "case_id": "M6Q-05",
+    "kind": "GRANT",
+    "grant_id": "g2",
+    "scope": {
+      "task_id": "M6Q-01-07-task-24ad1c56a25d4142980292b7cafd64f1",
+      "resource": "secret-a",
+      "destination": "sink",
+      "release": "release"
+    },
+    "issued_local": "2026-11-03T13:06:56.993907+05:30",
+    "completed_local": "2026-11-03T13:06:57.016977+05:30"
+  },
+  {
+    "case_id": "M6Q-05",
+    "kind": "REVOKE_SCOPE",
+    "scope": {
+      "task_id": "M6Q-01-07-task-24ad1c56a25d4142980292b7cafd64f1",
+      "resource": "secret-a",
+      "destination": "sink",
+      "release": "release"
+    },
+    "issued_local": "2026-11-03T13:06:57.017042+05:30",
+    "completed_local": "2026-11-03T13:06:57.039251+05:30"
+  },
+  {
+    "case_id": "M6Q-06",
+    "kind": "GRANT",
+    "grant_id": "g3",
+    "scope": {
+      "task_id": "M6Q-01-07-task-24ad1c56a25d4142980292b7cafd64f1",
+      "resource": "secret-a",
+      "destination": "sink",
+      "release": "release"
+    },
+    "issued_local": "2026-11-03T13:06:57.074941+05:30",
+    "completed_local": "2026-11-03T13:06:57.094674+05:30"
+  }
+]

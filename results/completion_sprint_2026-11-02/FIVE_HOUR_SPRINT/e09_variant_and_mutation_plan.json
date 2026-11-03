@@ -1,0 +1,32 @@
+{
+  "schema": "chainguard-e09-seven-variant-plan-v1",
+  "classification": "PREPARATION_ONLY; NOT FROZEN E09 RESEARCH CAMPAIGN",
+  "approved_labels": {
+    "A0": "structured records, no integrity",
+    "A1": "independent event hashes; require separately retained trusted digest for authentication claim",
+    "A2": "unkeyed event hash chain; recomputable without trusted closure",
+    "A3": "signed canonical event chain",
+    "A3T": "signed ordered canonical transcript without unused event-chain computation",
+    "A4": "A3 plus independent expected run and durable fresh acceptance",
+    "A4T": "A3T plus independent expected run and durable fresh acceptance"
+  },
+  "current_implementation": {
+    "A0": "STUDY HARNESS MISSING",
+    "A1": "STUDY HARNESS MISSING",
+    "A2": "STUDY HARNESS MISSING",
+    "A3": "LIVE SIGNED CHAIN AVAILABLE; CURRENT-SOURCE QUALIFICATION BLOCKED",
+    "A3T": "SIGNED TRANSCRIPT FORMAT MISSING",
+    "A4": "LIVE ACCEPTANCE CODE AVAILABLE; FROZEN CAMPAIGN MISSING",
+    "A4T": "SIGNED TRANSCRIPT ACCEPTANCE MISSING"
+  },
+  "comparability_controls": ["identical semantic records", "identical durability and closure boundary", "identical signature frequency for signed variants", "same assessor expected inventory and key pin", "A3T must omit unused event-chain computation"],
+  "mutation_classes_to_freeze": ["edit", "insert", "delete", "reorder", "duplicate", "splice", "truncate", "whole-session removal", "unkeyed recomputation", "wrong signer", "wrong configuration", "stale context", "duplicate fresh submission", "pre-seal crash tail", "post-seal mutation"],
+  "current_a3_development_subset": [
+    {"case_id":"E09-DEV-A3-00","mutation":"none","expected":{"inspection_passed":true,"dimension":"commitment_integrity","status":"PASS"}},
+    {"case_id":"E09-DEV-A3-01","mutation":"noncanonical-trailing-byte","expected":{"inspection_passed":false,"dimension":"package_schema","status":"FAIL"}},
+    {"case_id":"E09-DEV-A3-02","mutation":"edit-first-event-sequence","expected":{"inspection_passed":false,"dimension":"commitment_integrity","status":"FAIL"}},
+    {"case_id":"E09-DEV-A3-03","mutation":"delete-last-record","expected":{"inspection_passed":false,"dimension":"commitment_integrity","status":"FAIL"}},
+    {"case_id":"E09-DEV-A3-04","mutation":"wrong-assessor-configuration","expected":{"inspection_passed":false,"dimension":"expected_binding","status":"FAIL"}}
+  ],
+  "research_completion_gate": "All seven mechanisms with matching semantics/durability/signature frequency, byte vectors, predeclared mutation-by-variant eligibility/dimension ledger and assessor-held originals; dimension-specific denominators and exclusions. Historical A3 development subset is not E09 research."
+}

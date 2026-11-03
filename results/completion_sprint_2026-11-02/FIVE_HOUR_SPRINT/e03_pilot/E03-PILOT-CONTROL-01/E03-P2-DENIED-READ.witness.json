@@ -1,0 +1,19 @@
+{
+  "case_id": "E03-P2-DENIED-READ",
+  "coverage": "COMPLETE",
+  "child_handler_count": 0,
+  "sink_arrival_count": 0,
+  "sink_payload_sha256": [],
+  "sink_payload_base64": [],
+  "client_response": {
+    "request_id": "e03-p2-denied-read",
+    "response": null,
+    "exception": {
+      "type": "_ClientRequestError",
+      "message": "Invalid M6 tool call"
+    }
+  },
+  "package_sha256": "e5c020603042d318ebb40a72f7a12c76c8040cb6d976f0d9868aaef379650359",
+  "child_stream_sha256": "d4bc3ef78b19c7fff6b1e104f705f75bca9b38f097568f9f2bce26f26adde92a",
+  "sink_stream_sha256": "5d7266ef225885ae68bc82bc14b1d78ee14c464dc50aacf6c12626c228566fbf"
+}

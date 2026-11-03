@@ -1,0 +1,10 @@
+{
+  "case_id": "M6Q-03",
+  "request_id": "q3-send",
+  "started_local": "2026-11-03T13:06:56.865987+05:30",
+  "ended_local": "2026-11-03T13:06:56.950002+05:30",
+  "status": "RETURNED",
+  "exception": null,
+  "request_sha256": "358ac86084580af614e7294f905e571f13cfee37f0631846bd54825d107a140e",
+  "response_sha256": "afc4cc9d9978f9697e40fe88ba4f1d4fce6d481494836e8124b5b5045e141039"
+}

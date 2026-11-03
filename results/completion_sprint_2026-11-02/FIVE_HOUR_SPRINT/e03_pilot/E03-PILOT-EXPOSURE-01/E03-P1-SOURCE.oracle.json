@@ -1,0 +1,9 @@
+{
+  "case_id": "E03-P1-SOURCE",
+  "label": "AUTHORIZED",
+  "source": "prewritten static permission plus independently witnessed source/control boundary",
+  "basis": "public read permission and independent child/client source result",
+  "source_success": true,
+  "denied_read_no_handler": null,
+  "plan_sha256": "98c5a9168975a851d4744c54f962007bc4ede91581a9ca509f7b03a861c99c95"
+}

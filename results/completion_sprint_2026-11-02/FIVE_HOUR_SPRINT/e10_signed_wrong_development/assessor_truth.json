@@ -1,0 +1,11 @@
+{
+  "classification": "ASSESSOR_HELD_SYNTHETIC_M6Q_TRUTH",
+  "source_response_sha256": "dbf2ac389bdea4e8f8451db18ec17d39565ed159af41befcca7b182a4ca305da",
+  "child_witness_sha256": "a5ea5f2c86923be7f02e82e5e6468d6fabdc55720a0c85af4468d9f88e59d07d",
+  "sink_witness_sha256": "4d6599b575889f37d06d78062f4dbc9c7d47800a6259e86dc0cd130ea587e226",
+  "source_handler_count": 1,
+  "sink_arrival_count": 1,
+  "sink_payload_sha256": "f89c820f68b91ede298fc486cd411b11ab252b3c1ae71f6c9eea062e38d68bf0",
+  "sink_recorded_payload_sha256": "f89c820f68b91ede298fc486cd411b11ab252b3c1ae71f6c9eea062e38d68bf0",
+  "source_and_sink_records_are_external_to_signed_audit": true
+}

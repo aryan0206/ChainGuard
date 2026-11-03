@@ -1,0 +1,10 @@
+{
+  "case_id": "M6Q-02",
+  "request_id": "q2-deny",
+  "started_local": "2026-11-03T13:06:56.807864+05:30",
+  "ended_local": "2026-11-03T13:06:56.838891+05:30",
+  "status": "RETURNED",
+  "exception": null,
+  "request_sha256": "90a15306aeaf7881d96df73a0cabf7b478cec9d7c344c58c03a4c93ca8d8e816",
+  "response_sha256": "623394a0641c1759eeffaed0f555144474ceab497feb6f3d7e0fa7b4b03f1846"
+}

@@ -1,0 +1,11 @@
+{
+  "command": ".\\.venv\\Scripts\\python.exe -B results/completion_sprint_2026-11-02/FIVE_HOUR_SPRINT/verify_e08_reference.py",
+  "start_local": "2026-11-03T12:58:21.5278864+05:30",
+  "end_local": "2026-11-03T12:58:21.9911262+05:30",
+  "elapsed_seconds": 0.4524336,
+  "exit_code": 0,
+  "python_version": "Python 3.14.3",
+  "powershell_version": "7.6.5",
+  "stdout": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\FIVE_HOUR_SPRINT\\e08_reference_verify.stdout.log",
+  "stderr": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\FIVE_HOUR_SPRINT\\e08_reference_verify.stderr.log"
+}

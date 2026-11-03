@@ -1,0 +1,35 @@
+{
+  "mode": "INSPECT",
+  "fresh_submission": "NOT_CHECKED",
+  "inspection_passed": false,
+  "dimensions": {
+    "package_schema": {
+      "status": "PASS",
+      "reason": "CANONICAL_LIVE_PACKAGE"
+    },
+    "commitment_integrity": {
+      "status": "PASS",
+      "reason": "CHAIN_AND_CLOSURE_MATCH"
+    },
+    "trusted_signature": {
+      "status": "PASS",
+      "reason": "PINNED_SIGNER_VERIFIED"
+    },
+    "expected_binding": {
+      "status": "FAIL",
+      "reason": "ASSESSOR_CONTEXT_MISMATCH"
+    },
+    "inventory_completeness": {
+      "status": "NOT_CHECKED",
+      "reason": "PREREQUISITE_UNAVAILABLE"
+    },
+    "lifecycle_semantics": {
+      "status": "NOT_CHECKED",
+      "reason": "PREREQUISITE_UNAVAILABLE"
+    },
+    "finding_reproduction": {
+      "status": "NOT_CHECKED",
+      "reason": "PREREQUISITE_UNAVAILABLE"
+    }
+  }
+}

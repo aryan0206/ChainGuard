@@ -1,0 +1,12 @@
+{
+  "schema_version": "m4-expected-inventory-v1",
+  "run_id": "E03-PILOT-CONTROL-01-run-243aae7cf50746b3b96a600efe9a0ec7",
+  "run_challenge": "3de608336ffa64e0e3c59e4921e28ed223c20255b0f2fefc40029b868f3656f1",
+  "sessions": [
+    {
+      "task_id": "E03-PILOT-CONTROL-01-task-243aae7cf50746b3b96a600efe9a0ec7",
+      "session_id": "E03-PILOT-CONTROL-01-session-243aae7cf50746b3b96a600efe9a0ec7",
+      "monitor_instance_id": "E03-PILOT-CONTROL-01-monitor-243aae7cf50746b3b96a600efe9a0ec7"
+    }
+  ]
+}

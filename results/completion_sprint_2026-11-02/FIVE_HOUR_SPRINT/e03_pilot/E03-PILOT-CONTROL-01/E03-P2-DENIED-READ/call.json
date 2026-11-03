@@ -1,0 +1,13 @@
+{
+  "case_id": "E03-P2-DENIED-READ",
+  "request_id": "e03-p2-denied-read",
+  "started_local": "2026-11-03T13:20:50.945167+05:30",
+  "ended_local": "2026-11-03T13:20:50.946208+05:30",
+  "status": "EXCEPTION",
+  "exception": {
+    "type": "_ClientRequestError",
+    "message": "Invalid M6 tool call"
+  },
+  "request_sha256": "652116ea9c7b444597cb2b2057e6e16239868ecc8191220a40db81bab4ad306d",
+  "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

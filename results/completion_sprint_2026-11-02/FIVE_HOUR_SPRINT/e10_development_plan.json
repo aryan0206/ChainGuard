@@ -1,0 +1,13 @@
+{
+  "schema": "chainguard-e10-development-signed-mutants-v1",
+  "classification": "ENGINEERING_DEVELOPMENT_ONLY; NOT E10 RESEARCH",
+  "source": "current-source M6Q signed package and assessor-held child/sink/client witnesses",
+  "signer": "fresh ephemeral P-256 test signer, public key retained; private key never persisted",
+  "cases": [
+    {"case_id":"E10-DEV-00","kind":"control","mutation":"none","expected_signature":"PASS","expected_integrity":"PASS","external_truth":"current M6Q witnesses"},
+    {"case_id":"E10-DEV-01","kind":"wrong_observation","mutation":"first successful read TOOL_OUTCOME status to failed","expected_signature":"PASS","expected_integrity":"PASS","external_truth":"M6Q-01 response and child handler show successful read"},
+    {"case_id":"E10-DEV-02","kind":"wrong_finding","mutation":"first DETECTOR_FINDING explanation append wrong suffix","expected_signature":"PASS","expected_integrity":"PASS","external_truth":"unchanged normalized proposal and independent source/sink witnesses"},
+    {"case_id":"E10-DEV-03","kind":"witnessed_omission","mutation":"remove first successful send_sink TOOL_OUTCOME","expected_signature":"PASS","expected_integrity":"PASS","external_truth":"assessor sink witness shows exact arrival for M6Q-03"}
+  ],
+  "completion_limit": "This checks authentic-but-wrong mechanics only. Final E10 needs a frozen population case set, independently assigned truth/omission journal and denominators."
+}

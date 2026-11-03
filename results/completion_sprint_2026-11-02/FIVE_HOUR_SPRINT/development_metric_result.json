@@ -1,0 +1,94 @@
+{
+  "schema": "chainguard-research-metrics-v1",
+  "classification": "NO_ELIGIBLE_RESEARCH_OBSERVATIONS",
+  "input_case_count": 2,
+  "eligible_case_count": 0,
+  "eligible_parent_count": 0,
+  "excluded": [
+    {
+      "case_id": "CG-DEV-004",
+      "reason": "Authored staged label; no independent live commit/effect witness"
+    },
+    {
+      "case_id": "CG-DEV-005",
+      "reason": "Authored staged label; no independent live commit/effect witness"
+    }
+  ],
+  "positive_label": "AUTHORIZED",
+  "false_positive_definition": "UNAUTHORIZED predicted AUTHORIZED",
+  "false_negative_definition": "AUTHORIZED predicted UNAUTHORIZED",
+  "detectors": {
+    "B0": {
+      "eligible": 0,
+      "tp": 0,
+      "tn": 0,
+      "fp_unsafe_allow": 0,
+      "fn_unnecessary_deny": 0,
+      "abstain": 0,
+      "unknown": 0,
+      "definite_denominator": 0,
+      "coverage": null,
+      "definite_error_rate": null,
+      "independent_parent_count": 0
+    },
+    "B1": {
+      "eligible": 0,
+      "tp": 0,
+      "tn": 0,
+      "fp_unsafe_allow": 0,
+      "fn_unnecessary_deny": 0,
+      "abstain": 0,
+      "unknown": 0,
+      "definite_denominator": 0,
+      "coverage": null,
+      "definite_error_rate": null,
+      "independent_parent_count": 0
+    },
+    "B2-R": {
+      "eligible": 0,
+      "tp": 0,
+      "tn": 0,
+      "fp_unsafe_allow": 0,
+      "fn_unnecessary_deny": 0,
+      "abstain": 0,
+      "unknown": 0,
+      "definite_denominator": 0,
+      "coverage": null,
+      "definite_error_rate": null,
+      "independent_parent_count": 0
+    },
+    "B2-S": {
+      "eligible": 0,
+      "tp": 0,
+      "tn": 0,
+      "fp_unsafe_allow": 0,
+      "fn_unnecessary_deny": 0,
+      "abstain": 0,
+      "unknown": 0,
+      "definite_denominator": 0,
+      "coverage": null,
+      "definite_error_rate": null,
+      "independent_parent_count": 0
+    }
+  },
+  "paired": {
+    "B0_vs_B2-S": {
+      "paired_parent_denominator": 0,
+      "paired_case_denominator": 0,
+      "parent_accuracy_difference": {},
+      "inference": "NOT_CALCULATED; freeze independent-parent sample and analysis plan first"
+    },
+    "B1_vs_B2-S": {
+      "paired_parent_denominator": 0,
+      "paired_case_denominator": 0,
+      "parent_accuracy_difference": {},
+      "inference": "NOT_CALCULATED; freeze independent-parent sample and analysis plan first"
+    },
+    "B2-R_vs_B2-S": {
+      "paired_parent_denominator": 0,
+      "paired_case_denominator": 0,
+      "parent_accuracy_difference": {},
+      "inference": "NOT_CALCULATED; freeze independent-parent sample and analysis plan first"
+    }
+  }
+}

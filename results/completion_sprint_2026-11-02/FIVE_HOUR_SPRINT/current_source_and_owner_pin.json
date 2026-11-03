@@ -1,0 +1,18 @@
+{
+  "owner_supplied_pin": "89dfbf78a953701cad2eb17da03218ff2abec709",
+  "trust_basis": "Owner supplied this value in response to request to attest exact current application source on 3 November 2026; no agent Git command or independent commit checkout",
+  "prior_engineering_source_snapshot": "..\\RESEARCH_UNBLOCKING\\focused_current_retry.run.json",
+  "source_sha256_rechecked": {
+    "chainguard/m6_live_profile.py": "b37ecc2c175fd7f2b23ae79d06d1325eff472ecdbf633e08cc30a31b5abf51c6",
+    "chainguard/m6_live_runtime.py": "c136f3c68306a3fb2b377da9002738bcf3fab6276e84fef57c2047f47c0dd15d",
+    "chainguard/m6_live_authorization.py": "1f58c490282de9f229ea460d7aa6b58f0c978f9dbaa6574a34c71d24050c1796",
+    "chainguard/m6_live_witness.py": "eed837391f37719ecbcb3494e1c56e96687e90a958428c8cbbb0197ccdbf31a6",
+    "chainguard/m6_controlled_server.py": "d0dda97e4ccbc42143ddba5295ffde02b2bd1e3b24e352a6bc6f2545d9c9261e",
+    "chainguard/m6_live_evidence.py": "ef76f214bd84da199f192c85f0eaa669aa9ba45034594055743759b532d142ea",
+    "chainguard/m6_live_seal.py": "dd4b3a75b290f801188ee7478f28dc18f65f8f21b96719d2b5fe20cef2e99ffd",
+    "chainguard/m6_live_verifier.py": "27c101aebdfc7751dc3944115f68c1f9167234fb525fa24711a12d13c05a1c79",
+    "chainguard/acceptance.py": "24f15abdbd6ae17be992357136cba4581ecd0726b8cb3365394f8ea846694d20"
+  },
+  "checked_local": "2026-11-03T13:06:50.2736590+05:30",
+  "limitation": "Hash equality with focused-test files plus owner attestation, not agent-verifiable repository ancestry"
+}

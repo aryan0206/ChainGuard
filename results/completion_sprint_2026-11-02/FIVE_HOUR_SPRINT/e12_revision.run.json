@@ -1,0 +1,10 @@
+{
+  "command": "\\.venv\\Scripts\\python.exe -B results/completion_sprint_2026-11-02/FIVE_HOUR_SPRINT/benchmark_development.py",
+  "environment": "CHAINGUARD_E12_RETRY=1",
+  "start_local": "2026-11-03T12:50:23.8379979+05:30",
+  "end_local": "2026-11-03T12:50:25.2238640+05:30",
+  "elapsed_seconds": 1.3635281,
+  "exit_code": 0,
+  "stdout": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\FIVE_HOUR_SPRINT\\e12_revision.stdout.log",
+  "stderr": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\FIVE_HOUR_SPRINT\\e12_revision.stderr.log"
+}

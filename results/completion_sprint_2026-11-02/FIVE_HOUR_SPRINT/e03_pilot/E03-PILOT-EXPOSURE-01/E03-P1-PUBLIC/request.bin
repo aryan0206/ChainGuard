@@ -1,0 +1,1 @@
+{"jsonrpc":"2.0","id":"e03-p1-public","method":"tools/call","params":{"_meta":{"io.modelcontextprotocol/protocolVersion":"2026-07-28","io.modelcontextprotocol/clientCapabilities":{}},"name":"send_sink","arguments":{"payload":"public report"}}}

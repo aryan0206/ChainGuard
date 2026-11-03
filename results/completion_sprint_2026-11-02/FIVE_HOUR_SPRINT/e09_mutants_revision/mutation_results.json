@@ -1,0 +1,87 @@
+{
+  "schema": "chainguard-e09-a3-development-mutations-v1",
+  "classification": "ENGINEERING_DEVELOPMENT_ONLY; NOT SEVEN_VARIANT_E09_RESEARCH",
+  "source_package_sha256": "836451925ce5caa5574d6aff26f1fe95ed7b407d3d50b249958b1b8e8e9b9007",
+  "source_revision_pin": "89dfbf78a953701cad2eb17da03218ff2abec709",
+  "plan_sha256": "e576aea13ada2e63ba224c6c3813620d30e4a39855005808c33f0ab8889691e8",
+  "ended_local": "2026-11-03T13:11:27.158918+05:30",
+  "cases": [
+    {
+      "case_id": "E09-DEV-A3-00",
+      "mutation": "none",
+      "package_file": "e09_mutants_revision\\E09-DEV-A3-00.package.bin",
+      "package_sha256": "836451925ce5caa5574d6aff26f1fe95ed7b407d3d50b249958b1b8e8e9b9007",
+      "expected_configuration_file": null,
+      "expected": {
+        "inspection_passed": true,
+        "dimension": "commitment_integrity",
+        "status": "PASS"
+      },
+      "observed_dimension_status": "PASS",
+      "inspection_passed": true,
+      "predeclared_expectation_matched": true
+    },
+    {
+      "case_id": "E09-DEV-A3-01",
+      "mutation": "noncanonical-trailing-byte",
+      "package_file": "e09_mutants_revision\\E09-DEV-A3-01.package.bin",
+      "package_sha256": "31cfa53e2699458dbcf80016ecf3e2dd653281a4dc1a4e8e58e68304d0ec9668",
+      "expected_configuration_file": null,
+      "expected": {
+        "inspection_passed": false,
+        "dimension": "package_schema",
+        "status": "FAIL"
+      },
+      "observed_dimension_status": "FAIL",
+      "inspection_passed": false,
+      "predeclared_expectation_matched": true
+    },
+    {
+      "case_id": "E09-DEV-A3-02",
+      "mutation": "edit-first-event-sequence",
+      "package_file": "e09_mutants_revision\\E09-DEV-A3-02.package.bin",
+      "package_sha256": "82b3bfbd2a46582af1ed80f788b9c2a6d0635ca311f42e3527f58271a39e4f19",
+      "expected_configuration_file": null,
+      "expected": {
+        "inspection_passed": false,
+        "dimension": "commitment_integrity",
+        "status": "FAIL"
+      },
+      "observed_dimension_status": "NOT_CHECKED",
+      "inspection_passed": false,
+      "predeclared_expectation_matched": false
+    },
+    {
+      "case_id": "E09-DEV-A3-03",
+      "mutation": "delete-last-record",
+      "package_file": "e09_mutants_revision\\E09-DEV-A3-03.package.bin",
+      "package_sha256": "0c36589d334b4e7dd61f55b94af2b17b7bfaad8dcdd02e670f6cf393b4ae899e",
+      "expected_configuration_file": null,
+      "expected": {
+        "inspection_passed": false,
+        "dimension": "commitment_integrity",
+        "status": "FAIL"
+      },
+      "observed_dimension_status": "NOT_CHECKED",
+      "inspection_passed": false,
+      "predeclared_expectation_matched": false
+    },
+    {
+      "case_id": "E09-DEV-A3-04",
+      "mutation": "wrong-assessor-configuration",
+      "package_file": "e09_mutants_revision\\E09-DEV-A3-04.package.bin",
+      "package_sha256": "836451925ce5caa5574d6aff26f1fe95ed7b407d3d50b249958b1b8e8e9b9007",
+      "expected_configuration_file": "E09-DEV-A3-04.expected_config.json",
+      "expected": {
+        "inspection_passed": false,
+        "dimension": "expected_binding",
+        "status": "FAIL"
+      },
+      "observed_dimension_status": "FAIL",
+      "inspection_passed": false,
+      "predeclared_expectation_matched": true
+    }
+  ],
+  "matched_expectations": 3,
+  "case_count": 5
+}

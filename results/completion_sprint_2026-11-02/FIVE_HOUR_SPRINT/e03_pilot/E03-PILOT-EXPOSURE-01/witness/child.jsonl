@@ -1,0 +1,3 @@
+{"component":"m6_controlled_server","parent_pid":72016,"phase":"child_started","pid":3168}
+{"component":"m6_controlled_server","parent_pid":72016,"phase":"tool_received","pid":3168,"request_id":"e03-p1-source","tool":"read_secret_a"}
+{"component":"m6_controlled_server","phase":"child_exiting","pid":3168}

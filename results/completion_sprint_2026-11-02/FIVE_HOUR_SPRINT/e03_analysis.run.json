@@ -1,0 +1,12 @@
+{
+  "command": ".\\.venv\\Scripts\\python.exe -B results/completion_sprint_2026-11-02/FIVE_HOUR_SPRINT/analyze_e03.py",
+  "trusted_revision": "NOT_SET",
+  "start_local": "2026-11-03T13:21:32.7242324+05:30",
+  "end_local": "2026-11-03T13:21:33.2077593+05:30",
+  "elapsed_seconds": 0.4708009,
+  "exit_code": 0,
+  "python_version": "Python 3.14.3",
+  "powershell_version": "7.6.5",
+  "stdout": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\FIVE_HOUR_SPRINT\\e03_analysis.stdout.log",
+  "stderr": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\FIVE_HOUR_SPRINT\\e03_analysis.stderr.log"
+}

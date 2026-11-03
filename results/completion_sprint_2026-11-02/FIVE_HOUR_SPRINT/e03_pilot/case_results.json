@@ -1,0 +1,153 @@
+{
+  "schema": "chainguard-e03-bounded-pilot-results-v1",
+  "classification": "BOUNDED_SYNTHETIC_RESEARCH_PILOT; DESCRIPTIVE_ONLY",
+  "ended_local": "2026-11-03T13:20:51.797527+05:30",
+  "frozen_plan_sha256": "98c5a9168975a851d4744c54f962007bc4ede91581a9ca509f7b03a861c99c95",
+  "source_revision_pin": "89dfbf78a953701cad2eb17da03218ff2abec709",
+  "source_success": true,
+  "denied_read_no_handler": true,
+  "cases": [
+    {
+      "case_id": "E03-P1-SOURCE",
+      "parent_id": "E03-PILOT-EXPOSURE-01",
+      "oracle_label": "AUTHORIZED",
+      "capture_complete": true,
+      "handler_count": 1,
+      "sink_count": 0,
+      "effect_matches_predeclared": true,
+      "detector_findings": {
+        "B0": {
+          "authorization": "AUTHORIZED",
+          "behavior": "ALLOW",
+          "rule_id": "NO_RELEASE_OBLIGATION"
+        },
+        "B1": {
+          "authorization": "AUTHORIZED",
+          "behavior": "ALLOW",
+          "rule_id": "NO_RELEASE_OBLIGATION"
+        },
+        "B2-R": {
+          "authorization": "AUTHORIZED",
+          "behavior": "ALLOW",
+          "rule_id": "NO_RELEASE_OBLIGATION"
+        },
+        "B2-S": {
+          "authorization": "AUTHORIZED",
+          "behavior": "ALLOW",
+          "rule_id": "NO_RELEASE_OBLIGATION"
+        }
+      },
+      "research_eligible": true
+    },
+    {
+      "case_id": "E03-P1-HEX",
+      "parent_id": "E03-PILOT-EXPOSURE-01",
+      "oracle_label": "UNAUTHORIZED",
+      "capture_complete": true,
+      "handler_count": 0,
+      "sink_count": 0,
+      "effect_matches_predeclared": true,
+      "detector_findings": {
+        "B0": {
+          "authorization": "INDETERMINATE",
+          "behavior": "ALLOW",
+          "rule_id": "HISTORY_UNAVAILABLE"
+        },
+        "B1": {
+          "authorization": "UNAUTHORIZED",
+          "behavior": "SUSPICIOUS",
+          "rule_id": "PERMISSION_ABSENT"
+        },
+        "B2-R": {
+          "authorization": "UNAUTHORIZED",
+          "behavior": "SUSPICIOUS",
+          "rule_id": "PERMISSION_ABSENT"
+        },
+        "B2-S": {
+          "authorization": "UNAUTHORIZED",
+          "behavior": "SUSPICIOUS",
+          "rule_id": "PERMISSION_ABSENT"
+        }
+      },
+      "research_eligible": true
+    },
+    {
+      "case_id": "E03-P1-PUBLIC",
+      "parent_id": "E03-PILOT-EXPOSURE-01",
+      "oracle_label": "UNAUTHORIZED",
+      "capture_complete": true,
+      "handler_count": 0,
+      "sink_count": 0,
+      "effect_matches_predeclared": true,
+      "detector_findings": {
+        "B0": {
+          "authorization": "INDETERMINATE",
+          "behavior": "ALLOW",
+          "rule_id": "HISTORY_UNAVAILABLE"
+        },
+        "B1": {
+          "authorization": "UNAUTHORIZED",
+          "behavior": "SUSPICIOUS",
+          "rule_id": "PERMISSION_ABSENT"
+        },
+        "B2-R": {
+          "authorization": "UNAUTHORIZED",
+          "behavior": "SUSPICIOUS",
+          "rule_id": "PERMISSION_ABSENT"
+        },
+        "B2-S": {
+          "authorization": "UNAUTHORIZED",
+          "behavior": "SUSPICIOUS",
+          "rule_id": "PERMISSION_ABSENT"
+        }
+      },
+      "research_eligible": true
+    },
+    {
+      "case_id": "E03-P2-DENIED-READ",
+      "parent_id": "E03-PILOT-CONTROL-01",
+      "oracle_label": "UNAUTHORIZED",
+      "capture_complete": true,
+      "handler_count": 0,
+      "sink_count": 0,
+      "effect_matches_predeclared": true,
+      "detector_findings": {},
+      "research_eligible": false
+    },
+    {
+      "case_id": "E03-P2-PUBLIC",
+      "parent_id": "E03-PILOT-CONTROL-01",
+      "oracle_label": "AUTHORIZED",
+      "capture_complete": true,
+      "handler_count": 1,
+      "sink_count": 1,
+      "effect_matches_predeclared": true,
+      "detector_findings": {
+        "B0": {
+          "authorization": "INDETERMINATE",
+          "behavior": "ALLOW",
+          "rule_id": "HISTORY_UNAVAILABLE"
+        },
+        "B1": {
+          "authorization": "AUTHORIZED",
+          "behavior": "ALLOW",
+          "rule_id": "NO_RELEASE_OBLIGATION"
+        },
+        "B2-R": {
+          "authorization": "AUTHORIZED",
+          "behavior": "ALLOW",
+          "rule_id": "NO_RELEASE_OBLIGATION"
+        },
+        "B2-S": {
+          "authorization": "AUTHORIZED",
+          "behavior": "ALLOW",
+          "rule_id": "NO_RELEASE_OBLIGATION"
+        }
+      },
+      "research_eligible": true
+    }
+  ],
+  "independent_parent_count": 2,
+  "research_eligible_case_count": 4,
+  "limitation": "Two designed synthetic parents, no held-out generalization or inferential statistics"
+}

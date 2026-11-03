@@ -1,0 +1,1 @@
+{"jsonrpc":"2.0","id":"q2-deny","method":"tools/call","params":{"_meta":{"io.modelcontextprotocol/protocolVersion":"2026-07-28","io.modelcontextprotocol/clientCapabilities":{}},"name":"send_sink","arguments":{"payload":"SYNTHETIC_CANARY_A"}}}

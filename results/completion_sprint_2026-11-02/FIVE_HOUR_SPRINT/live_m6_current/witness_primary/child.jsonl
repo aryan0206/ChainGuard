@@ -1,0 +1,7 @@
+{"component":"m6_controlled_server","parent_pid":6764,"phase":"child_started","pid":74316}
+{"component":"m6_controlled_server","parent_pid":6764,"phase":"tool_received","pid":74316,"request_id":"q1-read","tool":"read_secret_a"}
+{"component":"m6_controlled_server","parent_pid":6764,"phase":"tool_received","pid":74316,"request_id":"q3-send","tool":"send_sink"}
+{"component":"m6_local_sink","destination":"sink","payload_base64":"U1lOVEhFVElDX0NBTkFSWV9B","payload_byte_count":18,"payload_sha256":"f89c820f68b91ede298fc486cd411b11ab252b3c1ae71f6c9eea062e38d68bf0","phase":"sink_arrival","request_id":"q3-send","tool":"send_sink"}
+{"component":"m6_controlled_server","parent_pid":6764,"phase":"tool_received","pid":74316,"request_id":"q6-send","tool":"send_sink"}
+{"component":"m6_local_sink","destination":"sink","payload_base64":"U1lOVEhFVElDX0NBTkFSWV9B","payload_byte_count":18,"payload_sha256":"f89c820f68b91ede298fc486cd411b11ab252b3c1ae71f6c9eea062e38d68bf0","phase":"sink_arrival","request_id":"q6-send","tool":"send_sink"}
+{"component":"m6_controlled_server","phase":"child_exiting","pid":74316}

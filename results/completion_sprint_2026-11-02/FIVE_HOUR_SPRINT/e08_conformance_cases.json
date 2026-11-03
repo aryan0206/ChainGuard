@@ -1,0 +1,36 @@
+{
+  "schema": "chainguard-e08-r02-conformance-cases-v1",
+  "reference_commit": "3dd9690b5b6f9c4ef385289714b314d13f6ad9a1",
+  "scope": "common externally supplied sensitivity facts; R02 only; no source extraction, R01/R03/R04/R05, model, rate, capability or original audit claims",
+  "cases": [
+    {"case_id":"E08-C01-arg-sensitive-no-history","steps":[
+      {"kind":"proposal","tool":"http_post.post","destination":"sink","arg_ds":"DS:SENSITIVE","result_status":"denied","expected":{"decision":"DENY","rule":"R02","effective_ds":"DS:SENSITIVE","post_ds":"DS:NORMAL"}}]},
+    {"case_id":"E08-C02-benign-no-history","steps":[
+      {"kind":"proposal","tool":"http_post.post","destination":"sink","arg_ds":"DS:NORMAL","result_status":"none","expected":{"decision":"ALLOW","rule":null,"effective_ds":"DS:NORMAL","post_ds":"DS:NORMAL"}}]},
+    {"case_id":"E08-C03-successful-sensitive-result","steps":[
+      {"kind":"proposal","tool":"filesystem.read_file","arg_ds":"DS:NORMAL","result_status":"succeeded","result_ds":"DS:SENSITIVE","expected":{"decision":"ALLOW","rule":null,"effective_ds":"DS:NORMAL","post_ds":"DS:SENSITIVE"}},
+      {"kind":"proposal","tool":"http_post.post","destination":"sink","arg_ds":"DS:NORMAL","result_status":"denied","expected":{"decision":"DENY","rule":"R02","effective_ds":"DS:SENSITIVE","post_ds":"DS:SENSITIVE"}}]},
+    {"case_id":"E08-C04-public-transformation-after-exposure","steps":[
+      {"kind":"proposal","tool":"filesystem.read_file","arg_ds":"DS:NORMAL","result_status":"succeeded","result_ds":"DS:SENSITIVE","expected":{"decision":"ALLOW","rule":null,"effective_ds":"DS:NORMAL","post_ds":"DS:SENSITIVE"}},
+      {"kind":"proposal","tool":"transform.neutral","arg_ds":"DS:NORMAL","result_status":"succeeded","result_ds":"DS:NORMAL","expected":{"decision":"ALLOW","rule":null,"effective_ds":"DS:SENSITIVE","post_ds":"DS:SENSITIVE"}},
+      {"kind":"proposal","tool":"http_post.post","destination":"sink","arg_ds":"DS:NORMAL","result_status":"denied","expected":{"decision":"DENY","rule":"R02","effective_ds":"DS:SENSITIVE","post_ds":"DS:SENSITIVE"}}]},
+    {"case_id":"E08-C05-failed-acquisition","steps":[
+      {"kind":"proposal","tool":"filesystem.read_file","arg_ds":"DS:NORMAL","result_status":"failed","expected":{"decision":"ALLOW","rule":null,"effective_ds":"DS:NORMAL","post_ds":"DS:NORMAL"}},
+      {"kind":"proposal","tool":"http_post.post","destination":"sink","arg_ds":"DS:NORMAL","result_status":"none","expected":{"decision":"ALLOW","rule":null,"effective_ds":"DS:NORMAL","post_ds":"DS:NORMAL"}}]},
+    {"case_id":"E08-C06-denied-acquisition-without-result","steps":[
+      {"kind":"proposal","tool":"filesystem.read_file","arg_ds":"DS:NORMAL","result_status":"denied","expected":{"decision":"ALLOW","rule":null,"effective_ds":"DS:NORMAL","post_ds":"DS:NORMAL"}},
+      {"kind":"proposal","tool":"http_post.post","destination":"sink","arg_ds":"DS:NORMAL","result_status":"none","expected":{"decision":"ALLOW","rule":null,"effective_ds":"DS:NORMAL","post_ds":"DS:NORMAL"}}]},
+    {"case_id":"E08-C07-current-argument-no-accumulation","steps":[
+      {"kind":"proposal","tool":"http_post.post","destination":"sink","arg_ds":"DS:SENSITIVE","result_status":"denied","expected":{"decision":"DENY","rule":"R02","effective_ds":"DS:SENSITIVE","post_ds":"DS:NORMAL"}},
+      {"kind":"proposal","tool":"http_post.post","destination":"sink","arg_ds":"DS:NORMAL","result_status":"none","expected":{"decision":"ALLOW","rule":null,"effective_ds":"DS:NORMAL","post_ds":"DS:NORMAL"}}]},
+    {"case_id":"E08-C08-other-mapped-destination","steps":[
+      {"kind":"proposal","tool":"http_post.post","destination":"other-sink","arg_ds":"DS:SENSITIVE","result_status":"denied","expected":{"decision":"DENY","rule":"R02","effective_ds":"DS:SENSITIVE","post_ds":"DS:NORMAL"}}]},
+    {"case_id":"E08-C09-grant-does-not-bypass-r02","steps":[
+      {"kind":"proposal","tool":"filesystem.read_file","arg_ds":"DS:NORMAL","result_status":"succeeded","result_ds":"DS:SENSITIVE","expected":{"decision":"ALLOW","rule":null,"effective_ds":"DS:NORMAL","post_ds":"DS:SENSITIVE"}},
+      {"kind":"proposal","tool":"http_post.post","destination":"sink","grant_present":true,"arg_ds":"DS:NORMAL","result_status":"denied","expected":{"decision":"DENY","rule":"R02","effective_ds":"DS:SENSITIVE","post_ds":"DS:SENSITIVE"}}]},
+    {"case_id":"E08-C10-reconnect-preserves-state","steps":[
+      {"kind":"proposal","tool":"filesystem.read_file","arg_ds":"DS:NORMAL","result_status":"succeeded","result_ds":"DS:SENSITIVE","expected":{"decision":"ALLOW","rule":null,"effective_ds":"DS:NORMAL","post_ds":"DS:SENSITIVE"}},
+      {"kind":"reconnect","expected":{"post_ds":"DS:SENSITIVE"}},
+      {"kind":"proposal","tool":"http_post.post","destination":"sink","arg_ds":"DS:NORMAL","result_status":"denied","expected":{"decision":"DENY","rule":"R02","effective_ds":"DS:SENSITIVE","post_ds":"DS:SENSITIVE"}}]}
+  ]
+}

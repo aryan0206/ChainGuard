@@ -1,0 +1,9 @@
+{
+  "command": "\\.venv\\Scripts\\python.exe -B results/completion_sprint_2026-11-02/FIVE_HOUR_SPRINT/test_research_metrics.py",
+  "start_local": "2026-11-03T12:47:21.8600597+05:30",
+  "end_local": "2026-11-03T12:47:22.8713249+05:30",
+  "elapsed_seconds": 0.9946072,
+  "exit_code": 0,
+  "stdout": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\FIVE_HOUR_SPRINT\\metrics_revision.stdout.log",
+  "stderr": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\FIVE_HOUR_SPRINT\\metrics_revision.stderr.log"
+}

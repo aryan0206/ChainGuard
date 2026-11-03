@@ -1,0 +1,37 @@
+{
+  "schema": "chainguard-research-observations-v1",
+  "classification": "DEVELOPMENT_INPUT_ONLY",
+  "source_sha256": "6f4d859c2e2f7459d620b42970f393daa590f9b0d0e9afcc0fdbb2ed3c4ccd1b",
+  "cases": [
+    {
+      "case_id": "CG-DEV-004",
+      "parent_id": "P-DEV-S4-REVOCATION-01",
+      "classification": "DEVELOPMENT",
+      "eligible": false,
+      "exclusion_reason": "Authored staged label; no independent live commit/effect witness",
+      "authored_label": "UNAUTHORIZED",
+      "predictions": {
+        "B0": "INDETERMINATE",
+        "B1": "INDETERMINATE",
+        "B2-R": "UNAUTHORIZED",
+        "B2-S": "UNAUTHORIZED"
+      },
+      "b1_sha256": "04f3855f76dfef35d7b20948939ebf5cb849c10c29f63bb4a001df413f7435c1"
+    },
+    {
+      "case_id": "CG-DEV-005",
+      "parent_id": "P-DEV-S4-REVOCATION-01",
+      "classification": "DEVELOPMENT",
+      "eligible": false,
+      "exclusion_reason": "Authored staged label; no independent live commit/effect witness",
+      "authored_label": "AUTHORIZED",
+      "predictions": {
+        "B0": "INDETERMINATE",
+        "B1": "INDETERMINATE",
+        "B2-R": "AUTHORIZED",
+        "B2-S": "AUTHORIZED"
+      },
+      "b1_sha256": "04f3855f76dfef35d7b20948939ebf5cb849c10c29f63bb4a001df413f7435c1"
+    }
+  ]
+}

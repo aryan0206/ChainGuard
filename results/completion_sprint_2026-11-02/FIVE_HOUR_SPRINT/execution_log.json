@@ -1,0 +1,306 @@
+{
+  "schema": "chainguard-five-hour-execution-log-v1",
+  "model_tool": "GPT-6 Codex desktop; PowerShell 7.6.5; CPython 3.14.3; official GitHub web and read-only connector for approved reference source",
+  "start_local": "2026-11-03T12:41:44.0000000+05:30",
+  "end_local": "2026-11-03T13:29:57.3395989+05:30",
+  "elapsed_seconds": 2893.34,
+  "maximum_seconds": 18000,
+  "token_usage": "NOT EXPOSED",
+  "generation_time": "NOT EXPOSED",
+  "owner_revision": "89dfbf78a953701cad2eb17da03218ff2abec709",
+  "source_snapshot": "current_source_and_owner_pin.json",
+  "commands_and_exit_codes": [
+    {
+      "metadata_file": "analysis_checks.run.json",
+      "record": {
+        "steps": [
+          {
+            "command": ".\\.venv\\Scripts\\python.exe -B results/completion_sprint_2026-11-02/FIVE_HOUR_SPRINT/test_research_metrics.py",
+            "start_local": "2026-11-03T12:45:38.8761053+05:30",
+            "end_local": "2026-11-03T12:45:39.7375205+05:30",
+            "elapsed_seconds": 0.8435947,
+            "exit_code": 0,
+            "stdout": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\FIVE_HOUR_SPRINT\\analysis_0.stdout.log",
+            "stderr": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\FIVE_HOUR_SPRINT\\analysis_0.stderr.log"
+          },
+          {
+            "command": ".\\.venv\\Scripts\\python.exe -B results/completion_sprint_2026-11-02/FIVE_HOUR_SPRINT/prepare_development_metrics.py",
+            "start_local": "2026-11-03T12:45:39.7561409+05:30",
+            "end_local": "2026-11-03T12:45:40.5411162+05:30",
+            "elapsed_seconds": 0.7831917,
+            "exit_code": 0,
+            "stdout": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\FIVE_HOUR_SPRINT\\analysis_1.stdout.log",
+            "stderr": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\FIVE_HOUR_SPRINT\\analysis_1.stderr.log"
+          },
+          {
+            "command": ".\\.venv\\Scripts\\python.exe -B results/completion_sprint_2026-11-02/FIVE_HOUR_SPRINT/research_metrics.py results/completion_sprint_2026-11-02/FIVE_HOUR_SPRINT/development_metric_input.json results/completion_sprint_2026-11-02/FIVE_HOUR_SPRINT/development_metric_result.json",
+            "start_local": "2026-11-03T12:45:40.5518297+05:30",
+            "end_local": "2026-11-03T12:45:41.8548233+05:30",
+            "elapsed_seconds": 1.3021219,
+            "exit_code": 0,
+            "stdout": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\FIVE_HOUR_SPRINT\\analysis_2.stdout.log",
+            "stderr": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\FIVE_HOUR_SPRINT\\analysis_2.stderr.log"
+          }
+        ],
+        "python_version": "Python 3.14.3",
+        "powershell_version": "7.6.5"
+      }
+    },
+    {
+      "metadata_file": "current_qualification.run.json",
+      "record": {
+        "owner_pin": "89dfbf78a953701cad2eb17da03218ff2abec709",
+        "synthetic_pin": false,
+        "source_snapshot": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\FIVE_HOUR_SPRINT\\current_source_and_owner_pin.json",
+        "python_version": "Python 3.14.3",
+        "powershell_version": "7.6.5",
+        "os": "Microsoft Windows 10.0.26200",
+        "steps": [
+          {
+            "command": ".\\.venv\\Scripts\\python.exe -B results/completion_sprint_2026-11-02/FIVE_HOUR_SPRINT/qualify_live_current.py",
+            "start_local": "2026-11-03T13:06:50.3395238+05:30",
+            "end_local": "2026-11-03T13:07:03.2491112+05:30",
+            "elapsed_seconds": 12.9024221,
+            "exit_code": 0,
+            "stdout": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\FIVE_HOUR_SPRINT\\current_m6q.stdout.log",
+            "stderr": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\FIVE_HOUR_SPRINT\\current_m6q.stderr.log"
+          },
+          {
+            "command": ".\\.venv\\Scripts\\python.exe -B results/completion_sprint_2026-11-02/FIVE_HOUR_SPRINT/reinspect_current.py",
+            "start_local": "2026-11-03T13:07:03.277715+05:30",
+            "end_local": "2026-11-03T13:07:04.6723846+05:30",
+            "elapsed_seconds": 1.3942135,
+            "exit_code": 0,
+            "stdout": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\FIVE_HOUR_SPRINT\\current_reinspect.stdout.log",
+            "stderr": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\FIVE_HOUR_SPRINT\\current_reinspect.stderr.log"
+          },
+          {
+            "command": ".\\.venv\\Scripts\\python.exe -B results/completion_sprint_2026-11-02/FIVE_HOUR_SPRINT/submit_current.py",
+            "start_local": "2026-11-03T13:07:04.6769206+05:30",
+            "end_local": "2026-11-03T13:07:06.3843617+05:30",
+            "elapsed_seconds": 1.7067066,
+            "exit_code": 0,
+            "stdout": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\FIVE_HOUR_SPRINT\\current_fresh_submission.stdout.log",
+            "stderr": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\FIVE_HOUR_SPRINT\\current_fresh_submission.stderr.log"
+          }
+        ]
+      }
+    },
+    {
+      "metadata_file": "e03_analysis.run.json",
+      "record": {
+        "command": ".\\.venv\\Scripts\\python.exe -B results/completion_sprint_2026-11-02/FIVE_HOUR_SPRINT/analyze_e03.py",
+        "trusted_revision": "NOT_SET",
+        "start_local": "2026-11-03T13:21:32.7242324+05:30",
+        "end_local": "2026-11-03T13:21:33.2077593+05:30",
+        "elapsed_seconds": 0.4708009,
+        "exit_code": 0,
+        "python_version": "Python 3.14.3",
+        "powershell_version": "7.6.5",
+        "stdout": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\FIVE_HOUR_SPRINT\\e03_analysis.stdout.log",
+        "stderr": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\FIVE_HOUR_SPRINT\\e03_analysis.stderr.log"
+      }
+    },
+    {
+      "metadata_file": "e03_pilot_escalated.run.json",
+      "record": {
+        "command": ".\\.venv\\Scripts\\python.exe -B results/completion_sprint_2026-11-02/FIVE_HOUR_SPRINT/run_e03_pilot.py",
+        "trusted_revision": "89dfbf78a953701cad2eb17da03218ff2abec709",
+        "start_local": "2026-11-03T13:20:40.7858667+05:30",
+        "end_local": "2026-11-03T13:20:51.9493277+05:30",
+        "elapsed_seconds": 11.1380747,
+        "exit_code": 0,
+        "python_version": "Python 3.14.3",
+        "powershell_version": "7.6.5",
+        "stdout": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\FIVE_HOUR_SPRINT\\e03_pilot_escalated.stdout.log",
+        "stderr": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\FIVE_HOUR_SPRINT\\e03_pilot_escalated.stderr.log"
+      }
+    },
+    {
+      "metadata_file": "e03_pilot.run.json",
+      "record": {
+        "command": ".\\.venv\\Scripts\\python.exe -B results/completion_sprint_2026-11-02/FIVE_HOUR_SPRINT/run_e03_pilot.py",
+        "trusted_revision": "89dfbf78a953701cad2eb17da03218ff2abec709",
+        "start_local": "2026-11-03T13:20:20.459589+05:30",
+        "end_local": "2026-11-03T13:20:20.6169065+05:30",
+        "elapsed_seconds": 0.1486784,
+        "exit_code": 101,
+        "python_version": "Unable to create process using '\"C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\.venv\\Scripts\\python.exe\" --version': Access is denied.",
+        "powershell_version": "7.6.5",
+        "stdout": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\FIVE_HOUR_SPRINT\\e03_pilot.stdout.log",
+        "stderr": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\FIVE_HOUR_SPRINT\\e03_pilot.stderr.log"
+      }
+    },
+    {
+      "metadata_file": "e08_conformance.run.json",
+      "record": {
+        "command": ".\\.venv\\Scripts\\python.exe -B results/completion_sprint_2026-11-02/FIVE_HOUR_SPRINT/e08_conformance.py",
+        "start_local": "2026-11-03T13:01:19.1692698+05:30",
+        "end_local": "2026-11-03T13:01:19.8714795+05:30",
+        "elapsed_seconds": 0.6885874,
+        "exit_code": 0,
+        "python_version": "Python 3.14.3",
+        "powershell_version": "7.6.5",
+        "stdout": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\FIVE_HOUR_SPRINT\\e08_conformance.stdout.log",
+        "stderr": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\FIVE_HOUR_SPRINT\\e08_conformance.stderr.log"
+      }
+    },
+    {
+      "metadata_file": "e08_reference_verify.run.json",
+      "record": {
+        "command": ".\\.venv\\Scripts\\python.exe -B results/completion_sprint_2026-11-02/FIVE_HOUR_SPRINT/verify_e08_reference.py",
+        "start_local": "2026-11-03T12:58:21.5278864+05:30",
+        "end_local": "2026-11-03T12:58:21.9911262+05:30",
+        "elapsed_seconds": 0.4524336,
+        "exit_code": 0,
+        "python_version": "Python 3.14.3",
+        "powershell_version": "7.6.5",
+        "stdout": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\FIVE_HOUR_SPRINT\\e08_reference_verify.stdout.log",
+        "stderr": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\FIVE_HOUR_SPRINT\\e08_reference_verify.stderr.log"
+      }
+    },
+    {
+      "metadata_file": "e09_a3_mutations_pinned.run.json",
+      "record": {
+        "command": ".\\.venv\\Scripts\\python.exe -B results/completion_sprint_2026-11-02/FIVE_HOUR_SPRINT/e09_a3_mutation_development.py",
+        "trusted_revision": "89dfbf78a953701cad2eb17da03218ff2abec709",
+        "start_local": "2026-11-03T13:11:25.9215196+05:30",
+        "end_local": "2026-11-03T13:11:27.2703526+05:30",
+        "elapsed_seconds": 1.3331762,
+        "exit_code": 1,
+        "python_version": "Python 3.14.3",
+        "powershell_version": "7.6.5",
+        "stdout": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\FIVE_HOUR_SPRINT\\e09_a3_mutations_pinned.stdout.log",
+        "stderr": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\FIVE_HOUR_SPRINT\\e09_a3_mutations_pinned.stderr.log"
+      }
+    },
+    {
+      "metadata_file": "e09_a3_mutations_retry.run.json",
+      "record": {
+        "command": ".\\.venv\\Scripts\\python.exe -B results/completion_sprint_2026-11-02/FIVE_HOUR_SPRINT/e09_a3_mutation_development.py",
+        "start_local": "2026-11-03T13:10:04.0837555+05:30",
+        "end_local": "2026-11-03T13:10:05.323588+05:30",
+        "elapsed_seconds": 1.2279983,
+        "exit_code": 1,
+        "python_version": "Python 3.14.3",
+        "powershell_version": "7.6.5",
+        "stdout": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\FIVE_HOUR_SPRINT\\e09_a3_mutations_retry.stdout.log",
+        "stderr": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\FIVE_HOUR_SPRINT\\e09_a3_mutations_retry.stderr.log"
+      }
+    },
+    {
+      "metadata_file": "e09_a3_mutations.run.json",
+      "record": {
+        "command": ".\\.venv\\Scripts\\python.exe -B results/completion_sprint_2026-11-02/FIVE_HOUR_SPRINT/e09_a3_mutation_development.py",
+        "start_local": "2026-11-03T13:09:18.7032573+05:30",
+        "end_local": "2026-11-03T13:09:19.4407306+05:30",
+        "elapsed_seconds": 0.7244214,
+        "exit_code": 1,
+        "python_version": "Python 3.14.3",
+        "powershell_version": "7.6.5",
+        "stdout": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\FIVE_HOUR_SPRINT\\e09_a3_mutations.stdout.log",
+        "stderr": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\FIVE_HOUR_SPRINT\\e09_a3_mutations.stderr.log"
+      }
+    },
+    {
+      "metadata_file": "e10_signed_wrong.run.json",
+      "record": {
+        "command": ".\\.venv\\Scripts\\python.exe -B results/completion_sprint_2026-11-02/FIVE_HOUR_SPRINT/e10_signed_wrong_development.py",
+        "trusted_revision": "89dfbf78a953701cad2eb17da03218ff2abec709",
+        "start_local": "2026-11-03T13:13:57.3426647+05:30",
+        "end_local": "2026-11-03T13:13:58.550134+05:30",
+        "elapsed_seconds": 1.1966345,
+        "exit_code": 0,
+        "python_version": "Python 3.14.3",
+        "powershell_version": "7.6.5",
+        "stdout": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\FIVE_HOUR_SPRINT\\e10_signed_wrong.stdout.log",
+        "stderr": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\FIVE_HOUR_SPRINT\\e10_signed_wrong.stderr.log"
+      }
+    },
+    {
+      "metadata_file": "e12_development.run.json",
+      "record": {
+        "command": "\\.venv\\Scripts\\python.exe -B results/completion_sprint_2026-11-02/FIVE_HOUR_SPRINT/benchmark_development.py",
+        "start_local": "2026-11-03T12:49:14.3101637+05:30",
+        "end_local": "2026-11-03T12:49:16.6332866+05:30",
+        "elapsed_seconds": 2.2926792,
+        "exit_code": 0,
+        "stdout": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\FIVE_HOUR_SPRINT\\e12_development.stdout.log",
+        "stderr": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\FIVE_HOUR_SPRINT\\e12_development.stderr.log"
+      }
+    },
+    {
+      "metadata_file": "e12_revision.run.json",
+      "record": {
+        "command": "\\.venv\\Scripts\\python.exe -B results/completion_sprint_2026-11-02/FIVE_HOUR_SPRINT/benchmark_development.py",
+        "environment": "CHAINGUARD_E12_RETRY=1",
+        "start_local": "2026-11-03T12:50:23.8379979+05:30",
+        "end_local": "2026-11-03T12:50:25.223864+05:30",
+        "elapsed_seconds": 1.3635281,
+        "exit_code": 0,
+        "stdout": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\FIVE_HOUR_SPRINT\\e12_revision.stdout.log",
+        "stderr": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\FIVE_HOUR_SPRINT\\e12_revision.stderr.log"
+      }
+    },
+    {
+      "metadata_file": "metamorphic_development.run.json",
+      "record": {
+        "command": "\\.venv\\Scripts\\python.exe -B results/completion_sprint_2026-11-02/FIVE_HOUR_SPRINT/build_metamorphic_development.py",
+        "start_local": "2026-11-03T12:53:16.3873505+05:30",
+        "end_local": "2026-11-03T12:53:17.1409604+05:30",
+        "elapsed_seconds": 0.734802,
+        "exit_code": 1,
+        "stdout": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\FIVE_HOUR_SPRINT\\metamorphic_development.stdout.log",
+        "stderr": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\FIVE_HOUR_SPRINT\\metamorphic_development.stderr.log"
+      }
+    },
+    {
+      "metadata_file": "metamorphic_revision.run.json",
+      "record": {
+        "command": "\\.venv\\Scripts\\python.exe -B results/completion_sprint_2026-11-02/FIVE_HOUR_SPRINT/build_metamorphic_development.py",
+        "environment": "CHAINGUARD_META_RETRY=1",
+        "start_local": "2026-11-03T12:54:41.6212255+05:30",
+        "end_local": "2026-11-03T12:54:42.3244029+05:30",
+        "elapsed_seconds": 0.6845051,
+        "exit_code": 0,
+        "stdout": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\FIVE_HOUR_SPRINT\\metamorphic_revision.stdout.log",
+        "stderr": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\FIVE_HOUR_SPRINT\\metamorphic_revision.stderr.log"
+      }
+    },
+    {
+      "metadata_file": "metrics_revision.run.json",
+      "record": {
+        "command": "\\.venv\\Scripts\\python.exe -B results/completion_sprint_2026-11-02/FIVE_HOUR_SPRINT/test_research_metrics.py",
+        "start_local": "2026-11-03T12:47:21.8600597+05:30",
+        "end_local": "2026-11-03T12:47:22.8713249+05:30",
+        "elapsed_seconds": 0.9946072,
+        "exit_code": 0,
+        "stdout": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\FIVE_HOUR_SPRINT\\metrics_revision.stdout.log",
+        "stderr": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\FIVE_HOUR_SPRINT\\metrics_revision.stderr.log"
+      }
+    }
+  ],
+  "results": [
+    "Current-source M6Q 8/8 passed; separate fresh reinspection and acceptance passed",
+    "E03 bounded synthetic pilot 5 frozen calls, 4 detector-evaluable cases, 2 parents; one schema-rejected control excluded",
+    "E08 R02 reference subset conformance 10/10 passed; no comparative research",
+    "E09 A3 development mutant expectations 3/5 matched; two mismatches retained",
+    "E10 signed-wrong development four cases matched; no research result",
+    "E12 15 one-shot development measurements; no research benchmark",
+    "E01/E13 three development metamorphic pairs; no research result"
+  ],
+  "failures_and_retries": [
+    "Sandbox Python launch denied before E03 run (e03_pilot.run.json, exit 101); escalated retry exit 0",
+    "Initial E13 development invariant expectation failed on legitimate B1 input-count change; revised expectation exit 0",
+    "Initial E12 Windows working-set sampling returned null; WinAPI signature corrected and second development run exit 0",
+    "E09 first launcher missing PYTHONPATH; retry lacked trusted pin; pinned retry exit 1 with two genuine dimension mismatches"
+  ],
+  "boundaries": [
+    "No Git commands or repository Git operations",
+    "No dependency installation",
+    "No architecture/protocol or A1/A2/E08 pin change",
+    "No IEEE report writing/compilation",
+    "No audit.sqlite in deliverables",
+    "Earlier evidence preserved"
+  ]
+}

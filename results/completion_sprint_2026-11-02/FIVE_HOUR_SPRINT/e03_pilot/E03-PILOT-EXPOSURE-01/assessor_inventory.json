@@ -1,0 +1,12 @@
+{
+  "schema_version": "m4-expected-inventory-v1",
+  "run_id": "E03-PILOT-EXPOSURE-01-run-fd00335b951446e0a5d872ab8d1bbe55",
+  "run_challenge": "57c71cd36667b63d7463ef54b4bb94535b9d2bfb35bd4ded454e3e74d5c276e8",
+  "sessions": [
+    {
+      "task_id": "E03-PILOT-EXPOSURE-01-task-fd00335b951446e0a5d872ab8d1bbe55",
+      "session_id": "E03-PILOT-EXPOSURE-01-session-fd00335b951446e0a5d872ab8d1bbe55",
+      "monitor_instance_id": "E03-PILOT-EXPOSURE-01-monitor-fd00335b951446e0a5d872ab8d1bbe55"
+    }
+  ]
+}

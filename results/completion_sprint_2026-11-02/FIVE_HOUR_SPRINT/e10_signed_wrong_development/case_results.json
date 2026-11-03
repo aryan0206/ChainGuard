@@ -1,0 +1,100 @@
+{
+  "schema": "chainguard-e10-development-signed-wrong-v1",
+  "classification": "ENGINEERING_DEVELOPMENT_ONLY; NOT E10 RESEARCH",
+  "source_revision_pin": "89dfbf78a953701cad2eb17da03218ff2abec709",
+  "source_package_sha256": "836451925ce5caa5574d6aff26f1fe95ed7b407d3d50b249958b1b8e8e9b9007",
+  "plan_sha256": "7b690f9192db3ccdb21fab255790afd058e9d2a4d4319e2b8e517846194b55ab",
+  "ended_local": "2026-11-03T13:13:58.448844+05:30",
+  "cases": [
+    {
+      "case_id": "E10-DEV-00",
+      "kind": "control",
+      "signed_package": {
+        "path": "e10_signed_wrong_development\\E10-DEV-00.signed_package.bin",
+        "bytes": 63288,
+        "sha256": "3ee1cbe658af8566a013d94aa694b908fcb3308233e2594b035c28ac206712eb"
+      },
+      "dimensions": {
+        "package_schema": "PASS",
+        "commitment_integrity": "PASS",
+        "trusted_signature": "PASS",
+        "expected_binding": "PASS",
+        "inventory_completeness": "PASS",
+        "lifecycle_semantics": "PASS",
+        "finding_reproduction": "PASS"
+      },
+      "inspection_passed": true,
+      "expected_signature_met": true,
+      "expected_integrity_met": true,
+      "external_truth_ref": "assessor_truth.json"
+    },
+    {
+      "case_id": "E10-DEV-01",
+      "kind": "wrong_observation",
+      "signed_package": {
+        "path": "e10_signed_wrong_development\\E10-DEV-01.signed_package.bin",
+        "bytes": 63285,
+        "sha256": "e863736b631083fda3008f27b2a71dd5bf1d63c3dc3c03b7771f080979b5ed57"
+      },
+      "dimensions": {
+        "package_schema": "PASS",
+        "commitment_integrity": "PASS",
+        "trusted_signature": "PASS",
+        "expected_binding": "PASS",
+        "inventory_completeness": "PASS",
+        "lifecycle_semantics": "FAIL",
+        "finding_reproduction": "NOT_CHECKED"
+      },
+      "inspection_passed": false,
+      "expected_signature_met": true,
+      "expected_integrity_met": true,
+      "external_truth_ref": "assessor_truth.json"
+    },
+    {
+      "case_id": "E10-DEV-02",
+      "kind": "wrong_finding",
+      "signed_package": {
+        "path": "e10_signed_wrong_development\\E10-DEV-02.signed_package.bin",
+        "bytes": 63307,
+        "sha256": "cc344e0935e15feb63cc866f2e211dea77ec8a95f683b569cdd7553da834b02b"
+      },
+      "dimensions": {
+        "package_schema": "PASS",
+        "commitment_integrity": "PASS",
+        "trusted_signature": "PASS",
+        "expected_binding": "PASS",
+        "inventory_completeness": "PASS",
+        "lifecycle_semantics": "PASS",
+        "finding_reproduction": "FAIL"
+      },
+      "inspection_passed": false,
+      "expected_signature_met": true,
+      "expected_integrity_met": true,
+      "external_truth_ref": "assessor_truth.json"
+    },
+    {
+      "case_id": "E10-DEV-03",
+      "kind": "witnessed_omission",
+      "signed_package": {
+        "path": "e10_signed_wrong_development\\E10-DEV-03.signed_package.bin",
+        "bytes": 62458,
+        "sha256": "91d75c2a3ab2bed76f1746315aa86631d3018efa83f31024c68a0346f0462c64"
+      },
+      "dimensions": {
+        "package_schema": "PASS",
+        "commitment_integrity": "PASS",
+        "trusted_signature": "PASS",
+        "expected_binding": "PASS",
+        "inventory_completeness": "PASS",
+        "lifecycle_semantics": "FAIL",
+        "finding_reproduction": "NOT_CHECKED"
+      },
+      "inspection_passed": false,
+      "expected_signature_met": true,
+      "expected_integrity_met": true,
+      "external_truth_ref": "assessor_truth.json"
+    }
+  ],
+  "research_denominator": 0,
+  "limitation": "Test signer is freshly generated; exact wrong-fact population and independent omission oracle are not frozen for research"
+}

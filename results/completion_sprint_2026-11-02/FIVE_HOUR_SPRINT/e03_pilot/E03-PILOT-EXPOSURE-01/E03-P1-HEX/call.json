@@ -1,0 +1,10 @@
+{
+  "case_id": "E03-P1-HEX",
+  "request_id": "e03-p1-hex",
+  "started_local": "2026-11-03T13:20:46.397684+05:30",
+  "ended_local": "2026-11-03T13:20:46.429224+05:30",
+  "status": "RETURNED",
+  "exception": null,
+  "request_sha256": "2ff6ade944d74ddd46a9c64ed43d7578e6da55ac0e2849b6d887fbb65b21fca5",
+  "response_sha256": "ab6febac7cb16807ddf796fa00666bbcb0273c245777966533fb6e34d7fb5f31"
+}

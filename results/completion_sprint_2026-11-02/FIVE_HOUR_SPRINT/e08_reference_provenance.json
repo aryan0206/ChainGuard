@@ -1,0 +1,51 @@
+{
+  "schema": "chainguard-e08-reference-provenance-v1",
+  "repository": "https://github.com/wilesanGH/mcp-pep-agent-security",
+  "approved_commit": "3dd9690b5b6f9c4ef385289714b314d13f6ad9a1",
+  "source": "GitHub connector read-only fetch_file at approved commit; fetch_commit confirmed commit identity",
+  "retrieved_local": "2026-11-03T12:58:21.935615+05:30",
+  "rows": [
+    {
+      "path": "prototype/pep/enforcer.py",
+      "bytes": 12534,
+      "sha256": "d6a48083bab4a0ce381a6d10a7ed0f104ee89bccadf3dee8769696eeaa04f2b3",
+      "expected_git_blob_sha1": "ea565e0f7b33f10db2c230d5439427659ad3cf74",
+      "actual_git_blob_sha1": "ea565e0f7b33f10db2c230d5439427659ad3cf74",
+      "exact_blob_match": true
+    },
+    {
+      "path": "prototype/pep/label_tracker.py",
+      "bytes": 5138,
+      "sha256": "8253309ba475e0439a5ea6a7d237fbf114f954cdfd9689943c1c039f378a0e67",
+      "expected_git_blob_sha1": "2f1fe2662513519a68962227abd6c8802a86d5b9",
+      "actual_git_blob_sha1": "2f1fe2662513519a68962227abd6c8802a86d5b9",
+      "exact_blob_match": true
+    },
+    {
+      "path": "prototype/pep/rules.py",
+      "bytes": 7090,
+      "sha256": "62b2e5ccf3ba01f5fdf5d2f5f1340b58f3d5a13f0b9b441a217c1c76f6297a88",
+      "expected_git_blob_sha1": "1471e97a87ecd770912de2d025ed73b85e9e96af",
+      "actual_git_blob_sha1": "1471e97a87ecd770912de2d025ed73b85e9e96af",
+      "exact_blob_match": true
+    },
+    {
+      "path": "prototype/datatypes.py",
+      "bytes": 6046,
+      "sha256": "0ada96d619170912ad7c584ceca7c9afaf04b1f1cf670b50376d16c243c37b7a",
+      "expected_git_blob_sha1": "bf0d31c40d4a90298c1ddaa935912ed06f068186",
+      "actual_git_blob_sha1": "bf0d31c40d4a90298c1ddaa935912ed06f068186",
+      "exact_blob_match": true
+    },
+    {
+      "path": "LICENSE",
+      "bytes": 1120,
+      "sha256": "111deda24e3182af0ed4c4b5abc7a80b08d8551e8cf01f4f677969d153a47828",
+      "expected_git_blob_sha1": "5d56b657936e58acf198b5ac14e374d25b954b2f",
+      "actual_git_blob_sha1": "5d56b657936e58acf198b5ac14e374d25b954b2f",
+      "exact_blob_match": true
+    }
+  ],
+  "all_exact": true,
+  "execution_status": "SOURCE_PROVENANCE_ONLY; NO DIFFERENTIAL CONFORMANCE OR E08 COMPARISON"
+}

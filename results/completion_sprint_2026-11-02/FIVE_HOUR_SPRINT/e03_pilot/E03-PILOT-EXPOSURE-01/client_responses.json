@@ -1,0 +1,50 @@
+{
+  "E03-P1-SOURCE": {
+    "request_id": "e03-p1-source",
+    "response": {
+      "id": "e03-p1-source",
+      "jsonrpc": "2.0",
+      "result": {
+        "_meta": {
+          "io.modelcontextprotocol/serverInfo": {
+            "name": "chainguard-m6-synthetic",
+            "version": "0.1.0"
+          }
+        },
+        "content": [
+          {
+            "text": "SYNTHETIC_CANARY_A",
+            "type": "text"
+          }
+        ],
+        "isError": false,
+        "resultType": "complete"
+      }
+    },
+    "exception": null
+  },
+  "E03-P1-HEX": {
+    "request_id": "e03-p1-hex",
+    "response": {
+      "error": {
+        "code": -32003,
+        "message": "M6 authorization denied"
+      },
+      "id": "e03-p1-hex",
+      "jsonrpc": "2.0"
+    },
+    "exception": null
+  },
+  "E03-P1-PUBLIC": {
+    "request_id": "e03-p1-public",
+    "response": {
+      "error": {
+        "code": -32003,
+        "message": "M6 authorization denied"
+      },
+      "id": "e03-p1-public",
+      "jsonrpc": "2.0"
+    },
+    "exception": null
+  }
+}

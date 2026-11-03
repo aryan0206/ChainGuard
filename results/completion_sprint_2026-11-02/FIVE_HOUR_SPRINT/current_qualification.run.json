@@ -1,0 +1,37 @@
+{
+  "owner_pin": "89dfbf78a953701cad2eb17da03218ff2abec709",
+  "synthetic_pin": false,
+  "source_snapshot": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\FIVE_HOUR_SPRINT\\current_source_and_owner_pin.json",
+  "python_version": "Python 3.14.3",
+  "powershell_version": "7.6.5",
+  "os": "Microsoft Windows 10.0.26200",
+  "steps": [
+    {
+      "command": ".\\.venv\\Scripts\\python.exe -B results/completion_sprint_2026-11-02/FIVE_HOUR_SPRINT/qualify_live_current.py",
+      "start_local": "2026-11-03T13:06:50.3395238+05:30",
+      "end_local": "2026-11-03T13:07:03.2491112+05:30",
+      "elapsed_seconds": 12.9024221,
+      "exit_code": 0,
+      "stdout": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\FIVE_HOUR_SPRINT\\current_m6q.stdout.log",
+      "stderr": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\FIVE_HOUR_SPRINT\\current_m6q.stderr.log"
+    },
+    {
+      "command": ".\\.venv\\Scripts\\python.exe -B results/completion_sprint_2026-11-02/FIVE_HOUR_SPRINT/reinspect_current.py",
+      "start_local": "2026-11-03T13:07:03.2777150+05:30",
+      "end_local": "2026-11-03T13:07:04.6723846+05:30",
+      "elapsed_seconds": 1.3942135,
+      "exit_code": 0,
+      "stdout": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\FIVE_HOUR_SPRINT\\current_reinspect.stdout.log",
+      "stderr": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\FIVE_HOUR_SPRINT\\current_reinspect.stderr.log"
+    },
+    {
+      "command": ".\\.venv\\Scripts\\python.exe -B results/completion_sprint_2026-11-02/FIVE_HOUR_SPRINT/submit_current.py",
+      "start_local": "2026-11-03T13:07:04.6769206+05:30",
+      "end_local": "2026-11-03T13:07:06.3843617+05:30",
+      "elapsed_seconds": 1.7067066,
+      "exit_code": 0,
+      "stdout": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\FIVE_HOUR_SPRINT\\current_fresh_submission.stdout.log",
+      "stderr": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\FIVE_HOUR_SPRINT\\current_fresh_submission.stderr.log"
+    }
+  ]
+}

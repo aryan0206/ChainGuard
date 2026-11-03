@@ -1,0 +1,39 @@
+{
+  "case_id": "E03-P2-PUBLIC",
+  "coverage": "COMPLETE",
+  "child_handler_count": 1,
+  "sink_arrival_count": 1,
+  "sink_payload_sha256": [
+    "e006fcbac73d7c6a2fd450d311d528a8a61aa5ed46eddc4acf73679b392ca256"
+  ],
+  "sink_payload_base64": [
+    "cHVibGljIHJlcG9ydA=="
+  ],
+  "client_response": {
+    "request_id": "e03-p2-public",
+    "response": {
+      "id": "e03-p2-public",
+      "jsonrpc": "2.0",
+      "result": {
+        "_meta": {
+          "io.modelcontextprotocol/serverInfo": {
+            "name": "chainguard-m6-synthetic",
+            "version": "0.1.0"
+          }
+        },
+        "content": [
+          {
+            "text": "captured by local sink",
+            "type": "text"
+          }
+        ],
+        "isError": false,
+        "resultType": "complete"
+      }
+    },
+    "exception": null
+  },
+  "package_sha256": "e5c020603042d318ebb40a72f7a12c76c8040cb6d976f0d9868aaef379650359",
+  "child_stream_sha256": "d4bc3ef78b19c7fff6b1e104f705f75bca9b38f097568f9f2bce26f26adde92a",
+  "sink_stream_sha256": "5d7266ef225885ae68bc82bc14b1d78ee14c464dc50aacf6c12626c228566fbf"
+}

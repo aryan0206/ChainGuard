@@ -1,0 +1,33 @@
+{
+  "steps": [
+    {
+      "command": ".\\.venv\\Scripts\\python.exe -B results/completion_sprint_2026-11-02/FIVE_HOUR_SPRINT/test_research_metrics.py",
+      "start_local": "2026-11-03T12:45:38.8761053+05:30",
+      "end_local": "2026-11-03T12:45:39.7375205+05:30",
+      "elapsed_seconds": 0.8435947,
+      "exit_code": 0,
+      "stdout": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\FIVE_HOUR_SPRINT\\analysis_0.stdout.log",
+      "stderr": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\FIVE_HOUR_SPRINT\\analysis_0.stderr.log"
+    },
+    {
+      "command": ".\\.venv\\Scripts\\python.exe -B results/completion_sprint_2026-11-02/FIVE_HOUR_SPRINT/prepare_development_metrics.py",
+      "start_local": "2026-11-03T12:45:39.7561409+05:30",
+      "end_local": "2026-11-03T12:45:40.5411162+05:30",
+      "elapsed_seconds": 0.7831917,
+      "exit_code": 0,
+      "stdout": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\FIVE_HOUR_SPRINT\\analysis_1.stdout.log",
+      "stderr": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\FIVE_HOUR_SPRINT\\analysis_1.stderr.log"
+    },
+    {
+      "command": ".\\.venv\\Scripts\\python.exe -B results/completion_sprint_2026-11-02/FIVE_HOUR_SPRINT/research_metrics.py results/completion_sprint_2026-11-02/FIVE_HOUR_SPRINT/development_metric_input.json results/completion_sprint_2026-11-02/FIVE_HOUR_SPRINT/development_metric_result.json",
+      "start_local": "2026-11-03T12:45:40.5518297+05:30",
+      "end_local": "2026-11-03T12:45:41.8548233+05:30",
+      "elapsed_seconds": 1.3021219,
+      "exit_code": 0,
+      "stdout": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\FIVE_HOUR_SPRINT\\analysis_2.stdout.log",
+      "stderr": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\FIVE_HOUR_SPRINT\\analysis_2.stderr.log"
+    }
+  ],
+  "python_version": "Python 3.14.3",
+  "powershell_version": "7.6.5"
+}

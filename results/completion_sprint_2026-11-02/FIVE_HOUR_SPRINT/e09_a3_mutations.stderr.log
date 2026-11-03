@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "C:\Users\Laptop\OneDrive\Documents\MIT\ChainGuard\results\completion_sprint_2026-11-02\FIVE_HOUR_SPRINT\e09_a3_mutation_development.py", line 11, in <module>
+    from chainguard.canonical import decode, encode
+ModuleNotFoundError: No module named 'chainguard'

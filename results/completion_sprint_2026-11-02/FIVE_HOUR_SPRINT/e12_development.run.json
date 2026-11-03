@@ -1,0 +1,9 @@
+{
+  "command": "\\.venv\\Scripts\\python.exe -B results/completion_sprint_2026-11-02/FIVE_HOUR_SPRINT/benchmark_development.py",
+  "start_local": "2026-11-03T12:49:14.3101637+05:30",
+  "end_local": "2026-11-03T12:49:16.6332866+05:30",
+  "elapsed_seconds": 2.2926792,
+  "exit_code": 0,
+  "stdout": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\FIVE_HOUR_SPRINT\\e12_development.stdout.log",
+  "stderr": "C:\\Users\\Laptop\\OneDrive\\Documents\\MIT\\ChainGuard\\results\\completion_sprint_2026-11-02\\FIVE_HOUR_SPRINT\\e12_development.stderr.log"
+}

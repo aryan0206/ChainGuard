@@ -1,0 +1,1 @@
+{"id":"e03-p1-source","jsonrpc":"2.0","result":{"_meta":{"io.modelcontextprotocol/serverInfo":{"name":"chainguard-m6-synthetic","version":"0.1.0"}},"content":[{"text":"SYNTHETIC_CANARY_A","type":"text"}],"isError":false,"resultType":"complete"}}

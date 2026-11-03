@@ -1,0 +1,98 @@
+{
+  "pre_submission_state": "ACTIVE",
+  "result": {
+    "mode": "FRESH_SUBMISSION",
+    "status": "ACCEPTED",
+    "reason": "FRESH_COMPLETE_RUN",
+    "identity": {
+      "run_id": "M6Q-01-07-run-24ad1c56a25d4142980292b7cafd64f1",
+      "run_challenge": "0d523064969541712227e7594d3f617970a0e03ce297aacde905220b414641bd",
+      "expected_inventory_digest": "967c41d3bb9ee35c8fef633011adbe3b9b3592b39d987e5f8acb398b55f67c14"
+    },
+    "verification": {
+      "mode": "INSPECT_RUN",
+      "fresh_submission": "NOT_CHECKED",
+      "inspection_passed": true,
+      "dimensions": {
+        "package_schema": {
+          "status": "PASS",
+          "reason": "AGGREGATED_SESSION_CHECKS"
+        },
+        "commitment_integrity": {
+          "status": "PASS",
+          "reason": "AGGREGATED_SESSION_CHECKS"
+        },
+        "trusted_signature": {
+          "status": "PASS",
+          "reason": "AGGREGATED_SESSION_CHECKS"
+        },
+        "expected_binding": {
+          "status": "PASS",
+          "reason": "AGGREGATED_SESSION_CHECKS"
+        },
+        "inventory_completeness": {
+          "status": "PASS",
+          "reason": "EXACT_EXPECTED_SESSIONS"
+        },
+        "lifecycle_semantics": {
+          "status": "PASS",
+          "reason": "AGGREGATED_SESSION_CHECKS"
+        },
+        "finding_reproduction": {
+          "status": "PASS",
+          "reason": "AGGREGATED_SESSION_CHECKS"
+        }
+      },
+      "sessions": [
+        {
+          "mode": "INSPECT",
+          "fresh_submission": "NOT_CHECKED",
+          "inspection_passed": true,
+          "dimensions": {
+            "package_schema": {
+              "status": "PASS",
+              "reason": "CANONICAL_LIVE_PACKAGE"
+            },
+            "commitment_integrity": {
+              "status": "PASS",
+              "reason": "CHAIN_AND_CLOSURE_MATCH"
+            },
+            "trusted_signature": {
+              "status": "PASS",
+              "reason": "PINNED_SIGNER_VERIFIED"
+            },
+            "expected_binding": {
+              "status": "PASS",
+              "reason": "ASSESSOR_CONTEXT_MATCH"
+            },
+            "inventory_completeness": {
+              "status": "PASS",
+              "reason": "SESSION_PRESENT"
+            },
+            "lifecycle_semantics": {
+              "status": "PASS",
+              "reason": "LIVE_LIFECYCLE_RECONSTRUCTED"
+            },
+            "finding_reproduction": {
+              "status": "PASS",
+              "reason": "NORMALIZED_FINDINGS_REPRODUCED"
+            }
+          },
+          "reproduction": {
+            "proposals": 6,
+            "findings_reproduced": 24,
+            "b2_agreeing_prefixes": 6,
+            "basis": "recorded_normalized_facts_only"
+          }
+        }
+      ]
+    },
+    "commitments": [
+      {
+        "session_id": "M6Q-01-07-session-24ad1c56a25d4142980292b7cafd64f1",
+        "commitment_digest": "b4f4f8eb8fe0b063dddc6e84b352234c4d0de3d4b062753fcbb6ffdd5479f378"
+      }
+    ],
+    "registry_durability": "COMMITTED"
+  }
+}

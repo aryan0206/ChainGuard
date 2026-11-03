@@ -1,0 +1,12 @@
+{
+  "registered_local": "2026-11-03T13:06:52.653795+05:30",
+  "identity": {
+    "run_id": "M6Q-01-07-run-24ad1c56a25d4142980292b7cafd64f1",
+    "run_challenge": "0d523064969541712227e7594d3f617970a0e03ce297aacde905220b414641bd",
+    "expected_inventory_digest": "967c41d3bb9ee35c8fef633011adbe3b9b3592b39d987e5f8acb398b55f67c14"
+  },
+  "state": "ACTIVE",
+  "signer_key_id": "five-hour-ephemeral-assessor",
+  "registry_file": "acceptance_registry.sqlite",
+  "readback": "CONFIRMED_BEFORE_OPEN_TASK"
+}

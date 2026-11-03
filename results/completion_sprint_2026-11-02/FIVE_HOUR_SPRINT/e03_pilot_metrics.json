@@ -1,0 +1,99 @@
+{
+  "schema": "chainguard-research-metrics-v1",
+  "classification": "RESEARCH",
+  "input_case_count": 5,
+  "eligible_case_count": 4,
+  "eligible_parent_count": 2,
+  "excluded": [
+    {
+      "case_id": "E03-P2-DENIED-READ",
+      "reason": "No evaluated proposal, definite oracle or complete capture"
+    }
+  ],
+  "positive_label": "AUTHORIZED",
+  "provenance_review": "REQUIRED: matching digests and metadata do not themselves prove assessor independence or truthful effects",
+  "false_positive_definition": "UNAUTHORIZED predicted AUTHORIZED",
+  "false_negative_definition": "AUTHORIZED predicted UNAUTHORIZED",
+  "detectors": {
+    "B0": {
+      "eligible": 4,
+      "tp": 1,
+      "tn": 0,
+      "fp_unsafe_allow": 0,
+      "fn_unnecessary_deny": 0,
+      "abstain": 3,
+      "unknown": 0,
+      "definite_denominator": 1,
+      "coverage": 0.25,
+      "definite_error_rate": 0.0,
+      "independent_parent_count": 2
+    },
+    "B1": {
+      "eligible": 4,
+      "tp": 2,
+      "tn": 2,
+      "fp_unsafe_allow": 0,
+      "fn_unnecessary_deny": 0,
+      "abstain": 0,
+      "unknown": 0,
+      "definite_denominator": 4,
+      "coverage": 1.0,
+      "definite_error_rate": 0.0,
+      "independent_parent_count": 2
+    },
+    "B2-R": {
+      "eligible": 4,
+      "tp": 2,
+      "tn": 2,
+      "fp_unsafe_allow": 0,
+      "fn_unnecessary_deny": 0,
+      "abstain": 0,
+      "unknown": 0,
+      "definite_denominator": 4,
+      "coverage": 1.0,
+      "definite_error_rate": 0.0,
+      "independent_parent_count": 2
+    },
+    "B2-S": {
+      "eligible": 4,
+      "tp": 2,
+      "tn": 2,
+      "fp_unsafe_allow": 0,
+      "fn_unnecessary_deny": 0,
+      "abstain": 0,
+      "unknown": 0,
+      "definite_denominator": 4,
+      "coverage": 1.0,
+      "definite_error_rate": 0.0,
+      "independent_parent_count": 2
+    }
+  },
+  "paired": {
+    "B0_vs_B2-S": {
+      "paired_parent_denominator": 1,
+      "paired_case_denominator": 1,
+      "parent_accuracy_difference": {
+        "E03-PILOT-EXPOSURE-01": 0.0
+      },
+      "inference": "NOT_CALCULATED; freeze independent-parent sample and analysis plan first"
+    },
+    "B1_vs_B2-S": {
+      "paired_parent_denominator": 2,
+      "paired_case_denominator": 4,
+      "parent_accuracy_difference": {
+        "E03-PILOT-CONTROL-01": 0.0,
+        "E03-PILOT-EXPOSURE-01": 0.0
+      },
+      "inference": "NOT_CALCULATED; freeze independent-parent sample and analysis plan first"
+    },
+    "B2-R_vs_B2-S": {
+      "paired_parent_denominator": 2,
+      "paired_case_denominator": 4,
+      "parent_accuracy_difference": {
+        "E03-PILOT-CONTROL-01": 0.0,
+        "E03-PILOT-EXPOSURE-01": 0.0
+      },
+      "inference": "NOT_CALCULATED; freeze independent-parent sample and analysis plan first"
+    }
+  }
+}

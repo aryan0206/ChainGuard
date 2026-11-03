@@ -1,0 +1,124 @@
+{
+  "schema": "chainguard-research-observations-v1",
+  "frozen_contract": {
+    "path": "e03_frozen_pilot_plan.json",
+    "sha256": "98c5a9168975a851d4744c54f962007bc4ede91581a9ca509f7b03a861c99c95"
+  },
+  "cases": [
+    {
+      "case_id": "E03-P1-SOURCE",
+      "parent_id": "E03-PILOT-EXPOSURE-01",
+      "classification": "RESEARCH",
+      "eligible": true,
+      "exclusion_reason": null,
+      "oracle_source": "INDEPENDENT",
+      "witness_status": "COMPLETE",
+      "oracle_label": "AUTHORIZED",
+      "predictions": {
+        "B0": "AUTHORIZED",
+        "B1": "AUTHORIZED",
+        "B2-R": "AUTHORIZED",
+        "B2-S": "AUTHORIZED"
+      },
+      "oracle_record": {
+        "path": "e03_pilot\\E03-PILOT-EXPOSURE-01\\E03-P1-SOURCE.oracle.json",
+        "sha256": "67ea4eb6b3198fc7f77ef30006a3328bc57262132d7e856abcfb0785824f36c5"
+      },
+      "witness_record": {
+        "path": "e03_pilot\\E03-PILOT-EXPOSURE-01\\E03-P1-SOURCE.witness.json",
+        "sha256": "b5d9a3069bcd1fc6cc250cbe66c330481210ae0b13d55bb87e9d5105a3734ff0"
+      }
+    },
+    {
+      "case_id": "E03-P1-HEX",
+      "parent_id": "E03-PILOT-EXPOSURE-01",
+      "classification": "RESEARCH",
+      "eligible": true,
+      "exclusion_reason": null,
+      "oracle_source": "INDEPENDENT",
+      "witness_status": "COMPLETE",
+      "oracle_label": "UNAUTHORIZED",
+      "predictions": {
+        "B0": "INDETERMINATE",
+        "B1": "UNAUTHORIZED",
+        "B2-R": "UNAUTHORIZED",
+        "B2-S": "UNAUTHORIZED"
+      },
+      "oracle_record": {
+        "path": "e03_pilot\\E03-PILOT-EXPOSURE-01\\E03-P1-HEX.oracle.json",
+        "sha256": "d58251710f96d322a58e786b0dd00df2e0b560757dc0d9b658429a9811cf5fef"
+      },
+      "witness_record": {
+        "path": "e03_pilot\\E03-PILOT-EXPOSURE-01\\E03-P1-HEX.witness.json",
+        "sha256": "6131a77eac1995b87d42c966e3c4458c884c4ef317ba078f0bccbe72e4064a9d"
+      }
+    },
+    {
+      "case_id": "E03-P1-PUBLIC",
+      "parent_id": "E03-PILOT-EXPOSURE-01",
+      "classification": "RESEARCH",
+      "eligible": true,
+      "exclusion_reason": null,
+      "oracle_source": "INDEPENDENT",
+      "witness_status": "COMPLETE",
+      "oracle_label": "UNAUTHORIZED",
+      "predictions": {
+        "B0": "INDETERMINATE",
+        "B1": "UNAUTHORIZED",
+        "B2-R": "UNAUTHORIZED",
+        "B2-S": "UNAUTHORIZED"
+      },
+      "oracle_record": {
+        "path": "e03_pilot\\E03-PILOT-EXPOSURE-01\\E03-P1-PUBLIC.oracle.json",
+        "sha256": "90a551362a5be340d6193edf692e69159e7c915babb2600edc75762281d4e5c9"
+      },
+      "witness_record": {
+        "path": "e03_pilot\\E03-PILOT-EXPOSURE-01\\E03-P1-PUBLIC.witness.json",
+        "sha256": "6fd96954d18a48882368fb84fc3a431330b26f89cba78b4ed6ebd80808865553"
+      }
+    },
+    {
+      "case_id": "E03-P2-DENIED-READ",
+      "parent_id": "E03-PILOT-CONTROL-01",
+      "classification": "EXCLUDED_CONTROL",
+      "eligible": false,
+      "exclusion_reason": "No evaluated proposal, definite oracle or complete capture",
+      "oracle_source": "NOT_APPLICABLE",
+      "witness_status": "COMPLETE",
+      "oracle_label": "UNAUTHORIZED",
+      "predictions": {},
+      "oracle_record": {
+        "path": "e03_pilot\\E03-PILOT-CONTROL-01\\E03-P2-DENIED-READ.oracle.json",
+        "sha256": "e39b15ffb5a9fb5f8359ca08a1a83aec605e21a4ca347b0d2db3646dfec9bd6d"
+      },
+      "witness_record": {
+        "path": "e03_pilot\\E03-PILOT-CONTROL-01\\E03-P2-DENIED-READ.witness.json",
+        "sha256": "5ce153f930c5ef7d1c648fde325fcce71b19e7b540c5be59e1f894b87cdb6829"
+      }
+    },
+    {
+      "case_id": "E03-P2-PUBLIC",
+      "parent_id": "E03-PILOT-CONTROL-01",
+      "classification": "RESEARCH",
+      "eligible": true,
+      "exclusion_reason": null,
+      "oracle_source": "INDEPENDENT",
+      "witness_status": "COMPLETE",
+      "oracle_label": "AUTHORIZED",
+      "predictions": {
+        "B0": "INDETERMINATE",
+        "B1": "AUTHORIZED",
+        "B2-R": "AUTHORIZED",
+        "B2-S": "AUTHORIZED"
+      },
+      "oracle_record": {
+        "path": "e03_pilot\\E03-PILOT-CONTROL-01\\E03-P2-PUBLIC.oracle.json",
+        "sha256": "01b5070998a2dcbf5ed44424aa6dccac5139b62e29deee6ac7f9aae560890e0e"
+      },
+      "witness_record": {
+        "path": "e03_pilot\\E03-PILOT-CONTROL-01\\E03-P2-PUBLIC.witness.json",
+        "sha256": "148d89ad077f75019beb4e96dc535a482af1fee2d337f39c122fb55c2bae8205"
+      }
+    }
+  ]
+}
