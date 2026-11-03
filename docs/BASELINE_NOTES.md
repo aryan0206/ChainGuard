@@ -1,10 +1,10 @@
 # External baseline notes
 
-**Status: NOT STARTED / CONFORMANCE PENDING. No comparative result exists.** This document specifies future controls; Phase 1 implements no adapter and runs no baseline.
+**Current status, 3 November 2026: narrow R02 engineering conformance PASSED; E08 comparative research NOT STARTED.** Ten declared cases over nineteen supplied-fact steps matched expected, pinned-reference and adapter outputs. No paired ChainGuard/reference workflow study or comparative result exists. The original Phase 1 had no adapter or baseline run; the controls below remain required for a fair comparison.
 
 ## Pin and narrow scope
 
-Authoritative [Architecture Lock](ARCHITECTURE_LOCK.md) Section 17 references [mcp-pep-agent-security](https://github.com/wilesanGH/mcp-pep-agent-security), revision `3dd9690b5b6f9c4ef385289714b314d13f6ad9a1`. The supplied Astra task instead states `3dd9690b5b6f9c4ef385289714b314d13f6ad1`. The owner confirmed the Lock's full pin on 3 November 2026; the shorter string remains recorded for provenance. No external revision was fetched or verified locally, and the adapter and conformance gate remain pending.
+Authoritative [Architecture Lock](ARCHITECTURE_LOCK.md) Section 17 references [mcp-pep-agent-security](https://github.com/wilesanGH/mcp-pep-agent-security), revision `3dd9690b5b6f9c4ef385289714b314d13f6ad9a1`. The supplied Astra task instead states `3dd9690b5b6f9c4ef385289714b314d13f6ad1`. The owner confirmed the Lock's full pin on 3 November 2026; the shorter string remains recorded for provenance. The [pinned source provenance](../results/completion_sprint_2026-11-02/FIVE_HOUR_SPRINT/e08_reference_provenance.json) verifies five retained files, and the [narrow R02 result](../results/completion_sprint_2026-11-02/FIVE_HOUR_SPRINT/e08_conformance_results.json) records ten passing cases. The full enforcer was not run and no common-domain research comparison was performed.
 
 The intended subset is R02 with default-allow behavior on the declared common surface, using `prototype/pep/enforcer.py`, `prototype/pep/label_tracker.py`, `prototype/pep/rules.py` and `prototype/datatypes.py` at the locked revision. Keep the baseline's name distinct from B0/B1/B2. This is a Wang-style sensitivity-policy subset adaptation, not full reproduction of the published system.
 

@@ -1,0 +1,25 @@
+{
+  "schema": "chainguard-five-hour-experiment-inventory-v1",
+  "source_revision_pin": "89dfbf78a953701cad2eb17da03218ff2abec709",
+  "research_case_count": 0,
+  "research_parent_count": 0,
+  "pilot_detector_evaluable_case_count": 4,
+  "pilot_parent_count": 2,
+  "research_scope": "No E01-E13 experiment is fully contract-qualified. E03 is PARTIALLY EXECUTED — CONTRACT INCOMPLETE; four detector-evaluable pilot rows remain descriptive only.",
+  "classification_note": "The generated e03_pilot_metrics.json retains its original RESEARCH field and raw counts; this inventory records the later Step 1-2 qualification audit without rewriting metrics or evidence.",
+  "experiments": [
+    {"id":"E01","readiness":"BLOCKED","execution":"DEVELOPMENT_ONLY","implementation":"One benign reorder pair retained","remaining":"Independent task outcomes and final pair inventory"},
+    {"id":"E02","readiness":"BLOCKED","execution":"NOT_RUN","implementation":"Existing byte-identical B1 development pair and strict metric denominator code","remaining":"Independent ordered commit/effect labels and mixed-label group denominator"},
+    {"id":"E03","readiness":"CONTRACT_INCOMPLETE","execution":"PARTIALLY_EXECUTED_CONTRACT_INCOMPLETE","implementation":"Frozen five-call pilot, live source/child/sink and per-tool client capture, signed export and reproducible descriptive counts","raw":"e03_pilot/","analysis":"e03_pilot_metrics.json","cases":5,"detector_evaluable":4,"parents":2,"research_qualified_cases":0,"excluded_control":"E03-P2-DENIED-READ; schema rejection before detector proposal","remaining":"Frozen plan's separate task-level client objective acknowledgment is missing; full population and independent generalization absent; no superiority claim"},
+    {"id":"E04","readiness":"CONTRACT_INCOMPLETE","execution":"NOT_RUN","implementation":"M6Q and E03 retain distinct detector, controller, handler, sink and task records","remaining":"Equivalent enforcement configurations and attribution denominator"},
+    {"id":"E05","readiness":"BLOCKED","execution":"NOT_RUN","implementation":"Parent-aware metric code","remaining":"Validation and held-out parent split, independent oracle, preregistered analysis"},
+    {"id":"E06","readiness":"BLOCKED","execution":"QUALIFICATION_ONLY","implementation":"Eight current-source M6Q cases passed; signed/fresh-process/acceptance workflow","raw":"live_m6_current/","remaining":"Multi-scope/failure research matrix and independent population denominator"},
+    {"id":"E07","readiness":"CONTRACT_INCOMPLETE","execution":"QUALIFICATION_ONLY","implementation":"M6Q pre-dispatch commit-failure case retained","remaining":"Frozen fault/no-fault boundary ledger and ambiguity expectations"},
+    {"id":"E08","readiness":"BLOCKED","execution":"ENGINEERING_CONFORMANCE_ONLY","implementation":"Approved reference 3dd9690b5b6f9c4ef385289714b314d13f6ad9a1 pinned and blob-verified; ten narrow R02 common-fact cases and nineteen supplied-fact steps matched expected outputs","raw":"e08_reference/","analysis":"e08_conformance_results.json","research_qualified_cases":0,"remaining":"Paired ChainGuard/reference common-domain workflows with independent outcomes; full enforcer and broader reference rules not evaluated"},
+    {"id":"E09","readiness":"BLOCKED","execution":"INCONCLUSIVE_DEVELOPMENT_ONLY","implementation":"Seven-variant plan; five A3 development cells retained, three of five predeclared verifier dimensions matched; two mutants rejected at package schema before expected commitment check","raw":"e09_mutants_revision/","research_qualified_cases":0,"remaining":"A0/A1/A2/A4/A3T/A4T implementations, parity and two retained dimension expectation mismatches"},
+    {"id":"E10","readiness":"CONTRACT_INCOMPLETE","execution":"DEVELOPMENT_ONLY","implementation":"Four legitimately signed development packages and assessor truth digests","raw":"e10_signed_wrong_development/","remaining":"Full independent truth/omission population and sample contract"},
+    {"id":"E11","readiness":"CONTRACT_INCOMPLETE","execution":"QUALIFICATION_ONLY","implementation":"Fresh reinspection, durable acceptance, restart readback and duplicate rejection passed","raw":"live_m6_current/","remaining":"A4T parity and full acceptance/registry fault matrix"},
+    {"id":"E12","readiness":"CONTRACT_INCOMPLETE","execution":"DEVELOPMENT_ONLY","implementation":"15 one-shot B2 latency/state/working-set measurements, zero detector disagreement","raw":"e12_development_instrumentation_revision.json","remaining":"Frozen repeated workloads, staged boundaries, storage/export and isolation"},
+    {"id":"E13","readiness":"BLOCKED","execution":"DEVELOPMENT_ONLY","implementation":"Three before/after development pairs with raw projections","raw":"metamorphic_development_pairs_revision.json","remaining":"Independent invariance labels, qualified parents and full case matrix"}
+  ]
+}

@@ -1,0 +1,37 @@
+# Five-hour sprint — factual result and handoff
+
+**Current research classification (Step 1–2 audits, 3 November 2026):** No E01–E13 experiment is currently fully contract-qualified as a research result. E03 is **PARTIALLY EXECUTED — CONTRACT INCOMPLETE**. This status note corrects research-claim language without changing the frozen pilot, generated metrics or raw evidence.
+
+**Start:** 2026-11-03 12:41:44 +05:30. **Clock and command log:** `execution_log.json`. Model/tool: GPT-6 Codex desktop, PowerShell 7.6.5, CPython 3.14.3, official GitHub site and read-only connector for the approved E08 reference. Token usage: **NOT EXPOSED**. All commands, local timestamps, durations, exit codes and raw stdout/stderr are retained in the per-step `*.run.json` files and aggregated execution log.
+
+## Current-source M6 qualification
+
+The owner supplied trusted revision `89dfbf78a953701cad2eb17da03218ff2abec709` and attested it for the current source. The runner compared nine application-source SHA-256 digests with the previously tested current-source snapshot before executing. It did not use Git. This is host/owner trust, not independent Git revision verification. The qualified runtime digest is `c136f3c68306a3fb2b377da9002738bcf3fab6276e84fef57c2047f47c0dd15d`.
+
+M6Q-01 through M6Q-08 all **PASSED** at 13:06:50–13:07:03 +05:30, exit 0. Raw requests/responses, assessor inventory, pre-execution registration, child/host/sink records, exact sink payload bytes/digests, signed package and offline results are in `live_m6_current/`. Fresh-process reinspection passed all seven dimensions (exit 0); fresh submission was **ACCEPTED**, durable state remained **ACCEPTED** after restart, and duplicate submission was **REJECTED / ALREADY_ACCEPTED** (exit 0). These are bounded synthetic-local qualification cases. They do not complete the E06, E07 or E11 research populations. The private key was ephemeral and the task `audit.sqlite` lived in a temporary directory.
+
+## E03 bounded synthetic pilot
+
+`e03_frozen_pilot_plan.json` was saved before execution with five exact cases in two independently started task parents and the direct-recognition source hash. The pilot ran 13:20:40–13:20:51 +05:30, exit 0; descriptive analysis ran 13:21:32–13:21:33, exit 0. Raw requests/responses, signed packages, verifier reports, assessor inventory, source/client, child and sink witness streams, case-specific oracle/witness records, and digests are in `e03_pilot/`.
+
+All five planned calls were observed. E03-P1-SOURCE succeeded at the child; E03-P1-HEX and E03-P1-PUBLIC had no handler or sink arrival; E03-P2-DENIED-READ was rejected before a detector proposal and had no handler; E03-P2-PUBLIC reached one handler and one sink with exact payload bytes and digest. The schema-rejected read is a control, excluded from the detector denominator. Four calls have definite predecision labels and detector findings, across two task parents. The sink acknowledgment is a **per-tool** response for the public control send; the frozen plan's separate **task-level client objective acknowledgment** was not retained. No task-completion or full-contract qualification claim follows from the per-tool response.
+
+`e03_pilot_metrics.json` recomputes the four detector-evaluable case denominator: B0 one definite correct recommendation and three abstentions (25% coverage); B1, B2-R and B2-S each four definite correct recommendations. No false authorization or unnecessary denial occurred in this designed pilot. **These are descriptive, contract-incomplete pilot counts, not a fully qualified E03 research result.** The generated metrics file retains its historical `RESEARCH` classification and is not modified here; that field must not be used as the current qualification verdict. B1/B2 denials were `PERMISSION_ABSENT`, so the pilot does not establish superior direct payload recognition. The two parents are synthetic and designed, with no held-out generalization or statistical inference.
+
+## Other experiment gates and development work
+
+- **E08:** Approved pin `3dd9690b5b6f9c4ef385289714b314d13f6ad9a1` fetched through the read-only connector; five retained files verified against exact Git blob IDs, verifier exit 0. Ten predeclared narrow R02 common-fact conformance cases, comprising nineteen supplied-fact steps, matched expected and reference outputs, exit 0. This is engineering conformance only; no paired ChainGuard/reference workflow comparison or full-enforcer claim follows.
+- **E09:** Seven-variant matrix planned. Five A3 development mutants run; three predeclared dimension expectations matched. `edit-first-event-sequence` and `delete-last-record` failed at package schema, leaving commitment integrity `NOT_CHECKED`, whereas the plan expected that later dimension. Pinned run exit 1 and all mutant bytes/reports are retained. No plan or verifier was changed to force a pass.
+- **E10:** Four signed development packages passed the declared engineering checks, exit 0: control, wrong observation, wrong finding and omission. Signature/integrity passed for the altered packages; lifecycle or finding reproduction failed where applicable. Signature authenticity is not ground-truth accuracy.
+- **E12:** Fifteen one-shot B2 development fixture measurements with zero B2-R/B2-S verdict disagreements; latency, approximate retained Python state, working set and tracemalloc captured, exit 0 on corrected Windows sampler. No E12 research workload or performance inference.
+- **E01/E13:** Three raw before/after development pairs retained. Initial harmless-gap expectation failed because B1's unordered input count legitimately changed; revised expectation checked the invariant verdict/rule and retained the first failure. No independent research outcome.
+- **E02/E05:** Existing equal-B1 pair remains authored development evidence; parent-aware strict metric code was tested. No independent mixed-label or held-out observations.
+- **E04/E07/E11:** Distinct detector, controller, child, sink, commit/fault and acceptance evidence exists from M6Q/E03. Full experiment contracts and population runs remain open.
+
+`test_research_metrics.py` passed four focused tests (exit 0). The first strict analysis preflight passed all three steps with zero eligible development research cases. E03 analysis later produced four detector-evaluable descriptive pilot rows; the missing task-level acknowledgment prevents full research qualification. The complete attempt/retry ledger is in `execution_log.json`: sandbox Python launch exit 101, initial metamorphic expectation exit 1, initial E09 launcher/pin errors and final 3/5 predeclared-dimension mismatch exit 1 are retained. No failed observation was discarded.
+
+## Readiness and report boundary
+
+`experiment_inventory.json` tracks E01–E13 individually; `report_evidence_map.md` names valid report inputs and exclusions. The final IEEE project report was not written or compiled. The historical Evaluation-1 report is unchanged. The next work is the ranked plan in `ranked_execution_plan.md`: qualify larger independent populations, equivalent enforcement/fault/acceptance matrices, full evidence variants and repeated benchmark before making comparative or held-out claims. No A1/A2 or E08 owner decision remains; any new material design/dependency decision still needs owner approval.
+
+No Git command, stage, commit, push, pull or branch action was performed; no dependency was installed; no architecture/protocol/security semantics were changed; `audit.sqlite` is excluded from deliverables.
