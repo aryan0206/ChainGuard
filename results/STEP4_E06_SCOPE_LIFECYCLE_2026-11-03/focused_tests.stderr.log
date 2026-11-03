@@ -1,0 +1,18 @@
+test_grant_one_use_and_consumed_retry_denial (tests.test_m6_live_authorization.LiveAuthorizationTests.test_grant_one_use_and_consumed_retry_denial) ... ok
+test_active_unconsumed_revoke_denies_then_new_grant_restores (tests.test_m6_live_authorization.LiveAuthorizationTests.test_active_unconsumed_revoke_denies_then_new_grant_restores) ... ok
+test_multi_scope_all_or_nothing_and_minimum_id (tests.test_m6_live_authorization.LiveAuthorizationTests.test_multi_scope_all_or_nothing_and_minimum_id) ... ok
+test_missing_permission_names_disabled_override_without_consumption (tests.test_m6_live_authorization.LiveAuthorizationTests.test_missing_permission_names_disabled_override_without_consumption) ... ok
+test_failed_and_ambiguous_pre_dispatch_batch_never_returns_permit (tests.test_m6_live_authorization.LiveAuthorizationTests.test_failed_and_ambiguous_pre_dispatch_batch_never_returns_permit) ... ok
+test_failed_reservation_keeps_whole_grant_set_unconsumed (tests.test_m6_live_authorization.LiveAuthorizationTests.test_failed_reservation_keeps_whole_grant_set_unconsumed) ... ok
+test_unknown_outcome_halts_with_consumed_intent (tests.test_m6_live_authorization.LiveAuthorizationTests.test_unknown_outcome_halts_with_consumed_intent) ... ok
+test_failed_outcome_write_cannot_refund_intent (tests.test_m6_live_authorization.LiveAuthorizationTests.test_failed_outcome_write_cannot_refund_intent) ... ok
+test_assessor_stream_retains_commit_handler_and_exact_sink_bytes (tests.test_m6_live_runtime.RuntimeTests.test_assessor_stream_retains_commit_handler_and_exact_sink_bytes) ... ok
+test_one_use_release_and_second_denial (tests.test_m6_live_runtime.RuntimeTests.test_one_use_release_and_second_denial) ... ok
+test_exact_revoke_and_new_grant_restore_scope (tests.test_m6_live_runtime.RuntimeTests.test_exact_revoke_and_new_grant_restore_scope) ... ok
+test_partial_write_and_flush_failure_record_unknown_without_replay (tests.test_m6_live_runtime.RuntimeTests.test_partial_write_and_flush_failure_record_unknown_without_replay) ... ok
+test_outcome_write_failure_never_refunds_or_replays (tests.test_m6_live_runtime.RuntimeTests.test_outcome_write_failure_never_refunds_or_replays) ... ok
+
+----------------------------------------------------------------------
+Ran 13 tests in 23.228s
+
+OK

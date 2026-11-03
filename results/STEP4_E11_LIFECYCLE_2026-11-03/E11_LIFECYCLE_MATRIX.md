@@ -1,0 +1,25 @@
+# Frozen E11 requirement matrix
+
+These are **requirement categories**, because the frozen [protocol](../../docs/EVALUATION_PROTOCOL.md) and [matrix](../../docs/EXPERIMENT_MATRIX.md) do not assign E11 research case IDs or a final population. No IDs or expected outcomes were invented. The result column distinguishes retained live M6Q evidence, newly executed engineering tests, and blocked research cells. `M6` means `tests/test_m6_live_acceptance.py`; `M5` means `tests/test_m5.py`. Exact selected test names, expectations, command logs and limitations are in [execution](E11_EXECUTION_RESULTS.md) and [audit](E11_EVIDENCE_AUDIT.md). See [readiness](E11_READINESS.md) and [status](E11_FINAL_STATUS.md).
+
+| Frozen requirement category | Existing evidence before this sprint | Executable now under restrictions | Required research evidence | Result this sprint |
+| --- | --- | --- | --- | --- |
+| Preregistered complete singleton A4 fresh submission | M6Q `fresh_submission.json`: ACTIVE → ACCEPTED, COMMITTED | Engineering test yes | Frozen assessor inventory, key/config pin, raw package, confirmed registry boundary/readback | M6 complete-live-run test **passed**; research incomplete |
+| Repeatable inspection without consuming expectation; A3 inspect control | M6Q fresh reinspection PASS | Engineering test yes | Repeated dimension reports plus unchanged ACTIVE expectation | M6 complete-live-run test **passed**; research incomplete |
+| Exact multi-session whole-run acceptance | M5 source tests; no frozen E11 live corpus | M5 engineering yes | All session packages, independent inventory, atomic accepted commitments | M5 multi-session test **passed**; research incomplete |
+| Missing required session | M5/M6 tests, not E11 population | M6/M5 engineering yes | Omitted input, INCOMPLETE verdict, unchanged expectation | Selected tests **passed**; research incomplete |
+| Duplicate session within one submission | M5/M6 tests | M6/M5 engineering yes | Duplicate input, REJECTED verdict, unchanged expectation | Selected tests **passed**; research incomplete |
+| Unexpected extra session | M5/M6 tests | M6/M5 engineering yes | Extra input, REJECTED verdict, unchanged expectation | Selected tests **passed**; research incomplete |
+| Wrong signer/key, configuration, challenge and inventory | M5/M6 test implementations | M6 engineering yes | Altered inputs, per-dimension verifier reports, ACTIVE preservation | M6 context/pin test **passed**; research incomplete |
+| Old valid evidence against new/stale context | M5 test implementation | M5 engineering yes | Original package plus new registered context, binding failure, ACTIVE preservation | M5 stale-context test **passed**; research incomplete |
+| CANCELLED/FAILED terminal contexts after restart | M5 test implementation | M5 engineering yes | Independent terminal-state witness and reopened rejection | M5 terminal-state test **passed**; research incomplete |
+| Duplicate/resigned submission after acceptance and restart | M6Q readback rejects duplicate; M5/M6 tests | M6/M5 engineering yes | Same authenticated identity, reopened durable state, replay rejection | M6 replay and M5 separate-process restart tests **passed**; research incomplete |
+| Signed package missing terminal outcome | M6 test implementation | M6 engineering yes | Incomplete signed input; lifecycle INCOMPLETE; expectation ACTIVE | M6 missing-outcome test **passed**; research incomplete |
+| Concurrent submitters accept at most once | M5 test implementation | M5 engineering yes | Independent process attempts, one ACCEPTED/one REJECTED, durable state | M5 concurrency test **passed**; research incomplete |
+| Failed registry write/partial multi-session write preserves expectation | M5 test implementation | M5 engineering yes | Fault boundary, rollback/no partial commitments, ACTIVE readback | M5 insert and multi-session fault tests **passed**; research incomplete |
+| Ambiguous pre-commit acknowledgment | M6 test implementation | M6 engineering yes | UNKNOWN/NOT_CHECKED, fresh reopen ACTIVE, explicit retry | M6 pre-commit test **passed**; research incomplete |
+| Ambiguous post-commit acknowledgment | M6 test implementation | M6 engineering yes | No guessed success, fresh reopen ACCEPTED, duplicate rejection | M6 post-commit test **passed**; research incomplete |
+| A3T repeatable inspection control | Protocol/Lock requirement; no A3T retained package | **NO** | Implemented signed transcript, frozen vectors and expected dimensions | **BLOCKED** — new format/infrastructure |
+| A4T fresh complete-run acceptance parity | Protocol/Lock requirement; no A4T retained package | **NO** | A3T package plus durable acceptance, equal semantic/durability controls and frozen case ledger | **BLOCKED** — new format/infrastructure |
+
+**Matrix accounting:** 17 requirement categories: 15 with newly run engineering support, two blocked variant categories. None is a fully contract-qualified E11 research case. Existing test source and pass output do not supply an independent assessor-held research oracle or retained raw case-level population.

@@ -1,0 +1,9 @@
+test_old_valid_evidence_against_new_context_rejected (tests.test_m5.AcceptanceTests.test_old_valid_evidence_against_new_context_rejected) ... ok
+test_cancelled_and_failed_terminal_contexts_survive_restart (tests.test_m5.AcceptanceTests.test_cancelled_and_failed_terminal_contexts_survive_restart) ... ok
+test_real_insert_failure_rolls_back_without_consuming (tests.test_m5.AcceptanceTests.test_real_insert_failure_rolls_back_without_consuming) ... ok
+test_signed_missing_terminal_outcome_is_not_accepted (tests.test_m6_live_acceptance.LiveAcceptanceTests.test_signed_missing_terminal_outcome_is_not_accepted) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 6.088s
+
+OK

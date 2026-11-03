@@ -1,0 +1,17 @@
+{
+  "schema": "chainguard-e11-focused-engineering-run-v1",
+  "classification": "ENGINEERING_TEST_ONLY_NOT_E11_RESEARCH",
+  "command": ".\\.venv\\Scripts\\python.exe -B -m unittest -v tests.test_m5.AcceptanceTests.test_acceptance_and_duplicate_survive_separate_process_restart",
+  "start_local": "2026-11-03T18:05:58.6814497+05:30",
+  "end_local": "2026-11-03T18:06:05.1377388+05:30",
+  "elapsed_seconds": 6.456,
+  "exit_code": 0,
+  "test_names": [
+    "tests.test_m5.AcceptanceTests.test_acceptance_and_duplicate_survive_separate_process_restart"
+  ],
+  "revision_pin": "89dfbf78a953701cad2eb17da03218ff2abec709",
+  "stdout": "restart_test.stdout.log",
+  "stderr": "restart_test.stderr.log",
+  "retries": 0,
+  "prohibited_database_access": "none by selected test paths; ephemeral fixture/registry SQLite used"
+}

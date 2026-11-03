@@ -1,0 +1,25 @@
+{
+  "schema": "chainguard-e11-focused-engineering-run-v1",
+  "classification": "ENGINEERING_TEST_ONLY_NOT_E11_RESEARCH",
+  "command": ".\\.venv\\Scripts\\python.exe -B -m unittest -v tests.test_m6_live_acceptance.LiveAcceptanceTests.test_accepts_only_pre_registered_complete_live_run tests.test_m6_live_acceptance.LiveAcceptanceTests.test_wrong_signer_key_configuration_challenge_and_inventory_rejected tests.test_m6_live_acceptance.LiveAcceptanceTests.test_missing_duplicate_and_unexpected_sessions_rejected tests.test_m6_live_acceptance.LiveAcceptanceTests.test_duplicate_and_resigned_replay_rejected_after_restart tests.test_m6_live_acceptance.LiveAcceptanceTests.test_ambiguous_post_commit_ack_never_guesses_accepted tests.test_m6_live_acceptance.LiveAcceptanceTests.test_ambiguous_pre_commit_ack_requires_reconciliation tests.test_m5.AcceptanceTests.test_concurrent_processes_accept_exactly_once tests.test_m5.WholeRunTests.test_multi_session_full_inventory_atomic_acceptance_and_singleton_unchanged tests.test_m5.WholeRunTests.test_multi_session_failed_write_rolls_back_all_commitments",
+  "start_local": "2026-11-03T18:04:26.7043777+05:30",
+  "end_local": "2026-11-03T18:04:42.2592819+05:30",
+  "elapsed_seconds": 15.555,
+  "exit_code": 0,
+  "test_names": [
+    "tests.test_m6_live_acceptance.LiveAcceptanceTests.test_accepts_only_pre_registered_complete_live_run",
+    "tests.test_m6_live_acceptance.LiveAcceptanceTests.test_wrong_signer_key_configuration_challenge_and_inventory_rejected",
+    "tests.test_m6_live_acceptance.LiveAcceptanceTests.test_missing_duplicate_and_unexpected_sessions_rejected",
+    "tests.test_m6_live_acceptance.LiveAcceptanceTests.test_duplicate_and_resigned_replay_rejected_after_restart",
+    "tests.test_m6_live_acceptance.LiveAcceptanceTests.test_ambiguous_post_commit_ack_never_guesses_accepted",
+    "tests.test_m6_live_acceptance.LiveAcceptanceTests.test_ambiguous_pre_commit_ack_requires_reconciliation",
+    "tests.test_m5.AcceptanceTests.test_concurrent_processes_accept_exactly_once",
+    "tests.test_m5.WholeRunTests.test_multi_session_full_inventory_atomic_acceptance_and_singleton_unchanged",
+    "tests.test_m5.WholeRunTests.test_multi_session_failed_write_rolls_back_all_commitments"
+  ],
+  "revision_pin": "89dfbf78a953701cad2eb17da03218ff2abec709",
+  "stdout": "focused_tests_retry1.stdout.log",
+  "stderr": "focused_tests_retry1.stderr.log",
+  "retry_of": "focused_tests.run.json",
+  "prohibited_database_access": "none by selected test paths; ephemeral fixture/registry SQLite used"
+}

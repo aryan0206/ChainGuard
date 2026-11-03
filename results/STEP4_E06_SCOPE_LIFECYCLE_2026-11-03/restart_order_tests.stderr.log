@@ -1,0 +1,7 @@
+test_fifo_revocation_waits_for_pending_intent (tests.test_m6_live_runtime.RuntimeTests.test_fifo_revocation_waits_for_pending_intent) ... ok
+test_reopen_does_not_restore_task_or_grant_authority (tests.test_m6_live_audit.LiveWriterTests.test_reopen_does_not_restore_task_or_grant_authority) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 3.040s
+
+OK

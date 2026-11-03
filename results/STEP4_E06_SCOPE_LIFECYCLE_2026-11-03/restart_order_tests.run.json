@@ -1,0 +1,18 @@
+{
+  "schema": "chainguard-e06-focused-engineering-run-v1",
+  "classification": "ENGINEERING_TEST_ONLY_NOT_E06_RESEARCH",
+  "command": ".\\.venv\\Scripts\\python.exe -B -m unittest -v tests.test_m6_live_runtime.RuntimeTests.test_fifo_revocation_waits_for_pending_intent tests.test_m6_live_audit.LiveWriterTests.test_reopen_does_not_restore_task_or_grant_authority",
+  "start_local": "2026-11-03T18:16:39.9114356+05:30",
+  "end_local": "2026-11-03T18:16:44.0447282+05:30",
+  "elapsed_seconds": 4.133,
+  "exit_code": 0,
+  "test_names": [
+    "tests.test_m6_live_runtime.RuntimeTests.test_fifo_revocation_waits_for_pending_intent",
+    "tests.test_m6_live_audit.LiveWriterTests.test_reopen_does_not_restore_task_or_grant_authority"
+  ],
+  "revision_pin": "89dfbf78a953701cad2eb17da03218ff2abec709",
+  "stdout": "restart_order_tests.stdout.log",
+  "stderr": "restart_order_tests.stderr.log",
+  "retries": 0,
+  "prohibited_database_access": "none by selected test paths; ephemeral live.sqlite/m6-live.sqlite used"
+}

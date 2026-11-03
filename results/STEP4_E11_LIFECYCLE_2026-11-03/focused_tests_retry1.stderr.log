@@ -1,0 +1,14 @@
+test_accepts_only_pre_registered_complete_live_run (tests.test_m6_live_acceptance.LiveAcceptanceTests.test_accepts_only_pre_registered_complete_live_run) ... ok
+test_wrong_signer_key_configuration_challenge_and_inventory_rejected (tests.test_m6_live_acceptance.LiveAcceptanceTests.test_wrong_signer_key_configuration_challenge_and_inventory_rejected) ... ok
+test_missing_duplicate_and_unexpected_sessions_rejected (tests.test_m6_live_acceptance.LiveAcceptanceTests.test_missing_duplicate_and_unexpected_sessions_rejected) ... ok
+test_duplicate_and_resigned_replay_rejected_after_restart (tests.test_m6_live_acceptance.LiveAcceptanceTests.test_duplicate_and_resigned_replay_rejected_after_restart) ... ok
+test_ambiguous_post_commit_ack_never_guesses_accepted (tests.test_m6_live_acceptance.LiveAcceptanceTests.test_ambiguous_post_commit_ack_never_guesses_accepted) ... ok
+test_ambiguous_pre_commit_ack_requires_reconciliation (tests.test_m6_live_acceptance.LiveAcceptanceTests.test_ambiguous_pre_commit_ack_requires_reconciliation) ... ok
+test_concurrent_processes_accept_exactly_once (tests.test_m5.AcceptanceTests.test_concurrent_processes_accept_exactly_once) ... ok
+test_multi_session_full_inventory_atomic_acceptance_and_singleton_unchanged (tests.test_m5.WholeRunTests.test_multi_session_full_inventory_atomic_acceptance_and_singleton_unchanged) ... ok
+test_multi_session_failed_write_rolls_back_all_commitments (tests.test_m5.WholeRunTests.test_multi_session_failed_write_rolls_back_all_commitments) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 13.909s
+
+OK

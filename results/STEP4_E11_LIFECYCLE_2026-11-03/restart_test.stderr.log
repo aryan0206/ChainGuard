@@ -1,0 +1,6 @@
+test_acceptance_and_duplicate_survive_separate_process_restart (tests.test_m5.AcceptanceTests.test_acceptance_and_duplicate_survive_separate_process_restart) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 5.333s
+
+OK
