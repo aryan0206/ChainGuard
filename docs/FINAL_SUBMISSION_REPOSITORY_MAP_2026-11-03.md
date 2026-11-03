@@ -1,5 +1,7 @@
 # ChainGuard — Final Submission Repository Map
 
+**Current-status note (4 November 2026):** This is the 3 November inventory snapshot. Its proposed/absent professor runner references predate the implemented [`Run-ProfessorDemo.ps1`](../scripts/demo/Run-ProfessorDemo.ps1) and the successful owner run. For the current local demonstration use the [final readiness checklist](FINAL_PROFESSOR_DEMONSTRATION_READINESS.md); the large inventory and historical findings below remain as recorded.
+
 **Audit date:** 3 November 2026 (Asia/Calcutta). **Scope:** final submission audit, not implementation authorization. **Repository:** C:\Users\Laptop\OneDrive\Documents\MIT\ChainGuard. Paths in code spans are repository-relative unless stated otherwise; clickable links resolve from this document in docs/.
 
 ## 1. Executive summary

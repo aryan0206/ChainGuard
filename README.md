@@ -95,6 +95,8 @@ An inspected owner run completed all runner steps, including standalone M4 inspe
 
 ## Evaluation and evidence status
 
+For the current presentation sequence and safety checks, use the [operational readiness checklist](docs/FINAL_PROFESSOR_DEMONSTRATION_READINESS.md).
+
 The [evaluation protocol](docs/EVALUATION_PROTOCOL.md) requires independently specified workflow labels and source/sink/task observations, matched representation comparisons, frozen case definitions, workflow-level denominators and explicit unknowns. Engineering tests, replay fixtures and repeated prefixes are not independent research samples. The [results ledger](docs/RESULTS_LEDGER.md) and [claims register](docs/CLAIMS_REGISTER.md) are the status authorities: **no E01–E13 experiment is fully contract-qualified as a research result**.
 
 E03 has a retained pilot but lacks the separate, verifiable task-level client objective acknowledgment required by its contract; its larger proposed cohort is unapproved. E09 has five A3 development cells, with three expected-dimension matches and two preserved schema-first mismatches; seven-variant parity is incomplete. E11 has passing acceptance-lifecycle engineering methods but lacks A3T/A4T research support and an independent case population/oracle. M6Q cases and narrow external-reference conformance support bounded engineering claims only. No held-out superiority, general disclosure-prevention rate or final cost/scaling result follows from them. Focused assessments are under [`results/`](results/); the ledger explains their eligibility.

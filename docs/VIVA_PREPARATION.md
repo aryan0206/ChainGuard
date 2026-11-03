@@ -1,5 +1,7 @@
 # ChainGuard Evaluation-1 — Viva Preparation
 
+**Current-status note (4 November 2026):** This is a 9 October Evaluation-1 study aid. Statements below that live M6 is unimplemented, and its 216-test summary, describe that checkpoint; do not use them as current project status. The trusted-host M6 path now has bounded [M6Q engineering qualification](RESULTS_LEDGER.md), while no E01–E13 experiment is fully research-qualified. The existing [professor runner](../scripts/demo/Run-ProfessorDemo.ps1) executes separate M1–M5 steps and only inspects historical M6Q evidence. Use the [final operational readiness checklist](FINAL_PROFESSOR_DEMONSTRATION_READINESS.md) for presentation commands and current limits.
+
 Prepared 9 October 2026 against checkpoint **5d00057**. All outcomes below are **recorded results, not tests or experiments rerun during this documentation task**. This guide does not authorize implementation.
 
 Study A–M first, test yourself with N, and use O–P for navigation and rehearsal. Begin answers in ordinary language, then state the precise boundary. For an unmeasured outcome say: “We have not established that yet.”

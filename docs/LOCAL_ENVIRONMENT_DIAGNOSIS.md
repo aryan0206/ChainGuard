@@ -1,5 +1,7 @@
 # Local Python Environment Execution Diagnosis
 
+**Current-status note (4 November 2026):** This diagnosis records the earlier restricted-sandbox access failure. The owner subsequently ran the [professor runner](../scripts/demo/Run-ProfessorDemo.ps1) successfully in ordinary Windows PowerShell as `Laptop`; a separate controlled M1/M2 reproduction also succeeded in that account. Use the [final readiness checklist](FINAL_PROFESSOR_DEMONSTRATION_READINESS.md) for current execution. The original diagnostic scope and observations below are preserved.
+
 **Date:** 4 November 2026  
 **Scope:** interpreter startup and read-only environment inspection. No ChainGuard application workflow, test suite, research experiment, database operation, dependency installation, Git command, or repair was run.
 

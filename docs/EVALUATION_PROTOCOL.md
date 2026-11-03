@@ -1,5 +1,7 @@
 # Evaluation protocol
 
+**Status note (4 November 2026):** The experiment-status table below is an 8 October planning snapshot, not a current execution dashboard. Its methodology remains unchanged. Consult the [results ledger](RESULTS_LEDGER.md), [claims register](CLAIMS_REGISTER.md), and [3 November reconciliation](../results/STATUS_RECONCILIATION_2026-11-03.md) for current E03/E09/E11 and other experiment eligibility; no E01–E13 result is fully contract-qualified.
+
 Documentation snapshot: 8 October 2026. Approved Astra protocol supplied in the Phase 1 owner request, reconciled only by explicit authority notes below. This is the methodology control for E01-E13, subject to the [Architecture Lock](ARCHITECTURE_LOCK.md), [charter](PROJECT_CHARTER.md), [threat model](THREAT_MODEL.md), [playbook](../ENGINEERING_PLAYBOOK.md) and [AGENTS](../AGENTS.md). It authorizes no implementation, dependency, experiment, commit or publication.
 
 ## Authority and open ambiguities

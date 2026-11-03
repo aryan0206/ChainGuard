@@ -1,5 +1,7 @@
 # Experiment matrix
 
+**Status note (4 November 2026):** The status column records the original planning baseline and is not a current results table. The experimental design is unchanged. See the [results ledger](RESULTS_LEDGER.md) and [3 November reconciliation](../results/STATUS_RECONCILIATION_2026-11-03.md) for current eligibility, including E03, E09 and E11; no E01–E13 result is fully contract-qualified.
+
 All RQ IDs are protocol-local; controls, hypotheses, strata, metrics and authority conflicts are defined in [Evaluation Protocol](EVALUATION_PROTOCOL.md). No row is a completed final research experiment. Supporting engineering results belong in the [ledger](RESULTS_LEDGER.md). PLANNED = specified but unexecuted; NOT STARTED = prerequisites absent. Every row requires prewritten fixtures, frozen versions and independently retained observations.
 
 | Experiment | RQ | Hypothesis | Workflow stratum | Representation/system | Independent variable | Controls | Independent oracle | Primary outcome | Secondary outcomes | Current status | Required implementation | Required evidence |
