@@ -63,3 +63,7 @@ The first command demonstrates mediation and success/error/success. The second r
 - [Evaluation protocol](docs/EVALUATION_PROTOCOL.md), [experiment matrix](docs/EXPERIMENT_MATRIX.md), [results ledger](docs/RESULTS_LEDGER.md) and [claims register](docs/CLAIMS_REGISTER.md).
 - [Evaluation-1 report source](docs/overleaf-evaluation1/main.tex) and [figure documentation](docs/overleaf-evaluation1/figures/README.md). The original supplied proposal is historical; this is the current Evaluation-1 report.
 - [Viva preparation](docs/VIVA_PREPARATION.md), [adversarial findings](docs/ADVERSARIAL_FINDINGS.md) and [engineering history](docs/SPIKE_LOG.md).
+
+## Licence
+
+Original ChainGuard project material covered by the root [MIT Licence](LICENSE) is copyright (c) 2026 Aryan Malik and Saanvi Bansal. Third-party and upstream components retain their own licences and notices. The root licence does not override separate terms for datasets, external evidence, research material or third-party assets.
