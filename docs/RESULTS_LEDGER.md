@@ -6,6 +6,18 @@ M6.4 bounded engineering addendum: 21 October 2026. The dated entry below supple
 
 ## A. COMPLETED ENGINEERING RESULTS
 
+### Updated runtime and guided frontend — 4 November 2026
+
+Main was fast-forwarded by 12 commits from `3688081` to `65d0eb6`, preserving local frontend work. The adapter now meets upstream's trusted revision requirement and captures synthetic M6 host/child witness metadata separately from signed audit. The UI links actual request/control records to their inputs, removes predicted output fields and explains the site and M2–M6. **471 upstream tests passed in 168.064s**, **18 adapter tests passed**, **16 frontend data/rendering tests passed**, and the production build passed. One initial upstream test required localhost socket permission; the full rerun passed. A real HTTP-proxy M6 run produced 59 records, 28 findings, seven PASS inspection dimensions, ACCEPTED submission, ALREADY_ACCEPTED on resubmission, 53 host and 8 child observations. The registry/witness workspace remains temporary; no external assessor TCP sink or persistent UI acceptance service is claimed. Browser visual/interaction QA remains unperformed. These are bounded engineering observations, not new qualified research samples. Upstream runtime/test source, retained research evidence and dependency pins have no local edits.
+
+### Current M6 frontend integration — 31 October 2026
+
+Upstream pull confirmed local and remote main already at `3688081`; no new upstream commits were merged. The existing local frontend now exposes the fixed synthetic M6.4 live permission/evidence/acceptance interfaces. **466 original tests passed in 79.997s**, **17 adapter tests passed**, **10 frontend data/rendering tests passed**, and the production build passed. A real run through the local frontend proxy produced seven tool responses (including three actual controller denials and one controlled tool failure), two sink arrivals, 59 audit records, 28 findings, seven PASS inspection dimensions, ACCEPTED/COMMITTED complete-run submission and REJECTED/ALREADY_ACCEPTED after registry reopen. Registry/evidence cleanup is per-run; persistent frontend submission history is not implemented. Browser visual/interaction QA remains unperformed. These checks establish bounded engineering behavior, not new independent research observations. The runtime source and dependency pins are unchanged.
+
+### Local frontend milestone — 22 October 2026
+
+Original M1/M4 CLI demos passed on macOS with Python 3.14.3. Existing full discovery passed **466 tests in 122.230s**. The separate web environment passed **14 adapter tests**, including genuine demo execution, M1 CLI parity, M4 evidence/finding checks, malformed/unsupported requests, local request boundaries, concurrency rejection, isolated workspaces, exit-code preservation, timeout and shutdown cleanup. Node 25.2.1/npm 11.6.2 passed **4 frontend data-handling tests** and the Vite build. A real M4 run through the frontend HTTP proxy returned three responses, 26 records, 12 findings and PASS in all six offline inspection dimensions; complete-run acceptance was NOT_CHECKED. These counts are engineering checks, not independent workflow experiments. Browser visual/interaction QA remains unperformed. Vite 7.2.2 is retained by owner choice despite its reported advisories; the compatible fix was offered. Setup and remaining UI milestones are in the [README](../README.md#local-frontend--updated-4-november-2026).
+
 | ID | Completed engineering check | Recorded result | Interpretation / limit |
 | --- | --- | --- | --- |
 | ENG-M1 | Real MCP stdio mediation | 12 tests passed | Controlled client -> proxy -> server; bounded transport surface |

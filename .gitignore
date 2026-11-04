@@ -1,5 +1,7 @@
 # Python virtual environment
 .venv/
+.venv-web/
+node_modules/
 
 # Python cache
 __pycache__/

@@ -108,3 +108,128 @@ Coverage is a configured local MCP stdio subset with controlled tools and synthe
 ## Paper, contributors and licence
 
 The [IEEE paper source](docs/overleaf-evaluation1/main.tex) describes an earlier Evaluation-1 engineering snapshot; current implementation and research status should be checked against the ledger. No submission or publication status is claimed. Aryan Malik and Saanvi Bansal are named in the project licence and paper source. Original ChainGuard material is under the root [MIT Licence](LICENSE); third-party packages, external reference material, datasets and paper assets may have separate terms.
+
+## Local frontend — updated 4 November 2026
+
+The React console launches real M1, M4 and M6.4 workflows through a FastAPI adapter. It displays tool responses, actual controller authorization decisions, adapter progress, committed audit records, B0/B1/B2-R/B2-S findings, signed closure, offline inspection and complete-run acceptance where supported. It loads no mock security results.
+
+On 4 November, fetching `origin/main` found 12 new commits. The checkout was fast-forwarded from `3688081` to **65d0eb6cd2a57eaac168fe5b69873639e4cf20bc**. Local frontend changes were backed up and restored; the upstream README and its newer demonstration instructions were retained. The adapter now provisions the new trusted M6 code-revision assertion from local Git HEAD and captures the new host/child witnesses in a fresh external workspace. Browser input cannot choose that revision or witness path. No local changes were made to upstream security-runtime code or dependency pins.
+
+The interface now presents a visible input → context/decision → tool/audit → evidence flow. A guided workflow joins each actual result to its request, grant or revocation. Before execution it shows preset inputs and step descriptions only; there are no predicted output fields. After execution, only recorded responses and committed controls receive observed status. The site includes an expandable walkthrough explaining M1–M6 and which milestones have runnable UI scenarios.
+
+The Python runtime and web adapter use separate environments: the existing MCP pins require Starlette 1.7.0, while the approved FastAPI 0.121.0 requires Starlette below 0.50. This isolation preserves the original runtime dependency set. The adapter launches a fixed worker with `.venv/bin/python`; the worker uses the upstream demo functions and public M6 host/MCP ingress. It does not bypass or rewrite the security controller.
+
+### First-time installation on macOS
+
+Use Python 3.14 and a Node version supported by Vite 7 (Node 20.19+ or 22.12+). This implementation was checked with Python 3.14.3, Node 25.2.1 and npm 11.6.2. All commands below run inside the project; nothing needs a global package installation.
+
+In Terminal, install the existing runtime:
+
+```zsh
+cd ~/Desktop/fin_chain/ChainGuard
+python3 -m venv .venv
+.venv/bin/python -m pip install -r requirements-runtime-macos.txt
+```
+
+This file preserves every version from `requirements-m1.txt`, with Windows-only `pywin32` qualified by platform. Then install the adapter into its own environment:
+
+```zsh
+cd ~/Desktop/fin_chain/ChainGuard
+python3 -m venv .venv-web
+.venv-web/bin/python -m pip install -r requirements-web.lock.txt
+```
+
+`requirements-web.txt` lists the approved direct dependencies; `requirements-web.lock.txt` records the full installed set. Install the frontend:
+
+```zsh
+cd ~/Desktop/fin_chain/ChainGuard/frontend
+npm ci
+```
+
+### Start the application
+
+Terminal 1 — backend, from the repository root:
+
+```zsh
+cd ~/Desktop/fin_chain/ChainGuard
+.venv-web/bin/python -m uvicorn frontend_api.api:app --host 127.0.0.1 --port 8001
+```
+
+Terminal 2 — frontend:
+
+```zsh
+cd ~/Desktop/fin_chain/ChainGuard/frontend
+npm run dev
+```
+
+Open **http://127.0.0.1:5174/** in your browser. These ports avoid other applications already using 8000 and 5173 on the development machine. Use one backend worker. Stop either server with **Control-C** in its Terminal.
+
+Select **Live authorization & acceptance · M6.4**, inspect the read-only preset inputs, then click **Run demonstration**. This fresh synthetic scenario exercises source access, scoped grants, one-use consumption, revocation, regrant and a deliberate tool failure. The page does not display an output prediction before execution.
+
+Use **Step-by-step workflow** to read inputs alongside actual results and controller decisions. **Tool outputs** shows returned content and errors; **Detectors** shows recorded shadow findings; **Permissions** shows real dispatch decisions and committed host controls; **Evidence** separates inspection and acceptance; **Execution observations** shows host/server witnesses separately from signed audit; **Raw JSON** shows the full report. **Signed evidence · M4** remains the non-release signed-inspection demo, while **MCP mediation · M1** remains transport-only. **Clear result** resets the view without replaying tools. Selecting another scenario clears the selected result so data from two demos are not mixed.
+
+### Site walkthrough and milestone meanings
+
+The expandable **Site walkthrough · M1–M6 explained** guide is above the controls. Choose a demo, inspect its preset inputs, run it, follow the observed steps and then explore the detailed tabs. The four-stage diagram explains the path; the legend distinguishes returned tool content, controller denial and tool execution error. Signature/inspection and complete-run acceptance are separate from behavioral findings.
+
+| Milestone | What it demonstrates | UI availability |
+| --- | --- | --- |
+| M2 | Replay current-event B0, conservative unordered B1 and ordered B2-R/B2-S on prewritten histories; independent fixture oracle and reference/streaming consistency. No live tool execution. | Explained in the walkthrough; standalone replay remains CLI-only. |
+| M3 | Real non-release calls with durable SQLite proposal/decision/intent persistence before dispatch, followed by recorded outcomes. No signed closure. | Explained in the walkthrough; standalone M3 remains CLI-only. |
+| M4 | Hash-chained audit, ECDSA P-256 signed closure and six-dimensional offline inspection. Inspection does not accept a fresh submission. | Signed evidence scenario. |
+| M5 | Pre-execution registered inventory/configuration/signer, complete-run submission and durable duplicate rejection. | M6.4 uses this acceptance registry; the full standalone M5 campaign remains CLI-only. |
+| M6 | Trusted host scoped grant/revoke/one-use authority on real mediated synthetic calls; M6.4 adds signed export, inspection and submission. | Live authorization & acceptance scenario. |
+
+These are capabilities demonstrated by separate runs, not one continuous M1–M6 conversation. This frontend never reruns or overwrites the historical M6Q qualification tree under `results/`.
+
+### How the frontend works
+
+1. React loads the supported scenarios from `GET /api/scenarios`. Their descriptions, preset input arguments and workflow structure come from the local adapter; no predicted output fields are included.
+2. Clicking **Run demonstration** sends only the selected scenario ID to `POST /api/runs`. Browser input cannot supply commands, grants, destinations or tool arguments.
+3. FastAPI creates a run ID and launches a fixed worker using the existing runtime interpreter. The host supplies the current checkout revision through `CHAINGUARD_TRUSTED_CODE_REVISION`; the browser cannot supply it. M1/M4 use their original demo functions. M6 uses public `M6Host` and `HostTask.serve_client` interfaces; MCP frames and trusted host controls enter the existing serialized mediation path. Its new `witness_dir` is inside the fresh external temporary directory.
+4. The UI polls run status every second during execution. Adapter progress is available immediately; real audit records and results arrive after the workflow finishes.
+5. The UI renders the returned data. ChainGuard's Python code performs authorization, detection, audit persistence, signing, inspection and acceptance. React does not make security decisions.
+
+The key files are [`App.jsx`](frontend/src/App.jsx) for selection and polling, [`WorkflowView.jsx`](frontend/src/components/WorkflowView.jsx) for input/result linkage, [`Walkthrough.jsx`](frontend/src/components/Walkthrough.jsx) for site and milestone explanations, [`RunResults.jsx`](frontend/src/components/RunResults.jsx) for result panels, [`model.js`](frontend/src/model.js) for correlation/classification, [`api.py`](frontend_api/api.py) for HTTP/run management, [`runtime_context.py`](frontend_api/runtime_context.py) for host-owned revision provisioning, [`scenario_guides.py`](frontend_api/scenario_guides.py) for preset inputs, and [`live_demo.py`](frontend_api/live_demo.py) for the fixed M6 workflow.
+
+### API and behavior
+
+| Endpoint | Behavior |
+| --- | --- |
+| `GET /api/health` | Adapter status, current revision, runtime configuration readiness and busy state |
+| `GET /api/scenarios` | Allowlisted fixed demonstrations and supported capabilities |
+| `POST /api/runs` | JSON with `scenario_id`: `live-authorization`, `signed-evidence`, or `mediation`; returns 202 |
+| `GET /api/runs/{run_id}` | Run status, real report, exit code and sanitized errors |
+| `GET /api/runs/{run_id}/events` | Adapter events and completed M4/M6 audit records; JSON polling |
+| `GET /api/runs/{run_id}/evidence` | Public package, actual offline inspection and explicit acceptance status |
+
+The frontend proxies `/api` to port 8001. POST requests require `Content-Type: application/json` and `X-ChainGuard-Client: local-dashboard`; the browser origin and host are checked. This is a local development boundary, not user authentication or a public deployment design. Both servers bind to loopback.
+
+Runs execute sequentially; a second active run returns 409. Each worker has a 150-second timeout and an external temporary workspace. Completion, failure, timeout and adapter shutdown clean up temporary evidence and signing keys. Public reports are retained in memory for the latest 20 runs and disappear when the backend restarts. No private keys are returned. Error details in the API do not include raw process stderr; use the documented CLI for local diagnostics.
+
+For M6, the worker creates assessor expectations and a P-256 signer in memory before opening the live task. Expected inventory, configuration and public-key pin are registered and read back durably before task execution. After clean shutdown, the actual runtime exports and inspects the package; the existing acceptance registry then accepts the complete run. Reopening the registry and submitting the same package demonstrates duplicate rejection. The private key is never serialized. The registry is a temporary demonstration fixture and is removed after the run; this frontend does not provide a persistent cross-run submission service.
+
+M6 host/child witness streams are separate local observations, not signed audit and not proof against a dishonest host. The web report omits raw frame and payload copies. This scenario uses the controlled server's local sink observations; no external assessor TCP sink is configured. Witness files are cleaned up with the temporary workspace.
+
+### Verification and current limits
+
+```zsh
+cd ~/Desktop/fin_chain/ChainGuard
+CHAINGUARD_TRUSTED_CODE_REVISION="$(git rev-parse HEAD)" .venv/bin/python -B -m unittest discover -s tests -v
+.venv-web/bin/python -B -m unittest discover -s frontend_api/tests -v
+cd frontend
+npm test
+npm run build
+```
+
+Actual checks on 4 November 2026: **471 upstream tests passed in 168.064s**, **18 adapter tests passed**, **16 frontend data/rendering tests passed**, and the production build passed. The first sandboxed upstream run had one permission error because a new test binds a localhost socket; the complete suite passed when rerun with that permission. Adapter tests verify actual M1/M4/M6 execution, guide-to-request identity, exact revision provisioning, witness capture/sanitization, control injection rejection, registration-readback gating, acceptance and duplicate rejection. Frontend tests verify typed request correlation, exact grant/revocation scope, absence of predicted output and honest missing-result presentation. A real M6 run through the frontend proxy completed with 59 audit records, 28 findings, seven PASS inspection dimensions, ACCEPTED submission and ALREADY_ACCEPTED on resubmission, plus 53 host and 8 child observations. Browser interaction, visual layout and responsive behavior remain unverified in a real browser in this session.
+
+Custom arguments, interactive grant/revoke controls, live streaming of internal runtime events and a retained evidence-submission service remain follow-up work. The detector panel shows actual recorded findings and references; it does not yet display each evaluator's historical input representation. Adapter progress uses polling; audit records appear only after the demo completes. M1 exposes no policy evaluation or signed evidence. M4's public non-release history and the fixed M6 scenario do not establish detector superiority or final workflow qualification.
+
+M4 performs inspection, so fresh submission is **NOT_CHECKED**. M6 inspection also retains **NOT_CHECKED** for that operation, while its separate registry submission reports actual **ACCEPTED** or rejection status. Signatures authenticate commitments and do not prove that observations are true or actions are safe. Evidence acceptance likewise does not certify benign behavior.
+
+The owner chose to retain **Vite 7.2.2** after `npm audit` reported advisories and identified 7.3.7 as a compatible fix. The current audit reports one high-severity affected dependency. No automatic dependency upgrade was applied.
+
+If the dashboard says **Backend offline**, check Terminal 1 and port 8001. If it says **Runtime unavailable**, complete the runtime installation and restart the backend; readiness is cached. If a previous run expires or the backend restarts, the dashboard clears the stale run and allows another demonstration. If a port is occupied, do not stop an unrelated process; choose a free port and update the frontend proxy, browser-origin allowlist and startup commands consistently. A `.zshenv` warning about a missing Java installation comes from the user's shell configuration; this Python/React project does not require Java.
+
+Frontend source is under `frontend/` (React/Vite console and tests) and `frontend_api/` (adapter, fixed worker and tests), with the three dependency files above. Local Python environments, installed Node packages, build output and generated evidence are excluded from version control.
